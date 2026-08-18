@@ -1,0 +1,100 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Skill — CodingAgent.in Entity Hub</title><meta name="description" content="Skill documentation for CodingAgent.in. Understand skill definitions, verification, and reusable workflows."><meta name="robots" content="index,follow"><meta name="theme-color" content="#080a0f"><link rel="canonical" href="https://codingagent.in/skills/skill/what-is-an-agent-skill/"><style>:root{--bg:#080a0f;--fg:#e8ecf3;--dim:#8898a3;--border:#222834;--accent:#ff5a1f;--green:#35d17c;--blue:#3b82f6;--max:720px}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;line-height:1.6;padding:40px;max-width:var(--max);margin:auto}h1{font-size:clamp(32px,5vw,42px);margin-bottom:16px;color:var(--accent)}h2{font-size:clamp(22px,3vw,28px);margin:32px 0 16px;color:var(--green)}p{margin-bottom:16px}code{background:var(--border);padding:2px 6px;border-radius:4px;font-family:monospace}pre{background:var(--border);padding:16px;border-radius:8px;overflow-x:auto;margin:16px 0}.nav{margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border)}:fullscreen{background:#fff;color:#000}</style></head><body>
+<div class="nav"><a href="/" style="color:var(--accent);text-decoration:none">← Home</a></div>
+
+<h1>What is an Agent Skill?</h1>
+
+<p>A skill is a versioned, reviewed workflow definition for recurring tasks with declared tools, inputs, and verification criteria.</p>
+
+<h2>Skill Definition</h2>
+
+<p>Skills require the following components:</p>
+
+<ul>
+  <li><strong>name</strong>: Unique identifier for the capability</li>
+  <li><strong>version</strong>: Semantic versioning for evolution tracking</li>
+  <li><strong>instructions</strong>: Step-by-step execution logic</li>
+  <li><strong>required tools</strong>: List of needed tool integrations</li>
+  <li><strong>capabilities</strong>: Knowledge domains and expertise areas</li>
+  <li><strong>permissions</strong>: Allowed action boundaries and scope</li>
+  <li><strong>examples</strong>: Sample inputs and expected outputs</li>
+  <li><strong>verification criteria</strong>: Success conditions and quality gates</li>
+</ul>
+
+<h2>Memory vs Skills Distinction</h2>
+
+<p>Critical architectural separation:</p>
+
+<ul>
+  <li><strong>Memory = what is known or true</strong> (facts, data, context)</li>
+  <li><strong>Skill = how a recurring task is performed</strong> (procedures, workflows)</li>
+</ul>
+
+<p>Skills transform reviewed procedures into reusable, auditable capabilities that maintain policy compliance across multiple executions.</p>
+
+<h2>Skill Lifecycle</h2>
+
+<p>Skills evolve through defined states:</p>
+
+<ul>
+  <li><strong>DRAFT</strong>: Initial development and testing</li>
+  <li><strong>REVIEW</strong>: Verification and approval process</li>
+  <li><strong>PUBLISHED</strong>: Approved for production use</li>
+  <li><strong>REJECTED</strong>: Failed review or security concerns</li>
+  <li><strong>DEPRECATED</strong>: Retired from active service</li>
+</ul>
+
+<h2>Skill Components in Detail</h2>
+
+<h3>Instructions</h3>
+<p>Detailed, step-by-step execution flow including:</p>
+<ul>
+  <li>Input validation and transformation</li>
+  <li>Sequential tool calls with parameters</li>
+  <li>Decision logic for branching paths</li>
+  <li>Error handling and recovery procedures</li>
+</ul>
+
+<h3>Required Tools</h3>
+<p>Complete list of tool dependencies including:</p>
+<ul>
+  <li>File system operations</li>
+  <li>Database queries and updates</li>
+  <li>External API integrations</li>
+  <li>Verification and validation tools</li>
+</ul>
+
+<h3>Verification Criteria</h3>
+<p>Measurable success conditions including:</p>
+<ul>
+  <li>Functional requirements validation</li>
+  <li>Security and compliance checks</li>
+  <li>Performance benchmarks</li>\n  <li>Output quality standards</li>
+</ul>
+
+<h2>Skill Creation Process</h2>
+
+<p>Skills are developed through a structured workflow:</p>
+
+<ol>
+  <li><strong>Design</strong>: Define objective and success metrics</li>
+  <li><strong>Develop</strong>: Implement instructions with tool integrations</li>
+  <li><strong>Test</strong>: Validate with sample inputs and edge cases</li>
+  <li><strong>Review</strong>: Security, functionality, and performance assessment</li>
+  <li><strong>Publish</strong>: Make available for agent execution</li>
+</ol>
+
+<h2>Skill Execution</h2>
+
+<p>When a skill executes, agents:</p>
+
+<ul>
+  <li><strong>Follow instructions</strong> step by step</li>
+  <li><strong>Use only declared tools</strong> within approved permissions</li>
+  <li><strong>Validate against verification criteria</strong> continuously</li>
+  <li><strong>Capture evidence</strong> for audit and improvement</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid var(--border);margin:32px 0">
+<p><small>Last reviewed: 18 Aug 2026 | Author: CodingAgent.in Skills Team | Status: Published</small></p>
+<p><a href="/developers/" style="color:var(--accent)">→ Developer resources</a> | <a href="/glossary/agent-skill" style="color:var(--blue)">Glossary entry</a></p>
+</body></html>

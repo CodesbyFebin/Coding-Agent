@@ -1,0 +1,87 @@
+User-agent: *
+Disallow: /app/
+Allow: /
+Clean-param: /?
+crawl-delay: 10
+Sitemap: https://codingagent.in/sitemap.xml
+Sitemap: https://codingagent.in/sitemaps/pages.xml
+Sitemap: https://codingagent.in/sitemaps/pillars.xml
+Sitemap: https://codingagent.in/sitemaps/guides.xml
+Sitemap: https://codingagent.in/sitemaps/blog.xml
+Sitemap: https://codingagent.in/sitemaps/glossary.xml
+Sitemap: https://codingagent.in/sitemaps/entities.xml
+
+# Block administrative and internal paths
+Disallow: /app/codingagent
+Disallow: /projects
+Disallow: /missions
+Disallow: /tasks
+Disallow: /agents
+Disallow: /models
+Disallow: /approvals
+Disallow: /evidence
+Disallow: /tools
+Disallow: /memory
+Disallow: /skills
+Disallow: /mcp
+Disallow: /schedules
+Disallow: /usage
+Disallow: /events
+Disallow: /analytics
+Disallow: /builder
+Disallow: /settings
+Disallow: /administration
+Disallow: /api
+
+# Allow search engines to access main resources
+Allow: /about/
+Allow: /agents/
+Allow: /agents/agent/1/
+Allow: /agents/agent/2/
+Allow: /agents/agent/3/
+Allow: /models/model/
+Allow: /tools/tool/
+Allow: /swarms/swarm/
+Allow: /mcp/mcp-server/
+Allow: /memory/memory/1/
+Allow: /skills/skill/
+Allow: /verification/verifier/
+Allow: /security/
+Allow: /enterprise/
+Allow: /developers/
+Allow: /docs/
+Allow: /pricing/
+Allow: /about/
+Allow: /blog/
+Allow: /guides/
+Allow: /use-cases/
+Allow: /compare/
+Allow: /glossary/
+Allow: /research/
+Allow: /status/
+
+# Crawl our pillar resources
+Allow: /agents/agent/
+Allow: /models/model/
+Allow: /tools/tool/
+Allow: /swarms/swarm/
+Allow: /mcp/mcp-server/
+Allow: /memory/memory/
+Allow: /skills/skill/
+Allow: /verification/verifier/
+Allow: /security/policy/
+Allow: /runtime/runtime/
+Allow: /orchestration/swarm-orchestration/
+Allow: /gateway/tool-gateway/
+Allow: /router/model-router/
+Allow: /habitat/agent-runtime/
+
+# Respect robots meta tags and noindex pages
+Crawl-delay: 10
+
+# JSON-LD structured data for organization
+{"@context": "https://schema.org", "@type": "Organization", "name": "CodingAgent.in", "url": "https://codingagent.in/", "logo": "https://codingagent.in/assets/logo.svg"}
+
+# Performance recommendations
+Max-index-size: 50000
+Visit-time: 08:00-18:00 GMT

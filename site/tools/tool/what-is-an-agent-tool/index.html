@@ -1,0 +1,88 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tool — CodingAgent.in Entity Hub</title><meta name="description" content="Tool documentation for CodingAgent.in. Understand tool governance, adapter patterns, and execution boundaries."><meta name="robots" content="index,follow"><meta name="theme-color" content="#080a0f"><link rel="canonical" href="https://codingagent.in/tools/tool/what-is-an-agent-tool/"><style>:root{--bg:#080a0f;--fg:#e8ecf3;--dim:#8898a3;--border:#222834;--accent:#ff5a1f;--green:#35d17c;--blue:#3b82f6;--max:720px}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;line-height:1.6;padding:40px;max-width:var(--max);margin:auto}h1{font-size:clamp(32px,5vw,42px);margin-bottom:16px;color:var(--accent)}h2{font-size:clamp(22px,3vw,28px);margin:32px 0 16px;color:var(--green)}p{margin-bottom:16px}code{background:var(--border);padding:2px 6px;border-radius:4px;font-family:monospace}pre{background:var(--border);padding:16px;border-radius:8px;overflow-x:auto;margin:16px 0}.nav{margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border)}:fullscreen{background:#fff;color:#000}</style></head><body>
+<div class="nav"><a href="/" style="color:var(--accent);text-decoration:none">← Home</a></div>
+
+<h1>What is an Agent Tool?</h1>
+
+<p>A tool is an executable capability with policy enforcement, approval boundaries, and evidence capture for controlled execution.</p>
+
+<h2>Tool Gateway Architecture</h2>
+
+<p>Every tool call passes through a five-stage security chain:</p>
+
+<ol>
+  <li><strong>Policy:</strong> Permission validation against agent scope</li>
+  <li><strong>Approval:</strong> Operator decision for consequential actions</li>
+  <li><strong>Adapter:</strong> Transport layer connection and data transformation</li>
+  <li><strong>Execution:</strong> Actual tool function call</li>
+  <li><strong>Event:</strong> Audit trail generation and correlation</li>
+  <li><strong>Evidence:</strong> Provenance capture and verification linkage</li>
+</ol>
+
+<h2>Initial Tool Families</h2>
+
+<p>The foundation tool set includes:</p>
+
+<ul>
+  <li><strong>filesystem</strong>: Read/write operations with path validation</li>
+  <li><strong>shell</strong>: Command execution with safety restrictions</li>
+  <li><strong>git</strong>: Repository operations with access controls</li>
+  <li><strong>github</strong>: GitHub API integration with rate limiting</li>
+  <li><strong>web_fetch</strong>: HTTP requests with security filtering</li>
+  <li><strong>browser</strong>: Automated browser interaction with sandboxing</li>
+  <li><strong>postgres</strong>: Database operations with transaction controls</li>
+  <li><strong>http</strong>: Generic HTTP client with headers and body support</li>
+  <li><strong>storage</strong>: Cloud object storage integration</li>
+  <li><strong>artifact</strong>: Binary file handling with integrity verification</li>
+  <li><strong>search</strong>: Web and internal search capabilities</li>
+</ul>
+
+<h2>Execution Controls</h2>
+
+<p>No tool execution bypasses security controls:</p>
+
+<ul>
+  <li><strong>Git push, database writes, browser actions</strong> require explicit approval</li>
+  <li><strong>External network egress</strong> must be policy-approved</li>
+  <li><strong>Shell commands</strong> run in sandboxed environment</li>
+  <li><strong>Secret access</strong> requires additional authorization</li>
+  <li><strong>Destructive operations</strong> blocked by default</li>
+</ul>
+
+<h2>MCP Tool Integration</h2>
+
+<p>Model Context Protocol tools integrate through:</p>
+
+<ul>
+  <li><strong>Discovery</strong>: Server capability enumeration</li>
+  <li><strong>Filtering</strong>: Policy intersection with agent permissions</li>
+  <li><strong>Authorization</strong>: ALLOW/ASK/DENY decision points</li>
+  <li><strong>Execution</strong>: Standardized transport handling</li>
+  <li><strong>Audit</strong>: Complete evidence trail generation</li>
+</ul>
+
+<h2>Tool Adapter Patterns</h2>
+
+<p>Tools are implemented through standardized adapters:</p>
+
+<ul>
+  <li><strong>Protocol-specific</strong>: HTTP, gRPC, stdio transports</li>
+  <li><strong>Authentication-aware</strong>: Token, certificate, and OAuth support</li>
+  <li><strong>Error handling</strong>: Comprehensive failure and recovery logic</li>
+  <li><strong>Rate limiting</strong>: Respect for provider quotas and policies</li>
+</ul>
+
+<h2>Performance Characteristics</h2>
+
+<p>Tool execution optimizes for:</p>
+
+<ul>
+  <li><strong>Response latency</strong> with intelligent caching</li>
+  <li><strong>Resource usage</strong> with quota enforcement</li>
+  <li><strong>Security overhead</strong> with minimal performance impact</li>
+  <li><strong>Retry resilience</strong> with exponential backoff</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid var(--border);margin:32px 0">
+<p><small>Last reviewed: 18 Aug 2026 | Author: CodingAgent.in Security Team | Status: Published</small></p>
+<p><a href="/developers/" style="color:var(--accent)">→ Developer resources</a> | <a href="/glossary/tool-gateway" style="color:var(--blue)">Glossary entry</a></p>
+</body></html>

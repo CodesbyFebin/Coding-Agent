@@ -1,0 +1,105 @@
+codingagent.in - Sovereign AI Coding Agents Platform
+Version: 1.0.0
+Last Updated: 2026-08-18T00:00:00Z
+Author: CodingAgent.in Editorial Team
+
+=== CONTENT INDEX ===
+
+# Primary Topics
+
+## AI Coding Agents (/)
+Main platform overview and overview of autonomous AI systems for software development.
+
+## Model Context Protocol (/mcp/)
+Documentation for MCP (Model Context Protocol) integration patterns for agent communication and tool access.
+
+## Agentic Engineering (/agentic-engineering/)
+Practical guide to agentic software development workflows, planning, and controlled execution.
+
+## Local LLM First (/local-llm-coding/)
+Local-first model routing, private inference optimization, and self-hosted ML infrastructure.
+
+## Sovereign AI (/sovereign-ai/)
+Architecture for autonomous, locally-controlled AI systems with privacy and security focus.
+
+## Security (/security/)
+Controlled tool calling, permission boundaries, and secure agent execution policies.
+
+## Developer Resources (/developers/)
+API documentation, SDK guides, and integration patterns for building with CodingAgent.
+
+# Entity Hubs
+
+## Agent Entities (/agents/agent/)
+Individual AI agent specifications, capabilities, and configurations.
+
+## Model Entities (/models/model/)
+Local and cloud model definitions, routing policies, and capacity planning.
+
+## Tool Entities (/tools/tool/)
+Verified tool integrations, permissions, and execution patterns.
+
+## Swarm Entities (/swarms/swarm/)
+Multi-agent coordination, orchestration patterns, and scaling strategies.
+
+## MCP Server Entities (/mcp/mcp-server/)
+Model Context Protocol server definitions, transport configurations, and capability declarations.
+
+## Memory Entities (/memory/memory/)
+Agent memory systems, session contexts, and knowledge retention patterns.
+
+## Skill Entities (/skills/skill/)
+Versioned workflows, reusable capabilities, and execution patterns.
+
+## Verification Entities (/verification/verifier/)
+Independent verification workflows, acceptance criteria, and quality gates.
+
+## Policy Entities (/security/policy/)
+Agent security policies, approval workflows, and governance frameworks.
+
+## Runtime Entities (/runtime/runtime/)
+Agent runtime environments, sandbox configurations, and lifecycle management.
+
+## Orchestration Entities (/orchestration/swarm-orchestration/)
+Swarm management, task distribution, and coordination protocols.
+
+## Gateway Entities (/gateway/tool-gateway/)
+Tool gateway architectures, policy enforcement, and execution boundaries.
+
+## Router Entities (/router/model-router/)
+Model routing strategies, capability matching, and performance optimization.
+
+## Habitat Entities (/habitat/agent-runtime/)
+Local development environments, deployment configurations, and resource management.
+
+# Guide Resources
+
+## Setup Guides (/guides/)
+Step-by-step installation and configuration guides for all platform components.
+
+## Implementation Guides (/guides/)
+Practical implementation patterns and best practices for production deployment.
+
+## Blog Content (/blog/)
+Latest news, case studies, and technical articles about AI coding agents.
+
+## Glossary (/glossary/)
+Comprehensive terminology reference for AI, ML, and agentic systems.
+
+# Technical Architecture
+
+The codingagent.in platform provides:
+- Sovereign AI coding agent runtime
+- Model Context Protocol integration
+- Local-first model routing
+- Governed tool execution
+- Evidence-based verification
+- Reusable agent skills
+- Controlled memory systems
+- Independent verification
+- Enterprise security policies
+- Developer-friendly APIs
+
+All pages follow semantic HTML, structured data, and are optimized for search engines and AI systems.
+
+=== END INDEX ===

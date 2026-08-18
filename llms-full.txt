@@ -1,0 +1,314 @@
+CodingAgent.in Technical Documentation - Full Content Index
+Version: 1.0.0
+Last Updated: 2026-08-18T00:00:00Z
+Author: CodingAgent.in Technical Team
+
+# Full Content Package for AI Search Systems and LLM Training
+
+This file contains the complete, non-annotated content of CodingAgent.in for technical reference, indexing, and AI model training.
+
+---
+
+## Platform Overview (/)
+
+CodingAgent.in is a sovereign, open-source, local-LLM-first agentic engineering project focused on AI coding agents, controlled tool use, Model Context Protocol (MCP) integrations, verification and practical developer workflows.
+
+Key differentiators:
+- Sovereign architecture designed for private repositories
+- Local-LLM-first preference for sensitive contexts
+- MCP-native tooling and protocol integration
+- Controlled execution with evidence capture
+- Independent verification systems
+- Versioned, reviewed skills and memory
+
+The platform enables building, routing, governing and verifying AI coding-agent workflows across local and cloud models with strict permission boundaries.
+
+---
+
+## Entity Hubs
+
+### Agent Entities (/agents/agent/)
+Comprehensive documentation of AI agent specifications, configurations, and deployment patterns.
+
+### Model Entities (/models/model/)
+Local and cloud model definitions, routing strategies, and capability documentation.
+
+### Tool Entities (/tools/tool/)
+Verified tool integrations with permission models, execution patterns, and security boundaries.
+
+### Swarm Entities (/swarms/swarm/)
+Multi-agent coordination protocols, orchestration patterns, and scaling strategies.
+
+### MCP Server Entities (/mcp/mcp-server/)
+Model Context Protocol server definitions, transport configurations, and capability declarations for agent communication.
+
+### Memory Entities (/memory/memory/)
+Agent memory systems including working, session, mission, user, workspace, organization, and knowledge memory layers.
+
+### Skill Entities (/skills/skill/)
+Versioned workflows with name, version, instructions, required tools, capabilities, permissions, examples, verification criteria and review status.
+
+### Verification Entities (/verification/verifier/)
+Independent verification workflows including build, type, test, security, browser, accessibility, performance and acceptance verification with status PASS/FAIL/BLOCKED/SKIPPED/NOT_RUN/UNKNOWN.
+
+### Policy Entities (/security/policy/)
+Agent security policies, approval workflows, and governance frameworks for controlled execution.
+
+### Runtime Entities (/runtime/runtime/)
+Agent runtime environments, sandbox configurations, and lifecycle management states.
+
+### Orchestration Entities (/orchestration/swarm-orchestration/)
+Swarm management, task distribution, and coordination protocols for multi-agent systems.
+
+### Gateway Entities (/gateway/tool-gateway/)
+Tool gateway architectures, policy enforcement, and execution boundaries for controlled tool access.
+
+### Router Entities (/router/model-router/)
+Model routing strategies based on AUTO/QUALITY/SPEED/COST/PRIVACY/LOCAL/BALANCED policies with provider adapters.
+
+### Habitat Entities (/habitat/agent-runtime/)
+Local development environments, deployment configurations, and resource management for agent execution.
+
+---
+
+## Core Topics
+
+### AI Coding Agents (/)
+Definition of AI coding agents as software systems that can plan and execute engineering tasks using models, repository context, tools, permissions, tests and controlled execution.
+
+### Model Context Protocol (/mcp/)
+MCP as a governed capability layer for connecting LLMs to local data sources securely.
+
+### Agentic Engineering (/agentic-engineering/)
+Plan → execute → verify workflow for software development with separate reasoning, side effects and acceptance stages.
+
+### Local LLM First (/local-llm-coding/)
+Local-first architecture for sensitive repositories, offline work, and hardware-aware inference.
+
+### Sovereign AI (/sovereign-ai/)
+Architecture for autonomous, locally-controlled AI systems with privacy and security focus.
+
+### Security (/security/)
+Permissions, sandboxing, secrets, network access, approvals and verification in architecture rather than post-launch hardening.
+
+### Developer Resources (/developers/)
+API documentation, SDK guides, and integration patterns for building with CodingAgent including events, webhooks, task queues, state machines, tool gateways, and model routing APIs.
+
+---
+
+## Technical Documentation
+
+### Setup Guides (/guides/)
+Comprehensive setup guides for all platform components including coding-agent installation, MCP server setup, local LLM configuration, secure environment setup, agent verification, swarm orchestration, tool gateway configuration, model router setup, and agent runtime management.
+
+### Implementation Guides (/guides/)
+Practical implementation patterns and production deployment strategies for real-world usage.
+
+### Learning Resources (/learn/)
+Educational pathways for understanding AI agents, MCP, agentic engineering, local LLMs, and security.
+
+### Use Cases (/use-cases/)
+Practical applications including legacy code modernization, automated code review, bug fixing, test generation, documentation generation, JIRA automation, GitHub PR automation, CI/CD automation, DevOps, QA automation, security engineering, SEO engineering, data engineering, and Indian enterprise software.
+
+### Comparisons (/compare/)
+Framework comparisons including AI coding agents vs Copilot vs IDE extensions, AI coding agent frameworks, MCP vs REST API, MCP vs function calling, local vs cloud models, single vs multi-agent, LangGraph vs CrewAI, OpenHands vs Devika, and agent framework selection.
+
+### Blog (/blog/)
+Latest articles on AI coding agents, MCP development guide, local LLM coding guide, agentic engineering practices, and secure agent workflows.
+
+### Glossary (/glossary/)
+Comprehensive terminology reference including AI agent, agent runtime, agentic workflow, context window, function calling, Model Context Protocol, model routing, tool gateway, agent sandbox, prompt injection, agent memory, agent skill, agent verification, evidence provenance, AI artifact, agent lease, and context compaction.
+
+### Research (/research/)
+Research studies on AI coding agent market, agentic engineering trends, MCP ecosystem, local LLM coding, AI developer productivity methodology, AI agent security landscape, India AI developer ecosystem, and AI coding agent benchmarks.
+
+### Status (/status/)
+Platform status, release transparency, and operational metrics.
+
+---
+
+## Technical Architecture
+
+### Execution Flow
+
+Intent → evidence lifecycle with visible boundaries:
+1. Understand: Goal, repository and policy analysis
+2. Plan: Validated task graph generation
+3. Route: Capability + privacy-based model selection
+4. Execute: Scoped tools and workspace access
+5. Verify: Independent acceptance gates (build, type, test, security, browser, accessibility, performance, acceptance)
+6. Learn: Reviewed memory and skills
+
+### Core Technologies
+
+#### Model Fabric
+Implemented provider adapters behind common interface for OpenAI, Qwen, Kimi, MiniMax, Local, Custom OpenAI-compatible.
+
+Routing policies: AUTO, QUALITY, SPEED, COST, PRIVACY, LOCAL, BALANCED
+
+#### Agent Runtime
+Each agent requires: own context, model, budget, workspace, permissions, tools, parent-agent reference, lifecycle state, retry/timeout policy
+
+Lifecycle: SPAWNED → READY → RUNNING → WAITING_TOOL → WAITING_APPROVAL → RUNNING → COMPLETED → RETRY → FAILED
+
+#### Tool Gateway
+Every tool call through Policy → Approval → Adapter → Execution → Event → Evidence
+
+Initial tool families: filesystem, shell, git, github, web_fetch, browser, postgres, http, storage, artifact, search
+
+#### Evidence Ledger
+Evidence generated from real execution with id, missionId, taskId, agentId, claim, sourceType (WEB/FILE/TOOL/MODEL/USER/SYSTEM), sourceRef, collectedAt, evidenceHash, provenance, contradictions
+
+#### Verification Mesh
+Independent verification workers: build, type, test, security, browser, accessibility, performance, acceptance
+
+Statuses: PASS, FAIL, BLOCKED, SKIPPED, NOT_RUN, UNKNOWN
+
+#### Scheduling
+One-time and recurring schedules with time zones, pause/resume, misfire behavior, concurrency policy, retry policy, approval handling, audit events
+
+#### Memory and Skills
+Strict distinction: Memory = what is known or true; Skill = how a recurring task is performed
+
+Layers: working, session, mission, user, workspace, organization, knowledge
+
+Skills require: name, version, instructions, required tools, capabilities, permissions, examples, verification criteria
+
+### Entity Schema
+
+Minimum entities: User, Workspace, Membership, Role, Mission, TaskNode, Agent, Model, ModelInvocation, Tool, ToolInvocation, MCPServer, Approval, PolicyRule, DomainEvent, Evidence, VerificationRun, Artifact, Memory, Skill, Schedule, UsageRecord, AuditLog, Webhook
+
+All entities require workspace scoping where applicable.
+
+### API Surface
+
+/endpoints/v1/{resource-groups}
+
+Mission lifecycle endpoints: POST /missions, GET /missions, GET /missions/:id, PATCH /missions/:id, POST /missions/:id/plan, POST /missions/:id/queue, POST /missions/:id/pause, POST /missions/:id/resume, POST /missions/:id/cancel, POST /missions/:id/retry, GET /missions/:id/events, GET /missions/:id/evidence, GET /missions/:id/artifacts
+
+SSE: Authenticated, ordered, cursor-based, reconnectable, workspace-scoped, backed by persisted events, safe against duplicate delivery.
+
+### Security Standards
+
+Authentication, session management, MFA-ready design, RBAC, workspace isolation, tenant isolation, rate limiting, input validation, output validation, secret redaction, encrypted storage, audit logging, secure headers, strict CORS, signed webhooks, CSRF protection, prompt-injection defenses, untrusted-content boundaries, sandboxed execution, network egress controls, resource quotas, approval expiration, idempotency keys.
+
+### PWA and Mobile
+
+Responsive layouts, installable PWA, service worker, offline shell, stale-state indicators, reconnect handling, backgrounding, safe mobile approvals, mission creation from mobile, push notifications, keyboard and screen-reader accessibility, touch targets suitable for mobile, reduced-motion support.
+
+---
+
+### Quality Gates
+
+All gates must pass independently with honest BLOCKED/NOT_RUN status when capabilities are unavailable.
+
+### Release Report Template
+
+```json
+{
+  "release": {
+    "version": "1.0.0",
+    "commitSha": "UNKNOWN",
+    "generatedAt": "2026-08-18T00:00:00Z"
+  },
+  "classification": "BLOCKED",
+  "build": {
+    "status": "NOT_RUN",
+    "tests": 0,
+    "coverage": null
+  },
+  "subsystems": {
+    "database": "BLOCKED",
+    "api": "BLOCKED",
+    "workers": "BLOCKED",
+    "modelFabric": "BLOCKED",
+    "toolGateway": "BLOCKED",
+    "agentRuntime": "BLOCKED",
+    "verification": "BLOCKED",
+    "website": "NOT_RUN",
+    "mobile": "NOT_RUN",
+    "security": "BLOCKED",
+    "operations": "BLOCKED"
+  },
+  "findings": [],
+  "knownLimitations": [
+    "Production infrastructure has not been independently verified."
+  ],
+  "evidence": [],
+  "certification": {
+    "productionReady": false,
+    "reason": "Required production evidence is unavailable."
+  }
+}
+```
+
+---
+
+### Build Order
+
+Stage 0: Architecture freeze
+Stage 1: PostgreSQL, migrations, API and auth
+Stage 2: Event store and durable queue
+Stage 3: Worker leasing and scheduler
+Stage 4: Model adapters and router
+Stage 5: Tool Gateway and policy engine
+Stage 6: Agent runtime
+Stage 7: Evidence and artifact storage
+Stage 8: Independent verification
+Stage 9: Webapp integration
+Stage 10: Website and 100-resource publishing system
+Stage 11: PWA and mobile hardening
+Stage 12: Security, load, chaos, accessibility, SEO and DR certification
+
+---
+
+### Current Certification
+
+The existing artifact provides visual and conceptual starting point, but capability registry identifies task planning, model routing, approval, evidence, verification, artifact storage, SSE, and policy as simulated, while tool gateway, worker leasing, and scheduler capabilities are unavailable.
+
+---
+
+### Technology Stack
+
+Frontend: HTML5, CSS3 with CSS variables, vanilla JavaScript, semantic HTML, JSON-LD structured data, responsive design, PWA capabilities
+Backend: PostgreSQL with Supabase, Edge Functions, RLS, authenticated grants
+Security: Role-based access control, secret management, audit logging, approval workflows
+Architecture: Event-driven, message queues, durable missions, independent verification mesh
+
+---
+
+### Entity Definitions
+
+**User**: Authentication and authorization principal with project membership and roles
+**Workspace**: Tenant/scope container for isolated agent execution and data
+**Membership**: Project-user relationship with defined roles (OWNER, ADMIN, APPROVER, DEVELOPER, VIEWER, MEMBER)
+**Role**: Permission set for workspace operations
+**Mission**: Top-level autonomous task with goal, mode, classification, status, and progress tracking
+**TaskNode**: Discrete work unit with dependencies, capabilities, assigned agent, and retry logic
+**Agent**: Autonomous execution unit with context, model, budget, workspace, permissions, tools
+**Model**: Inference provider configuration with capability assessment and routing rules
+**ModelInvocation**: Historical record of model usage with provider, model, decision, tokens, latency, cost
+**Tool**: Executable capability with definition, permissions, and execution boundaries
+**ToolInvocation**: Historical record of tool usage with policy, approval, execution results
+**MCPServer**: External tool connection with transport, health, and capability discovery
+**Approval**: Consequential action authorization with risk, status, and decision tracking
+**PolicyRule**: Permission and execution rule definitions
+**DomainEvent**: Mission lifecycle and system event logging
+**Evidence**: Verifiable claim with provenance, source, and contradiction tracking
+**VerificationRun**: Independent verification execution with results and status
+**Artifact**: Produced output with metadata, provenance, and storage tracking
+**Memory**: Stored knowledge with scope, key, value, and review status
+**Skill**: Versioned workflow with instructions, tools, and verification criteria
+**Schedule**: Mission timing configuration with expression, enabled state, and template
+**UsageRecord**: Resource consumption tracking with cost and quota information
+**AuditLog**: Security and compliance event logging
+**Webhook**: External notification and integration endpoints
+
+---
+
+### Contact and Attribution
+
+Source repository: https://github.com/CodesbyFebin/Coding-Agent
+Application URL: https://app.codingagent.in/
+Website: https://codingagent.in/
+Generated: 2026-08-18

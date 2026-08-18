@@ -8,7 +8,7 @@ const allowedOrigins = new Set((Deno.env.get("APP_ORIGINS") || "https://app.codi
 function cors(req: Request) {
   const origin=req.headers.get("origin") || "";
   const allow=allowedOrigins.has(origin)?origin:"https://app.codingagent.in";
-  return {"Access-Control-Allow-Origin":allow,"Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"GET,POST,OPTIONS","Vary":"Origin"};
+  return {"Access-Control-Allow-Origin":allow,"Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"GET,POST,PUT,PATCH,DELETE,OPTIONS","Vary":"Origin"};
 }
 function json(req: Request, data: unknown, status=200){return new Response(JSON.stringify(data),{status,headers:{...cors(req),"Content-Type":"application/json","Cache-Control":"no-store"}})}
 function client(req: Request){const auth=req.headers.get("Authorization") || "";return createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{global:{headers:{Authorization:auth}},auth:{persistSession:false}})}
@@ -51,7 +51,112 @@ Deno.serve(async (req: Request) => {
     }
 
     const decision=p.match(/^\/approvals\/([0-9a-f-]+)\/decision$/i);
-    if(req.method==="POST" && decision){const body=await req.json(); const {data,error}=await supabase.rpc("decide_approval_tx",{p_approval_id:decision[1],p_status:body.status}); if(error) throw error; return json(req,{approval:data});}
+    if(req.method=="POST" && decision){const body=await req.json(); const {data,error}=await supabase.rpc("decide_approval_tx",{p_approval_id:decision[1],p_status:body.status}); if(error) throw error; return json(req,{approval:data});}
+
+    if(req.method==="GET" && p==="/models"){
+      const {data,error}=await supabase.from("models").select("id,name,provider,routing_policy,health_status,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{models:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/agents"){
+      const {data,error}=await supabase.from("agents").select("id,name,model_id,workspace,permissions,status,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{agents:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/tools"){
+      const {data,error}=await supabase.from("tool_invocations").select("id,tool_name,tool_type,execution_result,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{tools:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/swarms"){
+      const {data,error}=await supabase.from("agents").select("id,name,parent_agent_id,workspace,status").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{swarms:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/mcp-servers"){
+      const {data,error}=await supabase.from("mcp_servers").select("id,name,transport_type,health_status,tool_inventory,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{mcpServers:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/memory"){
+      const {data,error}=await supabase.from("memory_entries").select("id,project_id,scope,key,review_status,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{memory:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/skills"){
+      const {data,error}=await supabase.from("skills").select("id,project_id,name,version,status,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{skills:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/verification"){
+      const {data,error}=await supabase.from("verification_runs").select("id,mission_id,task_id,verifier_type,status,verified_at,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{verification:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/security"){
+      const {data,error}=await supabase.from("policy_rules").select("id,name,resource_type,action,effect,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{security:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/runtime"){
+      const {data,error}=await supabase.from("agents").select("id,name,status,workspace,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{runtime:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/orchestration"){
+      const {data,error}=await supabase.from("agents").select("id,name,parent_agent_id,workspace,status").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{orchestration:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/gateway"){
+      const {data,error}=await supabase.from("tool_invocations").select("id,tool_name,policy_rule_id,approval_id,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{gateway:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/router"){
+      const {data,error}=await supabase.from("model_invocations").select("id,model_id,provider,capability_decision,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{router:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/habitat"){
+      const {data,error}=await supabase.from("agents").select("id,name,workspace,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{habitat:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/events"){
+      const {data,error}=await supabase.from("mission_events").select("id,mission_id,sequence,type,payload,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{events:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/evidence"){
+      const {data,error}=await supabase.from("evidence").select("id,mission_id,task_id,agent_id,claim,source_type,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{evidence:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/artifacts"){
+      const {data,error}=await supabase.from("artifacts").select("id,project_id,mission_id,task_id,name,kind,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{artifacts:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/schedules"){
+      const {data,error}=await supabase.from("schedules").select("id,project_id,name,kind,expression,enabled,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{schedules:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/usage"){
+      const {data,error}=await supabase.from("usage_records").select("id,project_id,operation_type,tokens_used,cost,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{usage:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/audit"){
+      const {data,error}=await supabase.from("audit_logs").select("id,project_id,user_id,action,resource_type,success,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{audit:data||[]});
+    }
+
+    if(req.method=="GET" && p==="/webhooks"){
+      const {data,error}=await supabase.from("webhooks").select("id,project_id,name,url,events,active,created_at").order("created_at",{ascending:false}).limit(100);
+      if(error) throw error; return json(req,{webhooks:data||[]});
+    }
 
     return json(req,{error:"not found"},404);
   }catch(error){console.error(error);return json(req,{error:error instanceof Error?error.message:String(error)},500)}

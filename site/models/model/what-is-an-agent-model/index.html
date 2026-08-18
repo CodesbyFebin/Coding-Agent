@@ -1,0 +1,87 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Model — CodingAgent.in Entity Hub</title><meta name="description" content="Model documentation for CodingAgent.in. Understand model providers, routing policies, and local-first architecture."><meta name="robots" content="index,follow"><meta name="theme-color" content="#080a0f"><link rel="canonical" href="https://codingagent.in/models/model/what-is-an-agent-model/"><style>:root{--bg:#080a0f;--fg:#e8ecf3;--dim:#8898a3;--border:#222834;--accent:#ff5a1f;--green:#35d17c;--blue:#3b82f6;--max:720px}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;line-height:1.6;padding:40px;max-width:var(--max);margin:auto}h1{font-size:clamp(32px,5vw,42px);margin-bottom:16px;color:var(--accent)}h2{font-size:clamp(22px,3vw,28px);margin:32px 0 16px;color:var(--green)}p{margin-bottom:16px}code{background:var(--border);padding:2px 6px;border-radius:4px;font-family:monospace}pre{background:var(--border);padding:16px;border-radius:8px;overflow-x:auto;margin:16px 0}.nav{margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border)}:fullscreen{background:#fff;color:#000}</style></head><body>
+<div class="nav"><a href="/" style="color:var(--accent);text-decoration:none">← Home</a></div>
+
+<h1>What is an Agent Model?</h1>
+
+<p>A model is an inference provider configuration with capability assessment and routing rules for agent execution.</p>
+
+<h2>Model Fabric Architecture</h2>
+
+<p>CodingAgent.in implements a unified model interface behind provider adapters:</p>
+<ul>
+  <li><strong>OpenAI</strong>: GPT-4, GPT-3.5 for reasoning tasks</li>
+  <li><strong>Qwen</strong>: Specialized for coding and technical tasks</li>
+  <li><strong>Kimi</strong>: Korean language model with multilingual support</li>
+  <li><strong>MiniMax</strong>: Optimized for Chinese and international contexts</li>
+  <li><strong>Local</strong>: Ollama, vLLM, llama.cpp and self-hosted models</li>
+  <li><strong>Custom OpenAI-compatible</strong>: Any provider following OpenAI API standards</li>
+</ul>
+
+<h2>Routing Policies</h2>
+
+<p>Model selection uses intent-based routing with multiple optimization criteria:</p>
+
+<ul>
+  <li><strong>AUTO:</strong> Default router selects based on task requirements</li>
+  <li><strong>QUALITY:</strong> Prioritizes best-performing models for critical tasks</li>
+  <li><strong>SPEED:</strong> Chooses fastest responding models for time-sensitive work</li>
+  <li><strong>COST:</strong> Optimizes for token usage and pricing efficiency</li>
+  <li><strong>PRIVACY:</strong> Selects local or private models for sensitive contexts</li>
+  <li><strong>LOCAL:</strong> Forces use of on-premises models when available</li>
+  <li><strong>BALANCED:</strong> Balances speed, cost, and capability trade-offs</li>
+</ul>
+
+<h2>Model Invocation Tracking</h2>
+
+<p>Every model usage is persisted with comprehensive metadata:</p>
+
+<ul>
+  <li><strong>Provider and model name</strong></li>
+  <li><strong>Capability decision</strong> (reasoning, coding, analysis, etc.)</li>
+  <li><strong>Input and output token counts</strong></li>
+  <li><strong>Latency measurements</strong></li>
+  <li><strong>Cost tracking</strong></li>
+  <li><strong>Fallback information</strong> when models fail</li>
+  <li><strong>Truth state and correlation IDs</strong> for audit trails</li>
+  <li><strong>Mission and task references</strong> for provenance</li>
+</ul>
+
+<h2>Local-First Design</h2>
+
+<p>CodingAgent.in prefers local inference when it meets requirements:</p>
+<ul>
+  <li><strong>Repository sensitivity</strong> determines private model need</li>
+  <li><strong>Hardware availability</strong> (VRAM, CPU) guides model selection</li>
+  <li><strong>Context window size</strong> affects model choice for large repositories</li>
+  <li><strong>Offline requirements</strong> force local model usage</li>
+</ul>
+
+<h2>Deployment Strategies</h2>
+
+<p>Models can be deployed through multiple methods:</p>
+
+<ul>
+  <li><strong>Ollama</strong>: Docker-based local inference server</li>
+  <li><strong>vLLM</strong>: High-performance serving infrastructure</li>
+  <li><strong>llama.cpp</strong>: Lightweight on-device inference</li>
+  <li><strong>LM Studio</strong>: Desktop model management and deployment</li>
+  <li><strong>Cloud providers</strong>: OpenAI, AWS, GCP, Azure API access</li>
+</ul>
+
+<h2>Capability Assessment</h2>
+
+<p>Models are evaluated on multiple dimensions:</p>
+
+<ul>
+  <li><strong>Coding proficiency</strong> and language support</li>
+  <li><strong>Reasoning depth</strong> for complex problem solving</li>
+  <li><strong>Technical documentation generation</strong></li>
+  <li><strong>Testing and validation capabilities</strong></li>
+  <li><strong>Security analysis skills</strong></li>
+  <li><strong>Code review quality</strong></li>
+</ul>
+
+<hr style="border:none;border-top:1px solid var(--border);margin:32px 0">
+<p><small>Last reviewed: 18 Aug 2026 | Author: CodingAgent.in Technical Team | Status: Published</small></p>
+<p><a href="/developers/" style="color:var(--accent)">→ Developer resources</a> | <a href="/glossary/model-routing" style="color:var(--blue)">Glossary entry</a></p>
+</body></html>
