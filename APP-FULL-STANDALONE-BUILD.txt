@@ -1,0 +1,29 @@
+CodingAgent app.codingagent.in full standalone acceptance build
+Generated: 2026-08-18
+
+Artifact: codingagent-app-final-standalone.html
+Raw bytes: 24345684
+Raw MiB: 23.22
+Raw lines: 130188
+SHA-256: a5aae0ce7181f4b2fa96649a2953828fb7aa448ae6304c06dde629c1dc9ec1d8
+
+Frontend authority:
+- Canonical: https://app.codingagent.in/
+- Public site: https://codingagent.in/
+- GitHub: https://github.com/CodesbyFebin/Coding-Agent
+- Responsive desktop/mobile Command Center: implemented
+- No external CSS/JS runtime dependency in full standalone artifact
+- Browser never fabricates provider/tool/MCP/sandbox success
+
+Backend source:
+- supabase/migrations/001_codingagent_app.sql
+- supabase/functions/mission-api/index.ts
+- RLS / authenticated grants / project membership: implemented in source
+- Projects, missions, approvals, events, memory, skills, schedules: implemented in source
+- Mission creation truthfully records BLOCKED_PROVIDER until a model runtime is connected
+
+Backend deployment status:
+BLOCKED — dedicated Supabase CodingAgent.in project creation was attempted but the only available organization is already at its active free-project limit (2). Existing MCPServer.in and eWaste projects were not repurposed or paused because they are unrelated production resources.
+
+Transport-optimized frontend mirror:
+app/index.html
