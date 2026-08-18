@@ -1,0 +1,23 @@
+CodingAgent.in full standalone build identity
+Generated: 2026-08-18
+
+Artifact: codingagent-in-final-standalone.html
+Raw bytes: 6225616
+Raw lines: 157677
+SHA-256: 2ec633a44e4b8537ab83b0baffcdbabf61b9d4bafad792629da7d40673830713
+
+Acceptance:
+- Requirement > 2 MB: PASS
+- Requirement > 50,000 source lines: PASS
+- Standalone HTML: PASS
+- No external CSS/JS runtime dependencies: PASS
+- Canonical: https://codingagent.in/
+- App CTA: https://app.codingagent.in/
+- GitHub: https://github.com/CodesbyFebin/Coding-Agent
+- Static metadata/JSON-LD checks: PASS
+- Browser smoke tests at 1440x1000, 768x1024, 390x844, 320x700: PASS
+- Console errors observed in browser smoke tests: 0
+- Page errors observed in browser smoke tests: 0
+- Unsupported marketing claim scan: PASS
+
+Repository index.html is the transport-optimized public mirror used for GitHub/ShipStatic connector deployment. The full source artifact above is the size/line-count acceptance build and remains a single standalone HTML document.
