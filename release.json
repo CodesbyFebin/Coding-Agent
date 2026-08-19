@@ -1,0 +1,149 @@
+{
+  "release": {
+    "version": "1.0.0",
+    "commitSha": "UNKNOWN",
+    "generatedAt": "2026-08-19T14:30:00Z"
+  },
+  "classification": "BLOCKED",
+  "build": {
+    "status": "NOT_RUN",
+    "tests": 0,
+    "coverage": null
+  },
+  "subsystems": {
+    "database": "BLOCKED",
+    "api": "BLOCKED",
+    "workers": "BLOCKED",
+    "modelFabric": "BLOCKED",
+    "toolGateway": "BLOCKED",
+    "agentRuntime": "BLOCKED",
+    "verification": "BLOCKED",
+    "website": "NOT_RUN",
+    "mobile": "NOT_RUN",
+    "security": "BLOCKED",
+    "operations": "BLOCKED"
+  },
+  "findings": [],
+  "knownLimitations": [
+    "Production infrastructure has not been independently verified.",
+    "Neon PostgreSQL project has not been created.",
+    "Model providers (OpenAI, Qwen, Kimi, MiniMax, Local) are not configured.",
+    "Tool gateway adapters are not connected.",
+    "Agent worker leasing system is not deployed.",
+    "Evidence ledger contains only fixture/demo data.",
+    "Verification mesh workers are not deployed.",
+    "MCP servers are UNAVAILABLE (no transport adapters configured).",
+    "Scheduler is UNAVAILABLE (no durable worker pool).",
+    "SSE streaming is simulated, not backed by persisted events."
+  ],
+  "evidence": [],
+  "certification": {
+    "productionReady": false,
+    "reason": "Required production evidence is unavailable."
+  },
+  "infrastructure": {
+    "database": {
+      "provider": "Neon",
+      "migratedFrom": "Supabase",
+      "migrationFiles": [
+        "neon/migrations/001_codingagent_app.sql",
+        "neon/migrations/002_codingagent_extended.sql"
+      ],
+      "status": "MIGRATED_CODE_ONLY",
+      "note": "Migration files written but not deployed to Neon."
+    },
+    "api": {
+      "endpoint": "neon/functions/mission-api/index.ts",
+      "deploymentTarget": "Vercel Serverless Functions",
+      "status": "CODE_READY",
+      "note": "Requires NEON_URL environment variable configured."
+    }
+  },
+  "deliverables": {
+    "website": {
+      "homepage": "index.html (44 lines)",
+      "webapp": "app/index.html (complete Command Center)",
+      "seoInfrastructure": {
+        "sitemap": "sitemap.xml (13 URLs)",
+        "subSitemaps": [
+          "sitemaps/pages.xml (13 URLs)",
+          "sitemaps/pillars.xml (10 URLs)",
+          "sitemaps/guides.xml (11 URLs)",
+          "sitemaps/blog.xml (6 URLs)",
+          "sitemaps/glossary.xml (17 URLs)"
+        ],
+        "robotsTxt": "robots.txt",
+        "llmsTxt": "llms.txt",
+        "llmsFullTxt": "llms-full.txt"
+      }
+    },
+    "entityHubs": {
+      "count": 11,
+      "directory": "site/",
+      "entities": [
+        "agents/agent/what-is-an-ai-agent",
+        "models/model/what-is-an-agent-model",
+        "tools/tool/what-is-an-agent-tool",
+        "swarms/swarm/what-is-an-agent-swarm",
+        "mcp/mcp-server/what-is-an-mcp-server",
+        "memory/memory/what-is-agent-memory",
+        "skills/skill/what-is-an-agent-skill",
+        "verification/verifier/what-is-agent-verification",
+        "runtime/runtime/what-is-agent-runtime",
+        "orchestration/swarm-orchestration/what-is-swarm-orchestration",
+        "habitat/agent-runtime/what-is-agent-runtime-environment",
+        "gateway/tool-gateway/what-is-tool-gateway",
+        "router/model-router/what-is-model-router",
+        "security/policy/what-is-agent-security-policy"
+      ]
+    },
+    "backendSchema": {
+      "migrations": "neon/migrations/001_codingagent_app.sql",
+      "extendedSchema": "neon/migrations/002_codingagent_extended.sql",
+      "entities": [
+        "profiles", "projects", "project_members", "missions", "tasks",
+        "mission_events", "approvals", "artifacts", "memory_entries",
+        "skills", "schedules", "models", "agents", "model_invocations",
+        "tool_invocations", "mcp_servers", "policy_rules",
+        "verification_runs", "evidence", "usage_records", "audit_logs",
+        "webhooks"
+      ],
+      "securityFeatures": [
+        "Row Level Security (RLS) enabled on all tables",
+        "RLS policies for all entities",
+        "Workspace/tenant isolation via project_id scoping",
+        "is_project_member() function for access control"
+      ]
+    },
+    "apiEndpoints": {
+      "health": "GET /health",
+      "bootstrap": "GET /bootstrap (authenticated)",
+      "projects": "POST /projects (authenticated)",
+      "missions": "POST /missions (authenticated)",
+      "approvals": "POST /approvals/:id/decision (authenticated)",
+      "resourceGroups": [
+        "GET /models",
+        "GET /agents",
+        "GET /tools",
+        "GET /swarms",
+        "GET /mcp-servers",
+        "GET /memory",
+        "GET /skills",
+        "GET /verification",
+        "GET /security",
+        "GET /runtime",
+        "GET /orchestration",
+        "GET /gateway",
+        "GET /router",
+        "GET /habitat",
+        "GET /events",
+        "GET /evidence",
+        "GET /artifacts",
+        "GET /schedules",
+        "GET /usage",
+        "GET /audit",
+        "GET /webhooks"
+      ]
+    }
+  }
+}

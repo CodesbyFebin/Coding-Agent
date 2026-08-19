@@ -258,7 +258,7 @@ create index if not exists usage_records_date_idx on public.usage_records(timest
 create table if not exists public.audit_logs (
   id bigint generated always as identity primary key,
   project_id uuid not null references public.projects(id) on delete cascade,
-  user_id uuid not null references auth.users(id) on delete set null,
+  user_id uuid not null ,
   agent_id uuid references public.agents(id) on delete set null,
   action text not null,
   resource_type text not null,
@@ -313,7 +313,7 @@ create policy models_member_read on public.models for select to authenticated us
 
 -- Agents: project members with appropriate permissions
 create policy agents_member_read on public.agents for select to authenticated using(public.is_project_member(project_id));
-create policy agents_member_insert on public.agents for insert to authenticated using(public.is_project_member(project_id)) with check(created_by=auth.uid());
+create policy agents_member_insert on public.agents for insert to authenticated using(public.is_project_member(project_id)) with check(created_by=current_setting('app.current_user_id')::uuid);
 
 -- Model invocations: project members
 create policy model_invocations_member_read on public.model_invocations for select to authenticated using(public.is_project_member(project_id));
@@ -332,7 +332,7 @@ create policy verification_runs_member_read on public.verification_runs for sele
 
 -- Evidence: project members can read, only creators can insert
 create policy evidence_member_read on public.evidence for select to authenticated using(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
-create policy evidence_member_insert on public.evidence for insert to authenticated with check(created_by=auth.uid());
+create policy evidence_member_insert on public.evidence for insert to authenticated with check(created_by=current_setting('app.current_user_id')::uuid);
 
 -- Artifacts: project members
 create policy artifacts_member_read on public.artifacts for select to authenticated using(public.is_project_member(project_id));
@@ -346,18 +346,5 @@ create policy audit_logs_member_read on public.audit_logs for select to authenti
 -- Webhooks: project members
 create policy webhooks_member_all on public.webhooks for all to authenticated using(public.is_project_member(project_id)) with check(public.is_project_member(project_id));
 
--- Add mission_events to publication for real-time updates
+-- Event streaming handled via Neon WebSocket
 create policy mission_events_realtime on public.mission_events for select to authenticated;
-
-do $$ begin
-  if not exists(select 1 from pg_publication_tables where pubname='Neon_realtime' and schemaname='public' and tablename='mission_events') then
-    alter publication Neon_realtime add table public.mission_events;
-  end if;
-
-  -- Add other tables that might need real-time updates
-  for table_name in array['agents','model_invocations','tool_invocations','evidence','verification_runs'] loop
-    if not exists(select 1 from pg_publication_tables where pubname='Neon_realtime' and schemaname='public' and tablename=table_name) then
-      execute format('alter publication Neon_realtime add table public.%I', table_name);
-    end if;
-  end loop;
-end $$;

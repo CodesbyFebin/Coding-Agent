@@ -1,0 +1,83 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MCP Server — CodingAgent.in Entity Hub</title><meta name="description" content="MCP Server documentation for CodingAgent.in. Understand server connectivity, transport, and capability declaration."><meta name="robots" content="index,follow"><meta name="theme-color" content="#080a0f"><link rel="canonical" href="https://codingagent.in/mcp/mcp-server/what-is-an-mcp-server/"><style>:root{--bg:#080a0f;--fg:#e8ecf3;--dim:#8898a3;--border:#222834;--accent:#ff5a1f;--green:#35d17c;--blue:#3b82f6;--max:720px}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;line-height:1.6;padding:40px;max-width:var(--max);margin:auto}h1{font-size:clamp(32px,5vw,42px);margin-bottom:16px;color:var(--accent)}h2{font-size:clamp(22px,3vw,28px);margin:32px 0 16px;color:var(--green)}p{margin-bottom:16px}code{background:var(--border);padding:2px 6px;border-radius:4px;font-family:monospace}pre{background:var(--border);padding:16px;border-radius:8px;overflow-x:auto;margin:16px 0}.nav{margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border)}:fullscreen{background:#fff;color:#000}</style></head><body>
+<div class="nav"><a href="/" style="color:var(--accent);text-decoration:none">← Home</a></div>
+
+<h1>What is an MCP Server?</h1>
+
+<p>An MCP (Model Context Protocol) server is a capability declaration and transport layer for connecting AI applications with external tools and data sources.</p>
+
+<h2>Server States</h2>
+
+<p>MCP servers operate in defined health states:</p>
+
+<ul>
+  <li><strong>UNAVAILABLE</strong>: Not configured or inaccessible</li>
+  <li><strong>UNKNOWN</strong>: Not yet tested or verified</li>
+  <li><strong>DEGRADED</strong>: Partially functional with limitations</li>
+  <li><strong>HEALTHY</strong>: Fully operational and tested</li>
+</ul>
+
+<p>A server remains UNAVAILABLE, UNKNOWN, or DEGRADED until an actual transport adapter, health check, and authenticated execution path exist.</p>
+
+<h2>Server Components</h2>
+
+<p>A functional MCP server requires:</p>
+
+<ul>
+  <li><strong>Transport layer</strong>: stdio, HTTP, or custom protocol support</li>
+  <li><strong>Capability catalog</strong>: Complete list of available tools and resources</li>
+  <li><strong>Authentication system</strong>: Token, certificate, or API key validation</li>
+  <li><strong>Authorization mechanism</strong>: Permission boundaries and scope control</li>
+  <li><strong>Health monitoring</strong>: Connectivity and functionality checks</li>
+  <li><strong>Error handling</strong>: Graceful failure and recovery protocols</li>
+</ul>
+
+<h2>Server Lifecycle</h2>
+
+<p>MCP server operations follow this sequence:</p>
+
+<ol>
+  <li><strong>Connect</strong>: Establish transport and authenticate</li>
+  <li><strong>Refresh</strong>: Validate capabilities and test connections</li>
+  <li><strong>Enable/Disable</strong>: Toggle availability based on policy</li>
+  <li><strong>Test connection</strong>: Verify functionality before use</li>
+  <li><strong>Health monitoring</strong>: Continuous status tracking</li>
+</ul>
+
+<h2>Transport Types</h2>
+
+<p>Supported transport protocols:</p>
+
+<ul>
+  <li><strong>Standard I/O (stdio)</strong>: Command-line interface communication</li>
+  <li><strong>HTTP/S</strong>: Web-based protocol for remote connections</li>
+  <li><strong>gRPC</strong>: High-performance binary protocol</li>
+  <li><strong>Custom adapters</strong>: Specialized integrations for unique systems</li>
+</ul>
+
+<h2>Server Management</h2>
+
+<p>Administrative operations include:</p>
+
+<ul>
+  <li><strong>Tool inventory</strong>: Complete catalog of exported capabilities</li>
+  <li><strong>Permission mapping</strong>: Alignment with agent authorization rules</li>
+  <li><strong>Last-used tracking</strong>: Activity monitoring and cleanup</li>
+  <li><strong>Audit trail</strong>: Complete connection and usage history</li>
+</ul>
+
+<h2>Server Configuration</h2>
+
+<p>Essential server configuration elements:</p>
+
+<ul>
+  <li><strong>Endpoint URL</strong>: Network address and port</li>
+  <li><strong>Authentication credentials</strong>: Secure token management</li>
+  <li><strong>Capability filters</strong>: Restricted tool access patterns</li>
+  <li><strong>Rate limits</strong>: Provider quota enforcement</li>
+  <li><strong>Timeouts</strong>: Connection and operation duration limits</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid var(--border);margin:32px 0">
+<p><small>Last reviewed: 18 Aug 2026 | Author: CodingAgent.in MCP Team | Status: Published</small></p>
+<p><a href="/developers/" style="color:var(--accent)">→ Developer resources</a> | <a href="/glossary/model-context-protocol" style="color:var(--blue)">Glossary entry</a></p>
+</body></html>

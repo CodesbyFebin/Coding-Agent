@@ -1,0 +1,77 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Agent — CodingAgent.in Entity Hub</title><meta name="description" content="Entity documentation for AI agents in CodingAgent.in. Understand agent architecture, capabilities, deployment and governance."><meta name="robots" content="index,follow"><meta name="theme-color" content="#080a0f"><link rel="canonical" href="https://codingagent.in/agents/agent/what-is-an-ai-agent/"><style>:root{--bg:#080a0f;--fg:#e8ecf3;--dim:#8898a3;--border:#222834;--accent:#ff5a1f;--green:#35d17c;--blue:#3b82f6;--max:720px}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;line-height:1.6;padding:40px;max-width:var(--max);margin:auto}h1{font-size:clamp(32px,5vw,42px);margin-bottom:16px;color:var(--accent)}h2{font-size:clamp(22px,3vw,28px);margin:32px 0 16px;color:var(--green)}p{margin-bottom:16px}code{background:var(--border);padding:2px 6px;border-radius:4px;font-family:monospace}pre{background:var(--border);padding:16px;border-radius:8px;overflow-x:auto;margin:16px 0}.nav{margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border)}:fullscreen{background:#fff;color:#000}</style></head><body>
+<div class="nav"><a href="/" style="color:var(--accent);text-decoration:none">← Home</a></div>
+
+<h1>What is an AI Agent?</h1>
+
+<p>An AI agent is a software system that can plan and execute engineering tasks using models, repository context, tools, permissions, tests and controlled execution.</p>
+
+<h2>Core Architecture</h2>
+
+<p>The agent runtime provides the foundational execution contract:</p>
+<ul>
+  <li><strong>Context access:</strong> Repository analysis and project understanding</li>
+  <li><strong>Tool calling:</strong> Filesystem, shell, Git, browser, database and MCP operations</li>
+  <li><strong>Execution scope:</strong> Workspace boundaries and permission validation</li>
+  <li><strong>Verification integration:</strong> Build, test, security and artifact validation</li>
+</ul>
+
+<h2>Execution Layers</h2>
+
+<p>Agents operate through a controlled loop:</p>
+
+<ol>
+  <li><strong>Understand:</strong> Goal analysis, repository context and policy interpretation</li>
+  <li><strong>Plan:</strong> Validated task graph creation with dependencies and capabilities</li>
+  <li><strong>Route:</strong> Capability-based model selection with privacy and context awareness</li>
+  <li><strong>Execute:</strong> Scoped tool usage with real-time approval when needed</li>
+  <li><strong>Verify:</strong> Independent acceptance gates determine completion</li>
+  <li><strong>Learn:</strong> Memory and skills update for future tasks</li>
+</ol>
+
+<h2>Identity and Lifecycle</h2>
+
+<p>Each agent maintains its own:</p>
+<ul>
+  <li><strong>Context state:</strong> Working memory and session history</li>
+  <li><strong>Model identity:</strong> Provider and capability profile</li>
+  <li><strong>Budget controls:</strong> Resource usage limits and approval thresholds</li>
+  <li><strong>Workspace isolation:</strong> Dedicated execution environment</li>
+  <li><strong>Permission set:</strong> Allowed tool categories and action boundaries</li>
+  <li><strong>Lifecycle state:</strong> SPAWNED → READY → RUNNING → COMPLETED/FAILED</li>
+</ul>
+
+<h2>Governance Model</h2>
+
+<p>Agents follow ALLOW/ASK/DENY governance:</p>
+
+<ul>
+  <li><strong>ALLOW:</strong> Scoped read/write operations within project boundaries</li>
+  <li><strong>ASK:</strong> External network access and irreversible actions require explicit approval</li>
+  <li><strong>DENY:</strong> Unknown or potentially destructive operations are blocked</li>
+</ul>
+
+<h2>Verification Integration</h2>
+
+<p>An agent’s completion requires independent verification:</p>
+
+<ul>
+  <li>Build processes must pass automated checks</li>
+  <li>Tests must achieve coverage targets</li>
+  <li>Security scans must identify no critical issues</li>
+  <li>Artifacts must be validated and attested</li>
+  <li>Model output alone does not determine completion</li>
+</ul>
+
+<h2>Key Differentiators</h2>
+
+<ul>
+  <li><strong>Sovereign execution:</strong> Operates under your control and policies</li>
+  <li><strong>Local-first execution:</strong> Prefers private models when context demands it</li>
+  <li><strong>Evidence-led completion:</strong> Verification determines success, not model claims</li>
+  <li><strong>Controlled tool access:</strong> Every operation passes policy and approval gates</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid var(--border);margin:32px 0">
+<p><small>Last reviewed: 18 Aug 2026 | Author: CodingAgent.in Editorial Team | Status: Published</small></p>
+<p><a href="/developers/" style="color:var(--accent)">→ Developer resources</a> | <a href="/glossary/ai-agent" style="color:var(--blue)">Glossary entry</a></p>
+</body></html>

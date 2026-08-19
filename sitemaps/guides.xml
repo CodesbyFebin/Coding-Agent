@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://codingagent.in/guides/coding-agent-setup-guide</local>
+    <loc>https://codingagent.in/guides/coding-agent-setup-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/mcp-server-setup-guide</local>
+    <loc>https://codingagent.in/guides/mcp-server-setup-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/local-llm-setup-guide</local>
+    <loc>https://codingagent.in/guides/local-llm-setup-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/secure-agent-environment-guide</local>
+    <loc>https://codingagent.in/guides/secure-agent-environment-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/agent-verification-setup-guide</local>
+    <loc>https://codingagent.in/guides/agent-verification-setup-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/swarm-orchestration-guide</local>
+    <loc>https://codingagent.in/guides/swarm-orchestration-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/tool-gateway-config-guide</local>
+    <loc>https://codingagent.in/guides/tool-gateway-config-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/model-router-config-guide</local>
+    <loc>https://codingagent.in/guides/model-router-config-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/agent-runtime-management-guide</local>
+    <loc>https://codingagent.in/guides/agent-runtime-management-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/skill-creation-guide</local>
+    <loc>https://codingagent.in/guides/skill-creation-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://codingagent.in/guides/memory-management-guide</local>
+    <loc>https://codingagent.in/guides/memory-management-guide</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>

@@ -1,0 +1,76 @@
+<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Router — CodingAgent.in Entity Hub</title><meta name="description" content="Router documentation for CodingAgent.in. Understand model routing policies and provider selection."><meta name="robots" content="index,follow"><meta name="theme-color" content="#080a0f"><link rel="canonical" href="https://codingagent.in/router/model-router/what-is-model-router/"><style>:root{--bg:#080a0f;--fg:#e8ecf3;--dim:#8898a3;--border:#222834;--accent:#ff5a1f;--green:#35d17c;--blue:#3b82f6;--max:720px}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;line-height:1.6;padding:40px;max-width:var(--max);margin:auto}h1{font-size:clamp(32px,5vw,42px);margin-bottom:16px;color:var(--accent)}h2{font-size:clamp(22px,3vw,28px);margin:32px 0 16px;color:var(--green)}p{margin-bottom:16px}code{background:var(--border);padding:2px 6px;border-radius:4px;font-family:monospace}pre{background:var(--border);padding:16px;border-radius:8px;overflow-x:auto;margin:16px 0}.nav{margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border)}:fullscreen{background:#fff;color:#000}</style></head><body>
+<div class="nav"><a href="/" style="color:var(--accent);text-decoration:none">← Home</a></div>
+
+<h1>What is a Model Router?</h1>
+
+<p>A model router implements provider adapters behind a common interface for intelligent model selection and capability-based routing.</p>
+
+<h2>Model Fabric Architecture</h2>
+
+<p>The router presents a unified interface to multiple providers:</p>
+
+<ul>
+  <li><strong>OpenAI</strong>: GPT-4, GPT-3.5 models</li>
+  <li><strong>Qwen</strong>: Specialized for technical tasks</li>
+  <li><strong>Kimi</strong>: Multilingual and technical capabilities</li>
+  <li><strong>MiniMax</strong>: Chinese language optimization</li>
+  <li><strong>Local</strong>: Self-hosted and on-premise models</li>
+  <li><strong>Custom OpenAI-compatible</strong>: Any OpenAI-compatible API</li>
+</ul>
+
+<h2>Routing Policies</h2>
+
+<p>Model selection follows intent-based routing strategies:</p>
+
+<ul>
+  <li><strong>AUTO</strong>: Automatic selection based on task requirements</li>
+  <li><strong>QUALITY</strong>: Prioritizes highest-performing models</li>
+  <li><strong>SPEED</strong>: Optimizes for response latency</li>
+  <li><strong>COST</strong>: Minimizes token usage and pricing</li>
+  <li><strong>PRIVACY</strong>: Prefers private/local models for sensitive contexts</li>
+  <li><strong>LOCAL</strong>: Forces local model usage when available</li>
+  <li><strong>BALANCED</strong>: Balances multiple optimization criteria</li>
+</ul>
+
+<h2>Routing Decisions</h2>
+
+<p>Model selection considers multiple factors:</p>
+
+<ul>
+  <li><strong>Task capability</strong>: Required skills and expertise</li>
+  <li><strong>Privacy requirements</strong>: Sensitive vs. public data handling</li>
+  <li><strong>Hardware constraints</strong>: VRAM and processing capabilities</li>
+  <li><strong>Context window size</strong>: Required token capacity for the task</li>
+  <li><strong>Quality expectations</strong>: Historical performance metrics</li>
+</ul>
+
+<h2>Provider Adapters</h2>
+
+<p>Each provider implements standardized interfaces:</p>
+
+<ul>
+  <li><strong>Consistent API contracts</strong>: Unified method signatures</li>
+  <li><strong>Capability discovery</strong>: Available functions and models</li>
+  <li><strong>Error handling</strong>: Standardized failure responses</li>
+  <li><strong>Performance metrics</strong>: Latency, throughput, and quality data</li>
+</ul>
+
+<h2>Routing Persistence</h2>
+
+<p>Model invocations are recorded for analysis and optimization:</p>
+
+<ul>
+  <li><strong>Provider and model identification</strong></li>
+  <li><strong>Capability decision rationale</strong></li>
+  <li><strong>Input/output token counts</strong></li>
+  <li><strong>Latency measurements</strong></li>
+  <li><strong>Cost tracking</strong></li>
+  <li><strong>Fallback information</strong> for failed invocations</li>
+  <li><strong>Truth state documentation</strong></li>
+  <li><strong>Correlation IDs</strong> for tracing</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid var(--border);margin:32px 0">
+<p><small>Last reviewed: 18 Aug 2026 | Author: CodingAgent.in Architecture Team | Status: Published</small></p>
+<p><a href="/developers/" style="color:var(--accent)">→ Developer resources</a> | <a href="/glossary/model-routing" style="color:var(--blue)">Glossary entry</a></p>
+</body></html>
