@@ -55,3 +55,7 @@ supabase/.temp/
 .cache
 *.log
 .vercel
+
+# Playwright MCP browser artifacts (local UI probe outputs)
+.playwright-mcp/
+*.png
