@@ -1,0 +1,56 @@
+# Dependencies (frontend + any future backend)
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# Testing artifacts
+frontend/coverage/
+frontend/playwright-report/
+frontend/test-results/
+frontend/.nyc_output/
+
+# Storybook
+frontend/storybook-static/
+
+# TypeScript build info
+frontend/.tsbuildinfo*
+*.tsbuildinfo
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vercel
+.vercel/
+
+# Supabase backend artifacts
+supabase/.branches/
+supabase/.temp/
+
+# Cache
+.cache/
+.cache
+*.log

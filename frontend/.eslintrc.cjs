@@ -1,85 +1,71 @@
+/* eslint-env node */
 module.exports = {
   root: true,
   env: {
     browser: true,
-    es2020: true,
-    node: true
+    es2022: true,
+    node: true,
   },
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'jsx-a11y'],
   extends: [
     'eslint:recommended',
-    '@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
-    'plugin:jsx-a11y/recommended'
+    'plugin:jsx-a11y/recommended',
   ],
   ignorePatterns: [
     'dist/',
     'node_modules/',
-    'storybook-static/'
-  ],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true
-    }
-  },
-  plugins: [
-    '@typescript-eslint',
-    'react',
-    'react-hooks',
-    'jsx-a11y'
+    'storybook-static/',
+    'coverage/',
+    'playwright-report/',
+    'test-results/',
+    '*.config.ts',
+    '*.config.js',
+    'src/mocks/browser.ts',
   ],
   rules: {
-    // TypeScript rules
+    // TypeScript
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    
-    // React rules
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+      },
+    ],
+
+    // React
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
-    'react/jsx-uses-vars': 'error',
-    'react/jsx-no-duplicate-props': 'error',
-    'react/jsx-no-target-blank': 'error',
-    
-    // React hooks rules
+
+    // Hooks
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-    
-    // General rules
+
+    // General
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     'prefer-const': 'error',
     'no-var': 'error',
-    'operator-linebreak': ['error', 'after'],
-    'eol-last': 'error',
-    'eqeqeq': ['error', 'always'],
-    'curly': ['error', 'all'],
-    
-    // Import rules (if using import/no-unresolved)
-    'import/no-unresolved': ['error', { ignore: ['^@/'] }],
-    
-    // JSX a11y rules
-    'jsx-a11y/anchor-is-valid': ['warn', {
-      aspects: ['invalidHref', 'preferButton']
-    }],
-    'jsx-a11y/label-has-associated-control': [
-      'error',
-      {
-        required: {
-          some: ['nesting', 'id']
-        }
-      }
-    ],
-    'jsx-a11y/mouse-events-have-key-events': 'error',
-    'jsx-a11y/role-has-required-aria-props': 'error',
-    'jsx-a11y/role-supports-aria-props': 'error'
+    eqeqeq: ['error', 'always'],
+    curly: ['error', 'all'],
   },
   settings: {
     react: {
-      version: 'detect'
-    }
-  }
+      version: 'detect',
+    },
+  },
 };

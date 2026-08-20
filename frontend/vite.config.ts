@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin/react'
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,20 +16,20 @@ export default defineConfig({
       '@stores': resolve(__dirname, './src/stores'),
       '@types': resolve(__dirname, './src/types'),
       '@utils': resolve(__dirname, './src/utils'),
-      '@design-system': resolve(__dirname, './src/design-system')
-    }
+    },
   },
   server: {
-    port: 3000,
+    port: Number(process.env.VITE_PORT ?? 3000),
     strictPort: true,
-    open: true
+    open: false,
   },
   preview: {
-    port: 3000
+    port: 3000,
   },
   build: {
     outDir: 'dist',
     sourcemap: true,
+    chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -37,10 +37,9 @@ export default defineConfig({
           ui: ['@chakra-ui/react', '@chakra-ui/icons', 'framer-motion'],
           state: ['zustand', '@tanstack/react-query'],
           charts: ['recharts'],
-          flow: ['react-flow-renderer'],
-          forms: ['react-hook-form', 'zod']
-        }
-      }
-    }
-  }
-})
+          icons: ['lucide-react'],
+        },
+      },
+    },
+  },
+});

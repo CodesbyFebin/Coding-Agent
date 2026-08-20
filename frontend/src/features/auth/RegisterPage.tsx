@@ -1,199 +1,162 @@
-import React, { useState } from 'react';
-import { 
-  Box, 
-  VStack, 
-  Text, 
-  Input, 
-  Button, 
-  FormControl, 
-  FormLabel, 
-  HelperText, 
-  Alert, 
+import { useState } from 'react';
+import {
+  Box,
+  VStack,
+  Text,
+  Input,
+  Button,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Alert,
   AlertIcon,
-  Spinner,
-  useDisclosure
+  HStack,
+  Divider,
 } from '@chakra-ui/react';
-import { useAuth } from '../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
+import { useAuthStore } from '../../stores/authStore';
 
 export const RegisterPage = () => {
-  const { register, isAuthenticated, loading: authLoading } = useAuth();
+  const register = useAuthStore((s) => s.register);
+  const loading = useAuthStore((s) => s.loading);
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
-    setIsLoading(true);
-    
-    // Validate passwords match
     if (password !== confirmPassword) {
       setFormError('Passwords do not match');
-      setIsLoading(false);
       return;
     }
-    
+    setSubmitting(true);
     try {
       await register(email, password);
-      // Redirect to workspaces after successful registration
       navigate('/workspaces', { replace: true });
-    } catch (error: any) {
-      setFormError(error.message || 'Registration failed');
+    } catch (err) {
+      setFormError((err as Error).message || 'Registration failed');
     } finally {
-      setIsLoading(false);
+      setSubmitting(false);
     }
   };
 
-  // Auto-redirect if already authenticated
-  if (isAuthenticated) {
-    navigate('/workspaces', { replace: true });
-    return null;
-  }
+  const emailInvalid = email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const passwordInvalid = password.length > 0 && password.length < 8;
+  const confirmInvalid = confirmPassword.length > 0 && password !== confirmPassword;
 
   return (
-    <Box 
-      minH="100vh" 
-      bg="gray.50" 
-      display="flex" 
-      alignItems="center" 
+    <Box
+      minH="100vh"
+      bg="gray.50"
+      display="flex"
+      alignItems="center"
       justifyContent="center"
       p={4}
     >
-      <Box 
-        bg="white" 
-        rounded="lg" 
-        shadow="md" 
-        w="full" 
-        maxW="400px" 
-        p={6}
-      >
-        <VStack spacing={6} align="center">
+      <Box bg="white" rounded="lg" shadow="md" w="full" maxW="400px" p={6}>
+        <VStack spacing={5} align="stretch">
           <Box textAlign="center">
-            <UserPlus size={48} color="brand.500" />
-            <Text fontSize="2xl" fontWeight="bold">
+            <UserPlus size={36} color="#ff5a1f" />
+            <Text fontSize="2xl" fontWeight="bold" mt={2}>
               CodingAgent
             </Text>
-            <Text colorScheme="mb" fontSize="sm">
+            <Text fontSize="sm" color="gray.500">
               Create your Command Center account
             </Text>
           </Box>
-          
-          {/* Error Alert */}
+
           {formError && (
-            <Alert 
-              status="error" 
-              mb={4}
-              variant="left-accent"
-            >
+            <Alert status="error" variant="left-accent">
               <AlertIcon />
-              <Alert.Title>{formError}</Alert.Title>
+              <Text fontSize="sm">{formError}</Text>
             </Alert>
           )}
-          
-          <form onSubmit={handleSubmit}>
+
+          <form onSubmit={handleSubmit} noValidate>
             <VStack spacing={4} align="stretch" w="full">
-              
-              {/* Email Field */}
-              <FormControl isInvalid={!!formError}>
-                <FormLabel>Email</FormLabel>
+              <FormControl isInvalid={emailInvalid}>
+                <FormLabel htmlFor="register-email">Email</FormLabel>
                 <Input
+                  id="register-email"
                   type="email"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   isRequired
-                  disabled={isLoading}
-                  aria-label="Email address"
+                  isDisabled={submitting}
+                  autoComplete="email"
                 />
-                {formError && (
-                  <HelperText>{formError}</HelperText>
+                {emailInvalid && (
+                  <FormErrorMessage>Enter a valid email address.</FormErrorMessage>
                 )}
               </FormControl>
-              
-              {/* Password Field */}
-              <FormControl isInvalid={!!formError}>
-                <FormLabel>Password</FormLabel>
+
+              <FormControl isInvalid={passwordInvalid}>
+                <FormLabel htmlFor="register-password">Password</FormLabel>
                 <Input
+                  id="register-password"
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   isRequired
-                  minLength={8}
-                  disabled={isLoading}
-                  aria-label="Password"
+                  isDisabled={submitting}
+                  autoComplete="new-password"
                 />
-                {formError && (
-                  <HelperText>{formError}</HelperText>
+                {passwordInvalid && (
+                  <FormErrorMessage>Min 8 characters.</FormErrorMessage>
                 )}
               </FormControl>
-              
-              {/* Confirm Password Field */}
-              <FormControl isInvalid={!!formError}>
-                <FormLabel>Confirm Password</FormLabel>
+
+              <FormControl isInvalid={confirmInvalid}>
+                <FormLabel htmlFor="register-confirm">Confirm Password</FormLabel>
                 <Input
+                  id="register-confirm"
                   type="password"
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   isRequired
-                  minLength={8}
-                  disabled={isLoading}
-                  aria-label="Confirm password"
+                  isDisabled={submitting}
+                  autoComplete="new-password"
                 />
-                {formError && (
-                  <HelperText>{formError}</HelperText>
+                {confirmInvalid && (
+                  <FormErrorMessage>Passwords do not match.</FormErrorMessage>
                 )}
               </FormControl>
-              
-              {/* Submit Button */}
-              <Button 
-                type="submit" 
-                colorScheme="brand" 
-                w="full" 
-                isLoading={isLoading || authLoading}
-                _hover={{ bg: 'brand.600' }}
-                _active={{ bg: 'brand.700' }}
+
+              <Button
+                type="submit"
+                colorScheme="brand"
+                w="full"
+                isLoading={submitting || loading}
               >
                 Create Account
               </Button>
             </VStack>
           </form>
-          
-          {/* Divider */}
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            w="full" 
-            mt={6}
-          >
+
+          <HStack>
             <Divider />
-            <Text ml={2} mr={2} fontSize="xs" colorScheme="mb">
+            <Text fontSize="xs" color="gray.400">
               or
             </Text>
             <Divider />
-          </Box>
-          
-          {/* Login Link */}
-          <Button 
-            variant="link" 
-            colorScheme="mb" 
-            onClick={() => navigate('/login', { replace: true })}
-            size="sm"
-          >
-            Already have an account? Sign In
-          </Button>
+          </HStack>
+
+          <Text fontSize="sm" color="gray.600" textAlign="center">
+            Already have an account?{' '}
+            <RouterLink to="/login" style={{ color: '#ff5a1f', fontWeight: 600 }}>
+              Sign In
+            </RouterLink>
+          </Text>
         </VStack>
       </Box>
     </Box>
   );
 };
-
-// Import Divider
-import { Divider } from '@chakra-ui/react';
