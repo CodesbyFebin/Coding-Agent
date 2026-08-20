@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { AuthUser } from '../types';
 import { STORAGE_KEYS } from '../lib/constants';
 import { authApi } from '../lib/endpoints';
+import { useEventStreamStore } from '../realtime/eventStreamStore';
 
 interface AuthState {
   user: AuthUser | null;
@@ -72,6 +73,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     localStorage.removeItem(STORAGE_KEYS.token);
     localStorage.removeItem(STORAGE_KEYS.user);
+    // Tear down the shared realtime stream so a logged-out user (or the next
+    // login) doesn't keep a stale authenticated SSE connection open.
+    useEventStreamStore.getState().stop();
     set({ user: null, token: null, isAuthenticated: false, loading: false });
   },
 
