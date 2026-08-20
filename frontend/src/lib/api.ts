@@ -34,3 +34,35 @@ apiClient.interceptors.response.use(
     return Promise.reject(normalized);
   }
 );
+
+// Map an interceptor-normalized error to a user-facing message. Auth
+// credential errors (401/403) surface the server's own wording; a missing
+// or unreachable backend (404/405/5xx/network) gets an honest, non-jargon
+// line instead of "Request failed with status code 405".
+export function userFacingMessage(err: unknown, fallback: string): string {
+  const e = err as Error & { status?: number; body?: unknown };
+  const status = e?.status;
+
+  if (status === 401 || status === 403) {
+    const bodyMsg = (e.body as { message?: unknown } | undefined)?.message;
+    return typeof bodyMsg === 'string'
+      ? bodyMsg
+      : e?.message || 'Invalid email or password.';
+  }
+
+  const unreachable =
+    status === 0 ||
+    status === 404 ||
+    status === 405 ||
+    status === 500 ||
+    status === 502 ||
+    status === 503 ||
+    /\b(network|failed to fetch|request failed)\b/i.test(e?.message || '');
+
+  if (unreachable) {
+    return 'Unable to reach the server. Please try again later.';
+  }
+
+  return e?.message || fallback;
+}
+

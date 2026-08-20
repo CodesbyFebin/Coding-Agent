@@ -16,6 +16,7 @@ import {
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
+import { userFacingMessage } from '../../lib/api';
 
 export const RegisterPage = () => {
   const register = useAuthStore((s) => s.register);
@@ -39,7 +40,7 @@ export const RegisterPage = () => {
       await register(email, password);
       navigate('/workspaces', { replace: true });
     } catch (err) {
-      setFormError((err as Error).message || 'Registration failed');
+      setFormError(userFacingMessage(err, 'Registration failed'));
     } finally {
       setSubmitting(false);
     }

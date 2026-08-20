@@ -16,6 +16,7 @@ import {
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
+import { userFacingMessage } from '../../lib/api';
 
 export const LoginPage = () => {
   const login = useAuthStore((s) => s.login);
@@ -34,7 +35,7 @@ export const LoginPage = () => {
       await login(email, password);
       navigate('/workspaces', { replace: true });
     } catch (err) {
-      setFormError((err as Error).message || 'Login failed');
+      setFormError(userFacingMessage(err, 'Login failed'));
     } finally {
       setSubmitting(false);
     }

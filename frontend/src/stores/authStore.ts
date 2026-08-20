@@ -39,7 +39,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   login: async (email, password) => {
-    set({ loading: true, error: null });
+    // NOTE: do not flip the global `loading` flag here. App.tsx gates the
+    // entire router on `authStore.loading`; setting it true mid-action would
+    // unmount LoginPage mid-submit, flash the bootstrap LoadingScreen, and
+    // discard the in-flight formError so the user never sees auth failures.
+    // The submit spinner is driven by each page's local `submitting` state.
+    set({ error: null });
     try {
       const { token, user } = await authApi.login(email, password);
       localStorage.setItem(STORAGE_KEYS.token, token);
@@ -52,7 +57,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   register: async (email, password) => {
-    set({ loading: true, error: null });
+    set({ error: null });
     try {
       const { token, user } = await authApi.register(email, password);
       localStorage.setItem(STORAGE_KEYS.token, token);

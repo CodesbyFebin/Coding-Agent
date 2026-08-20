@@ -62,5 +62,27 @@ describe('LoginPage', () => {
 
     expect(authApi.login).toHaveBeenCalled();
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
+    // Regression guard: the error must render to the user, not be swallowed
+    // by a mid-submit unmount. userFacingMessage passes a bare Error through.
+    expect(await screen.findByText(/Invalid credentials/i)).toBeInTheDocument();
+  });
+
+  it('maps a backend-unreachable failure to an honest unreachable message', async () => {
+    const user = userEvent.setup();
+    const e = new Error('Request failed with status code 405') as Error & {
+      status?: number;
+      body?: unknown;
+    };
+    e.status = 405;
+    vi.spyOn(authApi, 'login').mockRejectedValue(e);
+    renderWithProviders(<LoginPage />, { route: '/login' });
+
+    await user.type(screen.getByLabelText(/Email/i), 'bad@example.com');
+    await user.type(screen.getByLabelText(/Password/i), 'password123');
+    await user.click(screen.getByRole('button', { name: /Sign In/i }));
+
+    expect(
+      await screen.findByText(/Unable to reach the server/i)
+    ).toBeInTheDocument();
   });
 });
