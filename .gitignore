@@ -54,3 +54,4 @@ supabase/.temp/
 .cache/
 .cache
 *.log
+.vercel
