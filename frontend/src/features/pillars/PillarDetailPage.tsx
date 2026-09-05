@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { ArrowLeft, ArrowRight, ExternalLink, ShieldCheck } from 'lucide-react';
 import { ALL_PILLARS, PILLAR_CATEGORIES } from '../../data/pillarsData';
+import { getEditorial, isContentIndexable } from '../../content/registry';
 import { useDocumentMeta } from '../../hooks/useDocumentMeta';
 
 // First-class, indexable page for a single sovereign engineering pillar.
@@ -20,6 +21,8 @@ import { useDocumentMeta } from '../../hooks/useDocumentMeta';
 export const PillarDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const pillar = ALL_PILLARS.find((p) => p.href === `/${slug}`);
+  const editorial = pillar ? getEditorial(pillar.id) : undefined;
+  const indexable = pillar ? isContentIndexable(pillar.id) : false;
 
   useDocumentMeta(
     pillar
@@ -27,7 +30,8 @@ export const PillarDetailPage = () => {
       : 'Pillar not found | CodingAgent.in',
     pillar
       ? `${pillar.description} ${pillar.verificationAspect ?? ''}`.trim()
-      : undefined
+      : undefined,
+    pillar ? !indexable : true
   );
 
   if (!pillar) {
@@ -118,6 +122,169 @@ export const PillarDetailPage = () => {
       >
         {pillar.description}
       </Text>
+
+      {editorial && (
+        <>
+          <Box
+            p={5}
+            border="1px solid"
+            borderColor="sovereign.line"
+            borderLeftWidth="3px"
+            borderLeftColor="sovereign.flame"
+            bg="sovereign.panel"
+            rounded="10px"
+            mb={8}
+          >
+            <Text
+              fontFamily="mono"
+              fontSize="10px"
+              fontWeight={900}
+              textTransform="uppercase"
+              letterSpacing="0.2em"
+              color="sovereign.flame"
+              mb={2}
+            >
+              Editorial · Updated {editorial.updated}
+            </Text>
+            <Text fontSize="md" color="sovereign.text" lineHeight="1.8">
+              {editorial.definition}
+            </Text>
+          </Box>
+
+          {editorial.sections.map((section) => (
+            <Box key={section.heading} as="section" mb={8}>
+              <Heading
+                as="h2"
+                fontFamily="heading"
+                fontSize={{ base: 'lg', md: 'xl' }}
+                fontWeight={900}
+                textTransform="uppercase"
+                mb={3}
+                display="flex"
+                alignItems="center"
+                gap={2}
+              >
+                <Box as="span" color="sovereign.flame">
+                  ■
+                </Box>
+                {section.heading}
+              </Heading>
+              {section.paragraphs.map((p, i) => (
+                <Text key={i} fontSize="sm" color="sovereign.muted" lineHeight="1.9" mb={3}>
+                  {p}
+                </Text>
+              ))}
+              {section.bullets && (
+                <VStack align="stretch" spacing={2} mt={3}>
+                  {section.bullets.map((b, i) => (
+                    <Flex key={i} gap={2} fontSize="xs" fontFamily="mono" color="sovereign.muted" lineHeight="1.7">
+                      <Text as="span" color="sovereign.flame" fontWeight={900}>
+                        ■
+                      </Text>
+                      <Text>{b}</Text>
+                    </Flex>
+                  ))}
+                </VStack>
+              )}
+            </Box>
+          ))}
+
+          {editorial.faq.length > 0 && (
+            <Box as="section" mb={8}>
+              <Heading
+                as="h2"
+                fontFamily="heading"
+                fontSize={{ base: 'lg', md: 'xl' }}
+                fontWeight={900}
+                textTransform="uppercase"
+                mb={3}
+                display="flex"
+                alignItems="center"
+                gap={2}
+              >
+                <Box as="span" color="sovereign.flame">
+                  ■
+                </Box>
+                Questions and answers
+              </Heading>
+              <VStack align="stretch" spacing={2}>
+                {editorial.faq.map((f) => (
+                  <Box
+                    key={f.question}
+                    as="details"
+                    border="1px solid"
+                    borderColor="sovereign.line"
+                    bg="sovereign.panel"
+                    rounded="10px"
+                  >
+                    <Box
+                      as="summary"
+                      px={4}
+                      py={3}
+                      cursor="pointer"
+                      fontFamily="heading"
+                      fontWeight={800}
+                      fontSize="sm"
+                      _hover={{ bg: '#10151b' }}
+                    >
+                      {f.question}
+                    </Box>
+                    <Text px={4} pb={4} fontSize="sm" color="sovereign.muted" lineHeight="1.8">
+                      {f.answer}
+                    </Text>
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
+          )}
+
+          {editorial.sources && editorial.sources.length > 0 && (
+            <Box as="section" mb={8}>
+              <Heading
+                as="h2"
+                fontFamily="heading"
+                fontSize="md"
+                fontWeight={900}
+                textTransform="uppercase"
+                mb={3}
+              >
+                Sources
+              </Heading>
+              <VStack align="flex-start" spacing={1}>
+                {editorial.sources.map((s) => (
+                  <Text key={s.href} as="span" fontFamily="mono" fontSize="xs">
+                    —{' '}
+                    <a
+                      href={s.href}
+                      target={s.href.startsWith('http') ? '_blank' : undefined}
+                      rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      style={{ color: '#6aa9ff' }}
+                    >
+                      {s.label}
+                    </a>
+                  </Text>
+                ))}
+              </VStack>
+            </Box>
+          )}
+        </>
+      )}
+
+      {!editorial && (
+        <Box
+          p={4}
+          mb={8}
+          border="1px dashed"
+          borderColor="sovereign.line2"
+          rounded="10px"
+          fontFamily="mono"
+          fontSize="11px"
+          color="sovereign.dim"
+        >
+          IN PROGRESS — the long-form editorial for this pillar is being
+          authored. This page is not indexed until it is complete.
+        </Box>
+      )}
 
       <VStack align="stretch" spacing={5} mb={10}>
         {pillar.rationale && (

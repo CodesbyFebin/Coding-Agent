@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/prerender.mjs",
     "build:vite": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
@@ -20,7 +20,8 @@
     "build-storybook": "storybook build",
     "e2e": "playwright test",
     "e2e:install": "playwright install chromium",
-    "msw:init": "msw init public/ --save"
+    "msw:init": "msw init public/ --save",
+    "prerender": "node scripts/prerender.mjs"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

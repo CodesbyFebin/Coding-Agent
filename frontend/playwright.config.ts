@@ -24,9 +24,11 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: 'npm run build && npm run preview -- --port 4173 --strictPort',
+        // dist/ is built by the preceding gate (`npm run build`); rebuilding
+        // here would exceed the webServer timeout and wipe dist mid-run.
+        command: 'npm run preview -- --port 4173 --strictPort',
         port: 4173,
         reuseRunningServer: !process.env.CI,
-        timeout: 120000,
+        timeout: 60000,
       },
 });

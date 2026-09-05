@@ -4,7 +4,11 @@ import { useEffect } from 'react';
 // the meta description, and an absolute canonical URL derived from the
 // current path so the same content served from any other host (e.g. the
 // noindex app deployment) consolidates to the public codingagent.in origin.
-export function useDocumentMeta(title: string, description?: string): void {
+export function useDocumentMeta(
+  title: string,
+  description?: string,
+  noindex = false
+): void {
   useEffect(() => {
     document.title = title;
     if (description) {
@@ -17,6 +21,19 @@ export function useDocumentMeta(title: string, description?: string): void {
         document.head.appendChild(meta);
       }
       meta.content = description;
+    }
+    // Indexability policy: template-only pillar pages carry noindex until
+    // their editorial is completed (mirrored in the prerendered HTML).
+    let robots = document.querySelector<HTMLMetaElement>(
+      'meta[name="robots"]:not([content*="max-image"])'
+    );
+    if (noindex) {
+      if (!robots) {
+        robots = document.createElement('meta');
+        robots.name = 'robots';
+        document.head.appendChild(robots);
+      }
+      robots.content = 'noindex, follow';
     }
 
     const canonical = document.querySelector<HTMLLinkElement>(

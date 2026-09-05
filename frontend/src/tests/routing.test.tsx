@@ -19,9 +19,16 @@ describe('App routing and route protection', () => {
     });
   });
 
-  it('redirects unauthenticated users from / to /login', () => {
+  it('renders the public landing for anonymous users at /', () => {
+    // "/" is the indexable public homepage for anonymous visitors; the
+    // Command Center renders inside it once authenticated.
     renderWithProviders(<AppRoutes />, { route: '/' });
-    expect(screen.getByText(/sign in to your command center/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/engineering with ai coding agents/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /explore the pillars/i })
+    ).toBeInTheDocument();
   });
 
   it('shows the login page at /login for unauthenticated users', () => {
@@ -70,5 +77,10 @@ describe('App routing and route protection', () => {
         screen.getByRole('button', { name: /sign out/i })
       ).toBeInTheDocument();
     });
+  });
+
+  it('keeps protected app routes gated for anonymous users', () => {
+    renderWithProviders(<AppRoutes />, { route: '/projects' });
+    expect(screen.getByText(/sign in to your command center/i)).toBeInTheDocument();
   });
 });

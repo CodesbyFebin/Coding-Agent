@@ -4,6 +4,9 @@
   "outputDirectory": "frontend/dist",
   "trailingSlash": false,
   "redirects": [
+    { "source": "/missions", "destination": "/projects", "permanent": false },
+    { "source": "/workspaces", "destination": "/projects", "permanent": false },
+    { "source": "/workspaces/:path*", "destination": "/projects/:path*", "permanent": false },
     {
       "source": "/pillars/:path",
       "destination": "/:path",
@@ -126,10 +129,20 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/register", "destination": "/index.html" },
+    { "source": "/projects", "destination": "/index.html" },
+    { "source": "/projects/:path*", "destination": "/index.html" },
+    { "source": "/missions", "destination": "/index.html" },
+    { "source": "/analytics", "destination": "/index.html" },
+    { "source": "/code", "destination": "/index.html" },
+    { "source": "/terminal", "destination": "/index.html" },
+    { "source": "/browser", "destination": "/index.html" },
+    { "source": "/memory", "destination": "/index.html" },
+    { "source": "/skills", "destination": "/index.html" },
+    { "source": "/schedules", "destination": "/index.html" },
+    { "source": "/security", "destination": "/index.html" },
+    { "source": "/settings", "destination": "/index.html" }
   ],
   "headers": [
     {

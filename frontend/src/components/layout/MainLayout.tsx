@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box, Grid } from '@chakra-ui/react';
 import { Topbar } from './Topbar';
@@ -12,8 +13,9 @@ import { Inspector } from '../inspector/Inspector';
 // The center column scrolls; sidebar/inspector/status are fixed. Below md the
 // sidebar hides and a mobile bottom nav appears; below xl the inspector hides.
 // `pb` on the center area reserves space for the mobile nav so content isn't
-// covered.
-export const MainLayout = () => (
+// covered. Children render in the center column when provided (HomePage's
+// embedded Command Center); otherwise the router <Outlet /> applies.
+export const MainLayout = ({ children }: { children?: ReactNode }) => (
   <Grid
     h="100dvh"
     gridTemplateRows={{ base: '52px 1fr 0', md: '52px 1fr 28px' }}
@@ -45,7 +47,7 @@ export const MainLayout = () => (
         background="radial-gradient(circle at 60% -20%, rgba(255,90,31,0.06), transparent 36%), sovereign.bg"
       >
         <Box maxW="container.xl" mx="auto" p={{ base: '18px 14px', md: '24px' }} minH="100%">
-          <Outlet />
+          {children ?? <Outlet />}
         </Box>
       </Box>
 

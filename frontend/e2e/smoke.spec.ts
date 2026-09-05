@@ -5,13 +5,17 @@ import { test, expect } from '@playwright/test';
 // auth surface and protected-route enforcement, plus the public knowledge
 // surfaces and route-resolution behavior.
 test.describe('Command Center smoke', () => {
-  test('renders the login screen for unauthenticated visitors', async ({ page }) => {
+  test('renders the public landing for anonymous visitors', async ({ page }) => {
     await page.goto('/');
-    // Root should redirect an anonymous user to /login
-    await expect(page).toHaveURL(/\/login$/);
-    await expect(page.getByRole('button', { name: /Sign In/i })).toBeVisible();
-    await expect(page.getByLabel(/Email/i)).toBeVisible();
-    await expect(page.getByLabel(/Password/i)).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1 })
+    ).toContainText(/engineering with ai coding agents/i);
+    await expect(
+      page.getByRole('link', { name: /explore the pillars/i })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: /launch console/i })
+    ).toBeVisible();
   });
 
   test('shows the register page', async ({ page }) => {

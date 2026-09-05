@@ -4,8 +4,8 @@ import { PublicShell } from '../components/layout/PublicShell';
 import { ProtectedRoute, PublicOnlyRoute } from '../components/ProtectedRoute';
 import { LoginPage } from '../features/auth/LoginPage';
 import { RegisterPage } from '../features/auth/RegisterPage';
+import { HomePage } from '../features/home/HomePage';
 import { SettingsPage } from '../features/settings/SettingsPage';
-import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { ProjectListPage } from '../features/projects/ProjectListPage';
 import { ProjectDetailPage } from '../features/projects/ProjectDetailPage';
 import { MissionListPage } from '../features/missions/MissionListPage';
@@ -30,6 +30,10 @@ import { NotFoundPage } from '../components/NotFoundPage';
 
 export const AppRoutes = () => (
   <Routes>
+    {/* Public homepage: landing for anonymous visitors, Command Center for
+        authenticated users (HomePage renders the shell itself) */}
+    <Route path="/" element={<HomePage />} />
+
     {/* Public-only routes: redirect authed users in */}
     <Route element={<PublicOnlyRoute />}>
       <Route path="/login" element={<LoginPage />} />
@@ -54,7 +58,6 @@ export const AppRoutes = () => (
     {/* Protected routes: require auth, render inside MainLayout */}
     <Route element={<ProtectedRoute />}>
       <Route element={<MainLayout />}>
-        <Route index element={<DashboardPage />} />
         <Route path="/projects" element={<ProjectListPage />} />
         <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
         <Route path="/projects/:projectId/missions" element={<MissionListPage />} />

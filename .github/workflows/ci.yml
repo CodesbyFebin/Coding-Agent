@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npx eslint --max-warnings 0
+
+      - name: Unit tests
+        run: npx vitest run
+
+      - name: Build (SEO surfaces + bundle + prerender)
+        run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E
+        run: npx playwright test
+
+      - name: Assert prerendered public surface
+        run: |
+          test -f dist/404.html
+          test -f dist/pillars/index.html
+          test -f dist/ai-coding-agents/index.html
+          test -f dist/dpdp-compliance/index.html
+          grep -q "PILLAR DIRECTORY" dist/pillars/index.html
+          grep -q "Task decomposition" dist/ai-coding-agents/index.html
+          grep -q "Questions and answers" dist/ai-coding-agents/index.html
+          grep -q "noindex, follow" dist/dpdp-compliance/index.html
+          grep -q "rel=\"canonical\" href=\"https://codingagent.in/dpdp-compliance\"" dist/dpdp-compliance/index.html
+          grep -c "<loc>" dist/sitemap.xml | grep -qx "9"

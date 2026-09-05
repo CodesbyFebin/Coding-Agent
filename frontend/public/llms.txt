@@ -10,83 +10,82 @@ Public knowledge surface (canonical URLs):
 - https://codingagent.in/local-runtimes
 - https://codingagent.in/security-matrix
 - https://codingagent.in/faq
+- https://codingagent.in/ai-coding-agents
+- https://codingagent.in/agentic-engineering
+- https://codingagent.in/plan-execute-verify
+- https://codingagent.in/task-graphs
+- https://codingagent.in/agent-state-machines
+- https://codingagent.in/parallel-subagents
+- https://codingagent.in/human-approval-gates
+- https://codingagent.in/agent-observability
+- https://codingagent.in/durable-runtimes
+- https://codingagent.in/production-operations
+- https://codingagent.in/model-context-protocol
+- https://codingagent.in/mcp-client-architecture
+- https://codingagent.in/mcp-server-architecture
+- https://codingagent.in/bidirectional-mcp
+- https://codingagent.in/mcp-tool-discovery
+- https://codingagent.in/mcp-permissions
+- https://codingagent.in/mcp-authentication
+- https://codingagent.in/mcp-transport
+- https://codingagent.in/mcp-security
+- https://codingagent.in/building-mcp-integrations
+- https://codingagent.in/local-llm-coding
+- https://codingagent.in/ollama-integration
+- https://codingagent.in/vllm-serving
+- https://codingagent.in/llama-cpp-runtimes
+- https://codingagent.in/lm-studio
+- https://codingagent.in/gguf-workflows
+- https://codingagent.in/quantized-models
+- https://codingagent.in/vram-aware-routing
+- https://codingagent.in/offline-embeddings
+- https://codingagent.in/air-gapped-agents
+- https://codingagent.in/ai-agent-security
+- https://codingagent.in/prompt-injection-defenses
+- https://codingagent.in/secure-tool-calling
+- https://codingagent.in/agent-sandboxing
+- https://codingagent.in/network-egress-controls
+- https://codingagent.in/secrets-isolation
+- https://codingagent.in/repository-permissions
+- https://codingagent.in/approval-policy-design
+- https://codingagent.in/audit-logs-provenance
+- https://codingagent.in/secure-mcp-servers
+- https://codingagent.in/independent-verification
+- https://codingagent.in/build-verification
+- https://codingagent.in/typecheck-verification
+- https://codingagent.in/unit-test-verification
+- https://codingagent.in/browser-verification
+- https://codingagent.in/artifact-hashing
+- https://codingagent.in/agent-memory-architecture
+- https://codingagent.in/working-mission-memory
+- https://codingagent.in/agent-skills-versioning
+- https://codingagent.in/context-compaction
+- https://codingagent.in/enterprise-agents
+- https://codingagent.in/organization-policy
+- https://codingagent.in/role-based-access
+- https://codingagent.in/audit-ready-engineering
+- https://codingagent.in/private-deployment
+- https://codingagent.in/agent-cost-governance
+- https://codingagent.in/model-governance
+- https://codingagent.in/developer-cli
+- https://codingagent.in/ide-integrations
+- https://codingagent.in/cicd-pipeline-agents
+- https://codingagent.in/india-sovereign-ai
+- https://codingagent.in/dpdp-compliance
+- https://codingagent.in/inr-pricing-billing
+- https://codingagent.in/indic-developer-workflows
+- https://codingagent.in/hallucination-defense
+- https://codingagent.in/token-optimization
+- https://codingagent.in/python-data-science
+- https://codingagent.in/fullstack-typescript
+- https://codingagent.in/devops-pipelines
+- https://codingagent.in/mcp-connection-resilience
+- https://codingagent.in/architecture
+- https://codingagent.in/use-cases
+- https://codingagent.in/docs
+- https://codingagent.in/guides
+- https://codingagent.in/knowledge-graph
+- https://codingagent.in/blog
+- https://codingagent.in/terminal-benchmarks
 
 Pillars:
-- [CodingAgent AI Coding Agents](https://codingagent.in/ai-coding-agents): Autonomous systems combining generative model reasoning, repository-scale context, tool execution, and deterministic ver…
-- [CodingAgent Agentic Engineering](https://codingagent.in/agentic-engineering): Disciplined methodology for designing, governing, testing, and deploying semi-autonomous software engineering agents.
-- [CodingAgent Plan-Execute-Verify](https://codingagent.in/plan-execute-verify): The core tri-phasic execution loop ensuring planning is isolated from execution, and execution is gated by independent v…
-- [CodingAgent Task Graphs](https://codingagent.in/task-graphs): Directed acyclic graphs (DAGs) representing complex engineering goals broken down into interdependent, atomically execut…
-- [CodingAgent Agent State Machines](https://codingagent.in/agent-state-machines): Deterministic finite state machines governing agent lifecycle transitions, error recovery, and tool access authorization…
-- [CodingAgent Parallel Subagents](https://codingagent.in/parallel-subagents): Isolated subagent execution runtimes tackling modular work units concurrently under strict parent orchestrator supervisi…
-- [CodingAgent Human Approval Gates](https://codingagent.in/human-approval-gates): Explicit interactive checkpoints interrupting autonomous execution when an agent touches sensitive network, deployment, …
-- [CodingAgent Agent Observability](https://codingagent.in/agent-observability): Deep structured telemetry capturing tokens, latency, tool call payloads, diffs, sandbox metrics, and verifier exit codes…
-- [CodingAgent Durable Runtimes](https://codingagent.in/durable-runtimes): Resilient execution runtimes capable of pausing, serializing, persisting to disk, and resuming missions across process r…
-- [CodingAgent Production Operations](https://codingagent.in/production-operations): Operational playbooks, rate limiters, cost governors, health monitors, and emergency killswitches for running agents at …
-- [CodingAgent Model Context Protocol](https://codingagent.in/model-context-protocol): Standardized open protocol connecting AI assistants to external data sources, developer tools, and operational environme…
-- [CodingAgent MCP Client Architecture](https://codingagent.in/mcp-client-architecture): The agent-side client implementation that discovers, negotiates, scopes, and governs tools exposed by external MCP serve…
-- [CodingAgent MCP Server Architecture](https://codingagent.in/mcp-server-architecture): The server-side implementation enabling CodingAgent to export reviewed internal capabilities, compilers, and analyzers t…
-- [CodingAgent Bidirectional MCP](https://codingagent.in/bidirectional-mcp): Architecture allowing agents to simultaneously act as MCP consumers and providers, forming collaborative agentic network…
-- [CodingAgent MCP Tool Discovery](https://codingagent.in/mcp-tool-discovery): Dynamic negotiation and registration of available tools, prompts, and resources from attached MCP server processes.
-- [CodingAgent MCP Permissions](https://codingagent.in/mcp-permissions): Granular role-based and path-based permission policies applied to individual MCP tool invocations.
-- [CodingAgent MCP Authentication](https://codingagent.in/mcp-authentication): Cryptographic authentication, bearer token rotation, and secret redaction for MCP server connections.
-- [CodingAgent MCP Transport](https://codingagent.in/mcp-transport): Low-latency stdio, Server-Sent Events (SSE), and WebSocket transport layers supporting both local and remote MCP servers…
-- [CodingAgent MCP Security](https://codingagent.in/mcp-security): Defense-in-depth security model protecting agent runtimes from malicious MCP servers, tainted outputs, and prompt poison…
-- [CodingAgent Building MCP Integrations](https://codingagent.in/building-mcp-integrations): Developer guide, SDKs, and templates for wrapping custom compilers, profilers, and enterprise ticketing systems into gov…
-- [CodingAgent Local LLM Coding](https://codingagent.in/local-llm-coding): First-class support for running state-of-the-art open coding models (DeepSeek-Coder, Qwen-Coder, Llama-Code) on local wo…
-- [CodingAgent Ollama Integration](https://codingagent.in/ollama-integration): Seamless integration with Ollama for zero-config local model pulls, GPU acceleration, and streaming inference.
-- [CodingAgent vLLM Serving](https://codingagent.in/vllm-serving): High-throughput self-hosted inference serving powered by PagedAttention and continuous batching for team clusters.
-- [CodingAgent llama.cpp Runtimes](https://codingagent.in/llama-cpp-runtimes): Bare-metal C/C++ GGUF model execution with minimal memory footprint and CPU fallback optimization.
-- [CodingAgent LM Studio](https://codingagent.in/lm-studio): Connector for LM Studio desktop local servers, providing visual model management and OpenAI-compatible API endpoints.
-- [CodingAgent GGUF Workflows](https://codingagent.in/gguf-workflows): Optimized pipeline for selecting, caching, and running quantized GGUF model weights tuned specifically for syntax and co…
-- [CodingAgent Quantized Models](https://codingagent.in/quantized-models): Evaluation benchmarks and best practices for running 4-bit, 5-bit, and 8-bit quantized models without degrading refactor…
-- [CodingAgent VRAM-Aware Routing](https://codingagent.in/vram-aware-routing): Intelligent router that dynamically inspects host GPU memory, context size requirements, and task complexity before choo…
-- [CodingAgent Offline Embeddings](https://codingagent.in/offline-embeddings): Local vector embedding models and lightweight embedded vector stores for indexing private codebases offline.
-- [CodingAgent Air-Gapped Agents](https://codingagent.in/air-gapped-agents): Hardened agent distribution packaged for defense, banking, and critical infrastructure environments with zero internet a…
-- [CodingAgent AI Agent Security](https://codingagent.in/ai-agent-security): Comprehensive threat modeling and defense architecture addressing the unique attack vectors introduced by autonomous cod…
-- [CodingAgent Prompt Injection Defenses](https://codingagent.in/prompt-injection-defenses): Multi-layer defense isolating untrusted repository strings, issues, and PR comments from executive system instructions.
-- [CodingAgent Secure Tool Calling](https://codingagent.in/secure-tool-calling): Strict schema enforcement, argument validation, and parameter sanitization applied prior to executing any tool call.
-- [CodingAgent Agent Sandboxing](https://codingagent.in/agent-sandboxing): Lightweight containerized (Docker, bubblewrap, gVisor) sandboxes enclosing code execution, compilation, and test runs.
-- [CodingAgent Network Egress Controls](https://codingagent.in/network-egress-controls): Default-deny network firewall allowing agent tool requests only to approved, domain-allowlisted endpoints.
-- [CodingAgent Secrets Isolation](https://codingagent.in/secrets-isolation): Fine-grained secret broker that injects credentials only at the instant of authorized tool calls and immediately scrubs …
-- [CodingAgent Repository Permissions](https://codingagent.in/repository-permissions): Granular file and branch access policies restricting which folders an agent can read, modify, or delete.
-- [CodingAgent Approval Policy Design](https://codingagent.in/approval-policy-design): Declarative policy rules categorizing actions into automatic ALLOW, interactive ASK, and absolute DENY tiers.
-- [CodingAgent Audit Logs & Provenance](https://codingagent.in/audit-logs-provenance): Immutable, tamper-evident cryptographic logs recording every model prompt, tool call argument, output diff, and verifica…
-- [CodingAgent Secure MCP Servers](https://codingagent.in/secure-mcp-servers): Hardening standards and security audits for authoring, running, and publishing Model Context Protocol server tools.
-- [CodingAgent Independent Verification](https://codingagent.in/independent-verification): The golden principle that model self-evaluations cannot be trusted: code changes must pass independent compilers and tes…
-- [CodingAgent Build Verification](https://codingagent.in/build-verification): Automated build pipeline invocation inside clean task sandboxes to verify package resolution and compilation success.
-- [CodingAgent Typecheck Verification](https://codingagent.in/typecheck-verification): Rigorous static type analysis ensuring strict adherence to interfaces, non-nullability, and function signature contracts…
-- [CodingAgent Unit Test Verification](https://codingagent.in/unit-test-verification): Execution of existing test suites and generation of new unit tests to confirm behavioral fixes without regressions.
-- [CodingAgent Browser Verification](https://codingagent.in/browser-verification): Headless browser execution (Playwright, Puppeteer) capturing screenshots, DOM snapshots, and console logs of frontend UI…
-- [CodingAgent Artifact Hashing](https://codingagent.in/artifact-hashing): Cryptographic SHA-256 fingerprinting of all inputs, intermediate diffs, tool outputs, and produced binary artifacts.
-- [CodingAgent Agent Memory Architecture](https://codingagent.in/agent-memory-architecture): Hierarchical memory system separating short-term scratchpad context, working task memory, and long-term repository knowl…
-- [CodingAgent Working & Mission Memory](https://codingagent.in/working-mission-memory): Structured state stores tracking active task objectives, hypotheses tested, failed approaches, and remaining TODOs.
-- [CodingAgent Agent Skills & Versioning](https://codingagent.in/agent-skills-versioning): System for extracting, reviewing, versioning, and sharing successful multi-step agent workflows as reusable SKILL.md mod…
-- [CodingAgent Context Compaction](https://codingagent.in/context-compaction): Intelligent AST-aware token pruning, diff summarization, and context compaction algorithms for ultra-long conversations.
-- [CodingAgent Enterprise Agents](https://codingagent.in/enterprise-agents): Centralized management platform for orchestrating thousands of developer agents across distributed enterprise repositori…
-- [CodingAgent Organization Policy](https://codingagent.in/organization-policy): Centrally managed, policy-as-code guardrails defining permitted models, external network boundaries, and required approv…
-- [CodingAgent Role-Based Access](https://codingagent.in/role-based-access): Fine-grained RBAC mapping developer identity (SSO, SAML) to permitted agent modes, cloud models, and production tool pri…
-- [CodingAgent Audit-Ready Engineering](https://codingagent.in/audit-ready-engineering): Automated documentation, changelog generation, and architectural decision records (ADRs) authored alongside code diffs.
-- [CodingAgent Private Deployment](https://codingagent.in/private-deployment): Helm charts, Terraform modules, and Kubernetes manifests for deploying the entire CodingAgent control plane in private V…
-- [CodingAgent Agent Cost Governance](https://codingagent.in/agent-cost-governance): Real-time token cost attribution, budget thresholds, cost forecasting, and automated throttling for developer teams.
-- [CodingAgent Model Governance](https://codingagent.in/model-governance): Vendor management, SLA tracking, failover orchestration, and license compliance audits for all models in the agent pool.
-- [CodingAgent Developer CLI](https://codingagent.in/developer-cli): Fast, scriptable terminal CLI for launching autonomous missions, piping diffs, inspecting memory, and managing local mod…
-- [CodingAgent IDE Integrations](https://codingagent.in/ide-integrations): Native extensions for VS Code, JetBrains IDEs, and Neovim providing inline diffs, gutter approvals, and chat panels.
-- [CodingAgent CI/CD Pipeline Agents](https://codingagent.in/cicd-pipeline-agents): Headless agent runners embedded in GitHub Actions, GitLab CI, and Jenkins to perform automated PR reviews and security t…
-- [CodingAgent India Sovereign AI](https://codingagent.in/india-sovereign-ai): India-first sovereign coding agent architecture tailored for national data autonomy, public sector compute, and Indian e…
-- [CodingAgent DPDP Compliance](https://codingagent.in/dpdp-compliance): Digital Personal Data Protection (DPDP)-oriented control framework designed around zero-cross-border-telemetry goals, da…
-- [CodingAgent INR Pricing & Billing](https://codingagent.in/inr-pricing-billing): Transparent INR pricing structure with native UPI, NetBanking, and GST-ready automated invoicing for Indian startups.
-- [CodingAgent Indic Developer Workflows](https://codingagent.in/indic-developer-workflows): Multi-lingual natural language support for Hindi, Hinglish, and regional developer communication across Indian tech hubs…
-- [CodingAgent Hallucination Defense](https://codingagent.in/hallucination-defense): Automated self-correcting logic engine that detects model hallucinations, syntax drift, and fabricated APIs before code …
-- [CodingAgent Token Optimization](https://codingagent.in/token-optimization): Prompt caching, context window pruning, and AST-targeted diff compression reducing agent token consumption and API costs…
-- [CodingAgent Python & Data Science](https://codingagent.in/python-data-science): Specialized agentic workflows for Python development, automated Jupyter notebook analysis, Pandas pipeline refactoring, …
-- [CodingAgent Full-Stack TypeScript](https://codingagent.in/fullstack-typescript): End-to-end agentic pipelines for TypeScript, React, Next.js, and Node.js with strict type-safety and component validatio…
-- [CodingAgent DevOps & Pipelines](https://codingagent.in/devops-pipelines): Automated CI/CD orchestration, Dockerfile generation, Kubernetes manifest hardening, and infrastructure-as-code scriptin…
-- [CodingAgent MCP Connection Resilience](https://codingagent.in/mcp-connection-resilience): Diagnostic and self-healing protocols for Model Context Protocol (MCP) stdio timeouts, process crashes, and handshake re…
-- [CodingAgent Architecture](https://codingagent.in/architecture): In-depth documentation of the six-stage control loop: Understand, Plan, Route, Execute, Verify, and Learn.
-- [CodingAgent Use Cases](https://codingagent.in/use-cases): Real-world engineering scenarios: large-scale refactoring, legacy migration, CVE remediation, and automated documentatio…
-- [CodingAgent Documentation](https://codingagent.in/docs): Comprehensive guides for configuration, CLI arguments, MCP integration, and security policies.
-- [CodingAgent Guides](https://codingagent.in/guides): Step-by-step tutorials for configuring local Ollama models, writing custom MCP tools, and setting up air-gapped runtimes…
-- [CodingAgent Knowledge Graph](https://codingagent.in/knowledge-graph): The interconnected ontology of 80 sovereign engineering pillars designed for human engineers and AI search engines.
-- [CodingAgent Blog](https://codingagent.in/blog): Deep dives, architectural benchmarks, and engineering retrospectives from the CodingAgent core team.
-- [CodingAgent Pillar Directory](https://codingagent.in/pillars): Complete index of all 80 architectural pillars with interactive fuzzy search, category filtering, and interlinking.
-- [CodingAgent Terminal Benchmarks](https://codingagent.in/terminal-benchmarks): Evidence-backed autonomous agent benchmarks measuring Terminal-Bench accuracy, task completion speed, and token cost tra…
