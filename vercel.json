@@ -4,7 +4,7 @@
   "outputDirectory": "frontend/dist",
   "trailingSlash": false,
   "redirects": [
-    { "source": "/pillars/:path*", "destination": "/:path*", "permanent": true },
+    { "source": "/pillars/:path", "destination": "/:path", "permanent": true },
     { "source": "/security/ai-coding-agents", "destination": "/ai-coding-agents", "permanent": true },
     { "source": "/security/:path*", "destination": "/pillars", "permanent": true },
     { "source": "/mcp/:path*", "destination": "/pillars", "permanent": true },
