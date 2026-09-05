@@ -79,7 +79,7 @@ export const ROUTING_DIMENSIONS: LocalRuntimeProfile[] = [
     description: 'Evaluates required context length from AST search. Short fixes fit standard 8k windows; deep call graph migrations use 32k-128k.',
     specSummary: 'Sliding window + RoPE scaling factors',
     recommendedHardware: 'Proportional to memory allocation',
-    privacyPosture: 'Guaranteed context retention'
+    privacyPosture: 'Context retention preserved by routing policy'
   },
   {
     id: 'dim-quality',
