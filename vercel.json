@@ -4,39 +4,149 @@
   "outputDirectory": "frontend/dist",
   "trailingSlash": false,
   "redirects": [
-    { "source": "/pillars/:path", "destination": "/:path", "permanent": true },
-    { "source": "/security/ai-coding-agents", "destination": "/ai-coding-agents", "permanent": true },
-    { "source": "/security/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/mcp/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/mcp", "destination": "/model-context-protocol", "permanent": true },
-    { "source": "/memory/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/skills/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/agents/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/models/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/tools/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/swarms/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/verification/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/runtime/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/glossary/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/glossary", "destination": "/pillars", "permanent": true },
-    { "source": "/guides/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/blog/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/sitemaps/:path*", "destination": "/sitemap.xml", "permanent": true },
-    { "source": "/about", "destination": "/platform", "permanent": true },
-    { "source": "/learn", "destination": "/pillars", "permanent": true },
-    { "source": "/compare", "destination": "/pillars", "permanent": true },
-    { "source": "/research", "destination": "/platform", "permanent": true },
-    { "source": "/sovereign-ai", "destination": "/india-sovereign-ai", "permanent": true },
-    { "source": "/status", "destination": "/", "permanent": true }
+    {
+      "source": "/pillars/:path",
+      "destination": "/:path",
+      "permanent": true
+    },
+    {
+      "source": "/security/ai-coding-agents",
+      "destination": "/ai-coding-agents",
+      "permanent": true
+    },
+    {
+      "source": "/security/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/mcp/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/memory/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/skills/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/agents/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/models/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/tools/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/swarms/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/verification/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/runtime/:a/:b/:c",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/glossary/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/guides/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/mcp",
+      "destination": "/model-context-protocol",
+      "permanent": true
+    },
+    {
+      "source": "/glossary",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/sitemaps/:path*",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/platform",
+      "permanent": true
+    },
+    {
+      "source": "/learn",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/compare",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/research",
+      "destination": "/platform",
+      "permanent": true
+    },
+    {
+      "source": "/sovereign-ai",
+      "destination": "/india-sovereign-ai",
+      "permanent": true
+    },
+    {
+      "source": "/status",
+      "destination": "/",
+      "permanent": true
+    }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Robots-Tag", "value": "all" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "all"
+        }
       ]
     }
   ]
