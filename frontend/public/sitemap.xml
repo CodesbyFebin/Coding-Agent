@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://codingagent.in/</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://codingagent.in/pillars</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>/platform</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>/agent-modes</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>/local-runtimes</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>/security-matrix</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>/faq</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://codingagent.in/platform</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://codingagent.in/agent-modes</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://codingagent.in/local-runtimes</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://codingagent.in/security-matrix</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://codingagent.in/faq</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://codingagent.in/pillars/ai-coding-agents</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://codingagent.in/ai-coding-agents</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://codingagent.in/pillars/agentic-engineering</loc><lastmod>2026-09-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
