@@ -2,7 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "cd frontend && npm ci && npm run build",
   "outputDirectory": "frontend/dist",
-  "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
     { "source": "/security/ai-coding-agents", "destination": "/ai-coding-agents", "permanent": true },
