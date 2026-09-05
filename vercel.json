@@ -10,73 +10,73 @@
       "permanent": true
     },
     {
+      "source": "/blog/:path",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/guides/:path",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/glossary/:path",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/runtime/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/verification/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/swarms/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/tools/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/models/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/agents/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/skills/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/memory/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/mcp/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
+      "source": "/security/:a/:b",
+      "destination": "/pillars",
+      "permanent": true
+    },
+    {
       "source": "/security/ai-coding-agents",
       "destination": "/ai-coding-agents",
-      "permanent": true
-    },
-    {
-      "source": "/security/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/mcp/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/memory/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/skills/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/agents/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/models/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/tools/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/swarms/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/verification/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/runtime/:a/:b/:c",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/glossary/:a/:b",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/guides/:a/:b",
-      "destination": "/pillars",
-      "permanent": true
-    },
-    {
-      "source": "/blog/:a/:b",
-      "destination": "/pillars",
       "permanent": true
     },
     {
