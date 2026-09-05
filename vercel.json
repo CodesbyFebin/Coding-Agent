@@ -4,6 +4,7 @@
   "outputDirectory": "frontend/dist",
   "trailingSlash": false,
   "redirects": [
+    { "source": "/pillars/:path*", "destination": "/:path*", "permanent": true },
     { "source": "/security/ai-coding-agents", "destination": "/ai-coding-agents", "permanent": true },
     { "source": "/security/:path*", "destination": "/pillars", "permanent": true },
     { "source": "/mcp/:path*", "destination": "/pillars", "permanent": true },
@@ -19,9 +20,7 @@
     { "source": "/glossary/:path*", "destination": "/pillars", "permanent": true },
     { "source": "/glossary", "destination": "/pillars", "permanent": true },
     { "source": "/guides/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/guides", "destination": "/pillars", "permanent": true },
     { "source": "/blog/:path*", "destination": "/pillars", "permanent": true },
-    { "source": "/blog", "destination": "/pillars", "permanent": true },
     { "source": "/sitemaps/:path*", "destination": "/sitemap.xml", "permanent": true },
     { "source": "/about", "destination": "/platform", "permanent": true },
     { "source": "/learn", "destination": "/pillars", "permanent": true },

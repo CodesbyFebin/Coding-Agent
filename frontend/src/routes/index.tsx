@@ -45,6 +45,8 @@ export const AppRoutes = () => (
       <Route path="/local-runtimes" element={<LocalRuntimesPage />} />
       <Route path="/security-matrix" element={<SecurityMatrixPage />} />
       <Route path="/faq" element={<FaqPage />} />
+      {/* Missions live under projects; send the orphan nav target there */}
+      <Route path="/missions" element={<Navigate to="/projects" replace />} />
       {/* Canonical top-level pillar slugs (e.g. /ai-coding-agents, /dpdp-compliance) */}
       <Route path="/:slug" element={<PillarDetailPage />} />
     </Route>

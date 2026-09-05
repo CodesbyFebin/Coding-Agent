@@ -182,7 +182,7 @@ export const PillarDetailPage = () => {
             {related.map((r) => (
               <RouterLink
                 key={r.id}
-                to={r.external ? r.href : `/pillars${r.href}`}
+                to={r.href}
                 {...(r.external
                   ? { target: '_blank', rel: 'noopener noreferrer' }
                   : {})}

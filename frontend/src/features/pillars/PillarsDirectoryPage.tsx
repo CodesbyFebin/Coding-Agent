@@ -296,7 +296,9 @@ const CategoryPill = ({
 );
 
 const PillarCard = ({ pillar }: { pillar: (typeof ALL_PILLARS)[number] }) => {
-  const href = pillar.external ? pillar.href : `/pillars${pillar.href}`;
+  // Canonical pillar URLs are the top-level slug form (/dpdp-compliance);
+  // the /pillars/:slug form 308-redirects here from the edge.
+  const href = pillar.href;
   return (
     <RouterLink
       to={href}
