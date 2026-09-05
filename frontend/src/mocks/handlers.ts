@@ -6,6 +6,7 @@ import type {
   MissionDetail,
   MissionMode,
   MissionStatus,
+  Project,
   Workspace,
 } from '../types';
 
@@ -102,33 +103,33 @@ export const handlers = [
     return HttpResponse.json(res);
   }),
 
-  // -- Workspaces --
-  http.get('/api/v1/workspaces', async ({ request }) => {
+  // -- Projects (renamed from workspaces) --
+  http.get('/api/v1/projects', async ({ request }) => {
     await delay(300);
     const token = request.headers.get('Authorization');
     if (!token) {
       return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    return HttpResponse.json({ workspaces: mockWorkspaces });
+    return HttpResponse.json({ projects: mockWorkspaces });
   }),
 
-  http.post('/api/v1/workspaces', async ({ request }) => {
+  http.post('/api/v1/projects', async ({ request }) => {
     await delay(400);
     const body = (await request.json()) as { name: string; description?: string };
-    const newWs: Workspace = {
-      id: `ws-${Date.now()}`,
-      name: body.name || 'Untitled Workspace',
+    const newProject: Project = {
+      id: `proj-${Date.now()}`,
+      name: body.name || 'Untitled Project',
       description: body.description ?? '',
       role: 'owner',
       status: 'active',
       createdAt: now(),
     };
-    mockWorkspaces.push(newWs);
-    return HttpResponse.json({ workspace: newWs }, { status: 201 });
+    mockWorkspaces.push(newProject);
+    return HttpResponse.json({ project: newProject }, { status: 201 });
   }),
 
   // -- Missions --
-  http.get('/api/v1/workspaces/:workspaceId/missions', async ({ params }) => {
+  http.get('/api/v1/projects/:workspaceId/missions', async ({ params }) => {
     await delay(250);
     const { workspaceId } = params;
     const missions = mockMissions.filter((m) => m.workspaceId === workspaceId);
@@ -136,7 +137,7 @@ export const handlers = [
   }),
 
   http.get(
-    '/api/v1/workspaces/:workspaceId/missions/:missionId',
+    '/api/v1/projects/:workspaceId/missions/:missionId',
     async ({ params }) => {
       await delay(300);
       const mission = mockMissions.find((m) => m.id === params.missionId);
@@ -153,7 +154,7 @@ export const handlers = [
   ),
 
   http.post(
-    '/api/v1/workspaces/:workspaceId/missions',
+    '/api/v1/projects/:workspaceId/missions',
     async ({ params, request }) => {
       await delay(400);
       const body = (await request.json()) as {
@@ -177,7 +178,7 @@ export const handlers = [
   ),
 
   http.post(
-    '/api/v1/workspaces/:workspaceId/missions/:missionId/run',
+    '/api/v1/projects/:workspaceId/missions/:missionId/run',
     async ({ params }) => {
       await delay(300);
       const mission = mockMissions.find((m) => m.id === params.missionId);
@@ -239,6 +240,79 @@ export const handlers = [
         'Cache-Control': 'no-cache',
         Connection: 'keep-alive',
       },
+    });
+  }),
+
+  // -- Bootstrap (aggregated data) --
+  http.get('/api/v1/bootstrap', async ({ request }) => {
+    await delay(300);
+    const token = request.headers.get('Authorization');
+    if (!token) {
+      return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    return HttpResponse.json({
+      projects: mockWorkspaces,
+      missions: mockMissions,
+      approvals: [],
+      events: [],
+      memory: [],
+      skills: [],
+      schedules: [],
+    });
+  }),
+
+  // -- Memory --
+  http.get('/api/v1/memory', async ({ request }) => {
+    await delay(200);
+    const token = request.headers.get('Authorization');
+    if (!token) {
+      return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    return HttpResponse.json({ entries: [] });
+  }),
+
+  // -- Skills --
+  http.get('/api/v1/skills', async ({ request }) => {
+    await delay(200);
+    const token = request.headers.get('Authorization');
+    if (!token) {
+      return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    return HttpResponse.json({ skills: [] });
+  }),
+
+  // -- Schedules --
+  http.get('/api/v1/schedules', async ({ request }) => {
+    await delay(200);
+    const token = request.headers.get('Authorization');
+    if (!token) {
+      return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    return HttpResponse.json({ schedules: [] });
+  }),
+
+  // -- Approvals --
+  http.get('/api/v1/approvals', async ({ request: Request }) => {
+    await delay(200);
+    const token = Request.headers.get('Authorization');
+    if (!token) {
+      return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    return HttpResponse.json({ approvals: [] });
+  }),
+
+  // -- Approval decision --
+  http.post('/api/v1/approvals/:id/decision', async ({ params, request: Req }) => {
+    await delay(200);
+    const token = Req.headers.get('Authorization');
+    if (!token) {
+      return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    const { action } = (await Req.json()) as { action: 'approve' | 'reject' };
+    return HttpResponse.json({
+      id: params.id,
+      action,
+      status: action === 'approve' ? 'APPROVED' : 'REJECTED',
     });
   }),
 ];

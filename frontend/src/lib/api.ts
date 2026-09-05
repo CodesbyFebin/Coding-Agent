@@ -1,23 +1,43 @@
 import axios, { type AxiosInstance } from 'axios';
-import { API_BASE_URL, STORAGE_KEYS } from './constants';
+import { STORAGE_KEYS } from '../lib/constants';
+
+// Resolve base URL: config store value > VITE_API_BASE_URL env > /api/v1 fallback.
+// At module level we can only use the env/env fallback since the store isn't hydrated yet.
+// The interceptor below reads sessionStorage directly for the actual config.
+const baseURL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 // Plain axios instance. MSW's service worker intercepts these requests
 // in development; in production they hit the configured backend.
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 30000,
 });
 
-// Inject bearer token on every request.
+// Inject apikey or bearer token on every request.
+// The interceptor reads from sessionStorage (backend config) and localStorage (auth)
+// so it never needs a React hook. This mirrors the prototype's authHeaders()
+// while staying generic (no Supabase-specific paths).
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem(STORAGE_KEYS.token);
-  if (token) {
-    config.headers = config.headers ?? {};
-    config.headers.Authorization = `Bearer ${token}`;
+  config.headers = config.headers ?? {};
+
+  // Read API key from sessionStorage (backend config store persistence keys)
+  const storedApiKey = typeof window !== 'undefined'
+    ? sessionStorage.getItem('cgcc.backend.key')
+    : null;
+
+  if (storedApiKey) {
+    config.headers['apikey'] = storedApiKey;
+  } else {
+    // Fall back to bearer token from auth store
+    const token = localStorage.getItem(STORAGE_KEYS.token);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
+
   return config;
 });
 
@@ -65,4 +85,3 @@ export function userFacingMessage(err: unknown, fallback: string): string {
 
   return e?.message || fallback;
 }
-

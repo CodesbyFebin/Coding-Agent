@@ -4,10 +4,12 @@ import type {
   Mission,
   MissionCreateInput,
   MissionDetail,
-  Workspace,
-  WorkspaceCreateInput,
+  Project,
+  ProjectCreateInput,
 } from '../types';
 
+// All data endpoints address projects (renamed from workspaces to align with
+// the backend's DB tables and the MSW handlers).
 // -- Auth --
 export const authApi = {
   login: async (email: string, password: string): Promise<AuthResponse> => {
@@ -26,56 +28,42 @@ export const authApi = {
   },
 };
 
-// -- Workspaces --
-export const workspaceApi = {
-  list: async (): Promise<Workspace[]> => {
-    const { data } = await apiClient.get<{ workspaces: Workspace[] }>(
-      '/workspaces'
-    );
-    return data.workspaces;
+// -- Projects --
+export const projectApi = {
+  list: async (): Promise<Project[]> => {
+    const { data } = await apiClient.get<{ projects: Project[] }>('/projects');
+    return data.projects;
   },
-  create: async (input: WorkspaceCreateInput): Promise<Workspace> => {
-    const { data } = await apiClient.post<{ workspace: Workspace }>(
-      '/workspaces',
-      input
-    );
-    return data.workspace;
+  create: async (input: ProjectCreateInput): Promise<Project> => {
+    const { data } = await apiClient.post<{ project: Project }>('/projects', input);
+    return data.project;
   },
 };
 
 // -- Missions --
 export const missionApi = {
-  list: async (workspaceId: string): Promise<Mission[]> => {
+  list: async (projectId: string): Promise<Mission[]> => {
     const { data } = await apiClient.get<{ missions: Mission[] }>(
-      `/workspaces/${workspaceId}/missions`
+      `/projects/${projectId}/missions`
     );
     return data.missions;
   },
-  get: async (
-    workspaceId: string,
-    missionId: string
-  ): Promise<MissionDetail> => {
+  get: async (projectId: string, missionId: string): Promise<MissionDetail> => {
     const { data } = await apiClient.get<MissionDetail>(
-      `/workspaces/${workspaceId}/missions/${missionId}`
+      `/projects/${projectId}/missions/${missionId}`
     );
     return data;
   },
-  create: async (
-    workspaceId: string,
-    input: MissionCreateInput
-  ): Promise<Mission> => {
+  create: async (projectId: string, input: MissionCreateInput): Promise<Mission> => {
     const { data } = await apiClient.post<{ mission: Mission }>(
-      `/workspaces/${workspaceId}/missions`,
+      `/projects/${projectId}/missions`,
       input
     );
     return data.mission;
   },
-  run: async (
-    workspaceId: string,
-    missionId: string
-  ): Promise<{ mission: Mission }> => {
+  run: async (projectId: string, missionId: string): Promise<{ mission: Mission }> => {
     const { data } = await apiClient.post(
-      `/workspaces/${workspaceId}/missions/${missionId}/run`
+      `/projects/${projectId}/missions/${missionId}/run`
     );
     return data;
   },

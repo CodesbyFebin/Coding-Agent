@@ -28,17 +28,17 @@ const MODE_OPTIONS: { value: MissionMode; label: string }[] = [
 ];
 
 export const MissionListPage = () => {
-  const { workspaceId } = useParams<{ workspaceId: string }>();
-  const { data: missions, isLoading, isError, error } = useMissions(workspaceId ?? '');
-  const createMission = useCreateMission(workspaceId ?? '');
-  const runMission = useRunMission(workspaceId ?? '');
+  const { projectId } = useParams<{ projectId: string }>();
+  const { data: missions, isLoading, isError, error } = useMissions(projectId ?? '');
+  const createMission = useCreateMission(projectId ?? '');
+  const runMission = useRunMission(projectId ?? '');
   const toast = useToast();
 
   const [goal, setGoal] = useState('');
   const [mode, setMode] = useState<MissionMode>('INSTANT');
 
   const handleCreate = async () => {
-    if (!goal.trim() || !workspaceId) {return;}
+    if (!goal.trim() || !projectId) return;
     try {
       await createMission.mutateAsync({ goal: goal.trim(), mode });
       setGoal('');
@@ -76,22 +76,22 @@ export const MissionListPage = () => {
       <HStack mb={2}>
         <Button
           as={RouterLink}
-          to={`/workspaces/${workspaceId}`}
+          to={`/projects/${projectId}`}
           size="sm"
           variant="ghost"
           leftIcon={<ArrowLeft size={16} />}
         >
-          Workspace
+          Project
         </Button>
       </HStack>
       <Heading size="lg" mb={2}>
         Missions
       </Heading>
-      <Text color="gray.500" fontSize="sm" mb={6}>
-        Create and execute agentic missions in this workspace.
+      <Text color="sovereign.muted" fontSize="sm" mb={6}>
+        Create and execute agentic missions in this project.
       </Text>
 
-      <Box bg="white" p={5} rounded="md" borderWidth="1px" mb={8}>
+      <Box bg="sovereign.panel" p={5} rounded="md" borderWidth="1px" borderColor="sovereign.line" mb={8}>
         <Heading size="sm" mb={3}>
           New Mission
         </Heading>
@@ -122,7 +122,7 @@ export const MissionListPage = () => {
             colorScheme="brand"
             onClick={handleCreate}
             isLoading={createMission.isPending}
-            isDisabled={!goal.trim() || !workspaceId}
+            isDisabled={!goal.trim() || !projectId}
           >
             Create Mission
           </Button>
@@ -144,7 +144,7 @@ export const MissionListPage = () => {
             <MissionRow
               key={m.id}
               mission={m}
-              workspaceId={workspaceId!}
+              projectId={projectId!}
               onRun={handleRun}
               isRunning={runMission.isPending && runMission.variables === m.id}
             />
@@ -157,30 +157,31 @@ export const MissionListPage = () => {
 
 interface MissionRowProps {
   mission: Mission;
-  workspaceId: string;
+  projectId: string;
   onRun: (missionId: string) => void;
   isRunning: boolean;
 }
 
-const MissionRow = ({ mission, workspaceId, onRun, isRunning }: MissionRowProps) => (
+const MissionRow = ({ mission, projectId, onRun, isRunning }: MissionRowProps) => (
   <RouterLink
-    to={`/workspaces/${workspaceId}/missions/${mission.id}`}
+    to={`/projects/${projectId}/missions/${mission.id}`}
     style={{ textDecoration: 'none' }}
   >
     <Box
-      bg="white"
+      bg="sovereign.panel"
       p={4}
       rounded="md"
       borderWidth="1px"
+      borderColor="sovereign.line"
       _hover={{ borderColor: 'brand.500', shadow: 'sm' }}
       cursor="pointer"
     >
       <HStack justify="space-between" align="start" spacing={4}>
         <Box flex={1}>
-          <Text fontSize="sm" color="gray.800" fontWeight="medium" noOfLines={2}>
+          <Text fontSize="sm" color="sovereign.text" fontWeight="medium" noOfLines={2}>
             {mission.goal}
           </Text>
-          <Text fontSize="xs" color="gray.400" fontFamily="mono" mt={1}>
+          <Text fontSize="xs" color="sovereign.dim" fontFamily="mono" mt={1}>
             {mission.mode} · {new Date(mission.createdAt).toLocaleString()}
           </Text>
         </Box>

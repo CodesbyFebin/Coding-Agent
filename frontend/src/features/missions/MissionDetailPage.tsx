@@ -21,12 +21,12 @@ import type {
 } from '../../types';
 
 export const MissionDetailPage = () => {
-  const { workspaceId, missionId } = useParams<{
-    workspaceId: string;
+  const { projectId, missionId } = useParams<{
+    projectId: string;
     missionId: string;
   }>();
   const { data: mission, isLoading, isError, error } = useMission(
-    workspaceId ?? '',
+    projectId ?? '',
     missionId ?? ''
   );
 
@@ -46,7 +46,7 @@ export const MissionDetailPage = () => {
       <HStack mb={2}>
         <Button
           as={RouterLink}
-          to={`/workspaces/${workspaceId}/missions`}
+          to={`/projects/${projectId}/missions`}
           size="sm"
           variant="ghost"
           leftIcon={<ArrowLeft size={16} />}
@@ -57,20 +57,20 @@ export const MissionDetailPage = () => {
 
       <HStack spacing={3} mb={2} align="center">
         <MissionStatusBadge status={mission.status} />
-        <Text fontSize="xs" fontFamily="mono" color="gray.500">
+        <Text fontSize="xs" fontFamily="mono" color="sovereign.muted">
           {mission.mode}
         </Text>
       </HStack>
       <Heading size="md" mb={2}>
         {mission.goal}
       </Heading>
-      <Code fontSize="xs" color="gray.500" display="inline-block" mb={4}>
+      <Code fontSize="xs" color="sovereign.muted" display="inline-block" mb={4}>
         id: {mission.id}
       </Code>
 
       {mission.mode !== 'INSTANT' && (
-        <Box bg="yellow.50" p={3} rounded="md" mb={4} borderLeft="3px solid" borderColor="yellow.400">
-          <Text fontSize="sm" color="yellow.700">
+        <Box bg="rgba(245,185,66,0.06)" p={3} rounded="md" mb={4} borderLeft="3px solid" borderColor="sovereign.warn">
+          <Text fontSize="sm" color="sovereign.warn">
             Mode {mission.mode} is not implemented in the backend — running
             returns 501 without executing.
           </Text>
@@ -78,8 +78,8 @@ export const MissionDetailPage = () => {
       )}
 
       {mission.status === 'FAILED' && (
-        <Box bg="red.50" p={3} rounded="md" mb={4} borderLeft="3px solid" borderColor="red.400">
-          <Text fontSize="sm" color="red.700">
+        <Box bg="rgba(255,107,107,0.06)" p={3} rounded="md" mb={4} borderLeft="3px solid" borderColor="sovereign.bad">
+          <Text fontSize="sm" color="sovereign.bad">
             {mission.errorMessage || 'Mission failed with an unknown error.'}
           </Text>
         </Box>
@@ -117,7 +117,7 @@ const EvidenceSection = ({ evidence }: { evidence: MissionEvidence[] }) => (
       Evidence ({evidence.length})
     </Heading>
     {evidence.length === 0 ? (
-      <Text fontSize="sm" color="gray.400">
+      <Text fontSize="sm" color="sovereign.dim">
         No evidence recorded for this mission.
       </Text>
     ) : (
@@ -125,20 +125,21 @@ const EvidenceSection = ({ evidence }: { evidence: MissionEvidence[] }) => (
         {evidence.map((e) => (
           <Box
             key={e.id}
-            bg="white"
+            bg="sovereign.panel"
             p={3}
             rounded="md"
             borderWidth="1px"
+            borderColor="sovereign.line"
             fontSize="xs"
             fontFamily="mono"
-            color="gray.600"
+            color="sovereign.muted"
           >
             <HStack justify="space-between" align="start" mb={1}>
               <VerificationStatusBadge status={e.verificationStatus} />
               <Text>{e.evidenceType}</Text>
             </HStack>
             <Text>source: {e.sourceType} ({e.sourceRef || '—'})</Text>
-            <Text color="gray.500" wordBreak="break-all" mt={1}>
+            <Text color="sovereign.dim" wordBreak="break-all" mt={1}>
               sha256: {e.contentHash}
             </Text>
           </Box>
@@ -158,7 +159,7 @@ const ModelInvocationsSection = ({
       Model Invocations ({invocations.length})
     </Heading>
     {invocations.length === 0 ? (
-      <Text fontSize="sm" color="gray.400">
+      <Text fontSize="sm" color="sovereign.dim">
         No model invocations recorded for this mission.
       </Text>
     ) : (
@@ -166,16 +167,17 @@ const ModelInvocationsSection = ({
         {invocations.map((mi) => (
           <Box
             key={mi.id}
-            bg="white"
+            bg="sovereign.panel"
             p={3}
             rounded="md"
             borderWidth="1px"
+            borderColor="sovereign.line"
             fontSize="xs"
             fontFamily="mono"
-            color="gray.600"
+            color="sovereign.muted"
           >
             <HStack justify="space-between" mb={1}>
-              <Text color={mi.success ? 'green.600' : 'red.600'}>
+              <Text color={mi.success ? 'sovereign.good' : 'sovereign.bad'}>
                 {mi.success ? 'success' : 'failed'}
               </Text>
               <Text>latency: {mi.latencyMs ?? '—'}ms</Text>
@@ -183,9 +185,9 @@ const ModelInvocationsSection = ({
             <Text>
               tokens: {mi.promptTokens ?? '—'} / {mi.completionTokens ?? '—'}
             </Text>
-            <Text color="gray.500" mt={1}>correlation: {mi.correlationId}</Text>
+            <Text color="sovereign.dim" mt={1}>correlation: {mi.correlationId}</Text>
             {mi.errorMessage && (
-              <Text color="red.600" mt={1}>error: {mi.errorMessage}</Text>
+              <Text color="sovereign.bad" mt={1}>error: {mi.errorMessage}</Text>
             )}
           </Box>
         ))}

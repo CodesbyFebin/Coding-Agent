@@ -38,7 +38,7 @@ export const RegisterPage = () => {
     setSubmitting(true);
     try {
       await register(email, password);
-      navigate('/workspaces', { replace: true });
+      navigate('/projects', { replace: true });
     } catch (err) {
       setFormError(userFacingMessage(err, 'Registration failed'));
     } finally {
@@ -53,20 +53,30 @@ export const RegisterPage = () => {
   return (
     <Box
       minH="100vh"
-      bg="gray.50"
+      bg="sovereign.bg"
       display="flex"
       alignItems="center"
       justifyContent="center"
       p={4}
+      background="radial-gradient(circle at 60% -20%, rgba(255,90,31,0.08), transparent 36%), sovereign.bg"
     >
-      <Box bg="white" rounded="lg" shadow="md" w="full" maxW="400px" p={6}>
+      <Box
+        bg="sovereign.panel"
+        rounded="lg"
+        shadow="0 24px 70px rgba(0,0,0,.32)"
+        w="full"
+        maxW="400px"
+        p={6}
+        border="1px solid"
+        borderColor="sovereign.line2"
+      >
         <VStack spacing={5} align="stretch">
           <Box textAlign="center">
             <UserPlus size={36} color="#ff5a1f" />
             <Text fontSize="2xl" fontWeight="bold" mt={2}>
               CodingAgent
             </Text>
-            <Text fontSize="sm" color="gray.500">
+            <Text fontSize="sm" color="sovereign.muted">
               Create your Command Center account
             </Text>
           </Box>
@@ -144,13 +154,13 @@ export const RegisterPage = () => {
 
           <HStack>
             <Divider />
-            <Text fontSize="xs" color="gray.400">
+            <Text fontSize="xs" color="sovereign.dim">
               or
             </Text>
             <Divider />
           </HStack>
 
-          <Text fontSize="sm" color="gray.600" textAlign="center">
+          <Text fontSize="sm" color="sovereign.muted" textAlign="center">
             Already have an account?{' '}
             <RouterLink to="/login" style={{ color: '#ff5a1f', fontWeight: 600 }}>
               Sign In

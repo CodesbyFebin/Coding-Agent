@@ -11,20 +11,20 @@ import {
 import { MissionStatusBadge } from '../../components/ui/StatusBadge';
 import type { Mission } from '../../types';
 
-export const WorkspaceDetailPage = () => {
-  const { workspaceId } = useParams<{ workspaceId: string }>();
-  const { data: workspaces, isLoading: wsLoading } = useWorkspaces();
+export const ProjectDetailPage = () => {
+  const { projectId } = useParams<{ projectId: string }>();
+  const { data: projects, isLoading: wsLoading } = useWorkspaces();
   const { data: missions, isLoading, isError, error } = useMissions(
-    workspaceId ?? ''
+    projectId ?? ''
   );
 
-  const workspace = workspaces?.find((w) => w.id === workspaceId);
+  const project = projects?.find((p) => p.id === projectId);
 
   if (wsLoading) {
-    return <LoadingState label="Loading workspace..." />;
+    return <LoadingState label="Loading project..." />;
   }
-  if (!workspace) {
-    return <ErrorState message="Workspace not found." />;
+  if (!project) {
+    return <ErrorState message="Project not found." />;
   }
 
   return (
@@ -32,27 +32,27 @@ export const WorkspaceDetailPage = () => {
       <HStack mb={2}>
         <Button
           as={RouterLink}
-          to="/workspaces"
+          to="/projects"
           size="sm"
           variant="ghost"
           leftIcon={<ArrowLeft size={16} />}
         >
-          Workspaces
+          Projects
         </Button>
       </HStack>
-      <Heading size="lg">{workspace.name}</Heading>
-      <Text color="gray.500" fontSize="sm" mb={1}>
-        {workspace.description || 'No description'}
+      <Heading size="lg">{project.name}</Heading>
+      <Text color="sovereign.muted" fontSize="sm" mb={1}>
+        {project.description || 'No description'}
       </Text>
-      <Code fontSize="xs" color="gray.500" mb={6} display="inline-block">
-        id: {workspace.id} · role: {workspace.role} · status: {workspace.status}
+      <Code fontSize="xs" color="sovereign.muted" mb={6} display="inline-block">
+        id: {project.id} · role: {project.role} · status: {project.status}
       </Code>
 
       <HStack justify="space-between" mb={4} align="center">
         <Heading size="sm">Missions</Heading>
         <Button
           as={RouterLink}
-          to={`/workspaces/${workspaceId}/missions`}
+          to={`/projects/${projectId}/missions`}
           size="sm"
           colorScheme="brand"
         >
@@ -74,10 +74,10 @@ export const WorkspaceDetailPage = () => {
       ) : (
         <Box>
           {missions.slice(0, 5).map((m) => (
-            <MissionRow key={m.id} mission={m} workspaceId={workspaceId!} />
+            <MissionRow key={m.id} mission={m} projectId={projectId!} />
           ))}
           {missions.length > 5 && (
-            <Text fontSize="sm" color="gray.500" mt={3} textAlign="center">
+            <Text fontSize="sm" color="sovereign.muted" mt={3} textAlign="center">
               +{missions.length - 5} more — see all
             </Text>
           )}
@@ -89,30 +89,31 @@ export const WorkspaceDetailPage = () => {
 
 const MissionRow = ({
   mission,
-  workspaceId,
+  projectId,
 }: {
   mission: Mission;
-  workspaceId: string;
+  projectId: string;
 }) => (
   <RouterLink
-    to={`/workspaces/${workspaceId}/missions/${mission.id}`}
+    to={`/projects/${projectId}/missions/${mission.id}`}
     style={{ textDecoration: 'none' }}
   >
     <Box
-      bg="white"
+      bg="sovereign.panel"
       p={3}
       rounded="md"
       borderWidth="1px"
+      borderColor="sovereign.line"
       mb={2}
       _hover={{ borderColor: 'brand.500' }}
       cursor="pointer"
     >
       <HStack justify="space-between" align="start">
         <Box flex={1}>
-          <Text fontSize="sm" color="gray.800" noOfLines={1}>
+          <Text fontSize="sm" color="sovereign.text" noOfLines={1}>
             {mission.goal}
           </Text>
-          <Text fontSize="xs" color="gray.400" fontFamily="mono" mt={1}>
+          <Text fontSize="xs" color="sovereign.dim" fontFamily="mono" mt={1}>
             {mission.mode} · {new Date(mission.createdAt).toLocaleString()}
           </Text>
         </Box>

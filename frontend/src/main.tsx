@@ -2,38 +2,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ChakraProvider, extendTheme, ColorModeScript } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import App from './App';
 import { useAuthStore } from './stores/authStore';
-
-const theme = extendTheme({
-  config: { initialColorMode: 'light', useSystemColorMode: false },
-  colors: {
-    // Accent palette shared with legacy console and authority site.
-    brand: {
-      50: '#fff5ed',
-      100: '#ffe8d4',
-      200: '#ffceaa',
-      300: '#ffb080',
-      400: '#ff8b57',
-      500: '#ff5a1f',
-      600: '#f0430e',
-      700: '#c7330b',
-      800: '#9e2a10',
-      900: '#7f2811',
-    },
-  },
-  fonts: {
-    heading: `-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`,
-    body: `-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`,
-    mono: `'SF Mono', 'JetBrains Mono', monospace`,
-  },
-  styles: {
-    global: {
-      'html, body': { bg: 'gray.50', color: 'gray.900' },
-    },
-  },
-});
+import { theme } from './theme';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,7 +41,7 @@ enableMocking().finally(() => {
   root.render(
     <React.StrictMode>
       <ChakraProvider theme={theme}>
-        <ColorModeScript initialColorMode="light" />
+        <ColorModeScript initialColorMode="dark" />
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <App />

@@ -37,8 +37,16 @@ describe('App routing and route protection', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows NotFound page on unknown routes', () => {
+  it('shows the graceful pillar-not-found page on unknown single-segment routes', () => {
+    // /:slug resolves pillar hrefs; an unknown slug renders the graceful
+    // "Pillar not found" knowledge surface rather than the raw 404.
     renderWithProviders(<AppRoutes />, { route: '/does-not-exist' });
+    expect(screen.getByText(/pillar not found/i)).toBeInTheDocument();
+    expect(screen.getByText(/browse the pillar directory/i)).toBeInTheDocument();
+  });
+
+  it('shows NotFound page on unknown multi-segment routes', () => {
+    renderWithProviders(<AppRoutes />, { route: '/does-not-exist/deeper' });
     expect(screen.getByText(/404/i)).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: /404/i })
@@ -57,7 +65,10 @@ describe('App routing and route protection', () => {
     void user;
     renderWithProviders(<AppRoutes />, { route: '/' });
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument();
+      // Auth button copy aligned with the new Sovereign Command Center shell.
+      expect(
+        screen.getByRole('button', { name: /sign out/i })
+      ).toBeInTheDocument();
     });
   });
 });

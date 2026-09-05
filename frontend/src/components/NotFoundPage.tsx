@@ -8,13 +8,15 @@ export const NotFoundPage = () => (
     alignItems="center"
     justifyContent="center"
     p={6}
-    bg="gray.50"
+    bg="sovereign.bg"
+    color="sovereign.text"
+    background="radial-gradient(circle at 60% -20%, rgba(255,90,31,0.08), transparent 36%), sovereign.bg"
   >
     <Box textAlign="center">
-      <Heading size="2xl" color="brand.500">
+      <Heading size="2xl" color="sovereign.flame" fontFamily="heading">
         404
       </Heading>
-      <Text fontSize="lg" color="gray.700" mt={2} mb={6}>
+      <Text fontSize="lg" color="sovereign.muted" mt={2} mb={6}>
         This page doesn&#39;t exist in the Command Center.
       </Text>
       <Button as={RouterLink} to="/" colorScheme="brand">

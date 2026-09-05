@@ -33,7 +33,7 @@ export const LoginPage = () => {
     setSubmitting(true);
     try {
       await login(email, password);
-      navigate('/workspaces', { replace: true });
+      navigate('/projects', { replace: true });
     } catch (err) {
       setFormError(userFacingMessage(err, 'Login failed'));
     } finally {
@@ -47,20 +47,30 @@ export const LoginPage = () => {
   return (
     <Box
       minH="100vh"
-      bg="gray.50"
+      bg="sovereign.bg"
       display="flex"
       alignItems="center"
       justifyContent="center"
       p={4}
+      background="radial-gradient(circle at 60% -20%, rgba(255,90,31,0.08), transparent 36%), sovereign.bg"
     >
-      <Box bg="white" rounded="lg" shadow="md" w="full" maxW="400px" p={6}>
+      <Box
+        bg="sovereign.panel"
+        rounded="lg"
+        shadow="0 24px 70px rgba(0,0,0,.32)"
+        w="full"
+        maxW="400px"
+        p={6}
+        border="1px solid"
+        borderColor="sovereign.line2"
+      >
         <VStack spacing={5} align="stretch">
           <Box textAlign="center">
             <LogIn size={36} color="#ff5a1f" />
             <Text fontSize="2xl" fontWeight="bold" mt={2}>
               CodingAgent
             </Text>
-            <Text fontSize="sm" color="gray.500">
+            <Text fontSize="sm" color="sovereign.muted">
               Sign in to your Command Center
             </Text>
           </Box>
@@ -121,13 +131,13 @@ export const LoginPage = () => {
 
           <HStack>
             <Divider />
-            <Text fontSize="xs" color="gray.400">
+            <Text fontSize="xs" color="sovereign.dim">
               or
             </Text>
             <Divider />
           </HStack>
 
-          <Text fontSize="sm" color="gray.600" textAlign="center">
+          <Text fontSize="sm" color="sovereign.muted" textAlign="center">
             Don&#39;t have an account?{' '}
             <RouterLink to="/register" style={{ color: '#ff5a1f', fontWeight: 600 }}>
               Register

@@ -1,15 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ff5a1f" />
+
+    <!-- Primary SEO -->
+    <title>CodingAgent.in — Sovereign AI Coding Agents &amp; Agentic Engineering</title>
     <meta
       name="description"
-      content="CodingAgent Command Center — Agentic engineering platform for planning, executing, and verifying autonomous coding missions."
+      content="CodingAgent.in is a sovereign, open-source, local-LLM-first agentic engineering platform for AI coding agents, MCP-native tooling, and verification-first workflows."
     />
-    <title>CodingAgent — Command Center</title>
+    <meta
+      name="keywords"
+      content="best AI coding agent for developers 2026, autonomous coding assistant, AI coding agent India, sovereign AI coding agent, DPDP compliant AI coding agent, local LLM coding agent Ollama, best MCP server for AI coding agents, verification-first AI coding"
+    />
+    <meta name="author" content="CodingAgent" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://codingagent.in/" />
+    <meta name="theme-color" content="#080a0d" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="CodingAgent.in" />
+    <meta property="og:title" content="CodingAgent.in — Sovereign AI Coding Agents &amp; Agentic Engineering" />
+    <meta
+      property="og:description"
+      content="Sovereign, open-source, local-LLM-first agentic engineering for planning, coding, debugging, review, security and verification — under your control."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://codingagent.in/" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CodingAgent.in — Sovereign AI Coding Agents &amp; Agentic Engineering" />
+    <meta
+      name="twitter:description"
+      content="Sovereign, open-source, local-LLM-first agentic engineering platform for AI coding agents, MCP-native tooling, and verification-first workflows."
+    />
+
+    <!-- Fonts: Inter (body), JetBrains Mono (code), Space Grotesk (display) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,900&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured data: SoftwareApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "CodingAgent",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS, Linux, Windows",
+        "url": "https://codingagent.in/",
+        "description": "Sovereign, open-source, local-LLM-first agentic engineering platform for AI coding agents, MCP-native tooling, and verification-first workflows.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+        "featureList": [
+          "Autonomous AI coding agents",
+          "MCP-native governed tool use",
+          "Local-LLM-first routing (Ollama, vLLM, llama.cpp)",
+          "Evidence-backed independent verification",
+          "DPDP-compliant India data residency",
+          "Human approval gates and audit provenance"
+        ]
+      }
+    </script>
+
+    <!-- Structured data: WebSite + SearchAction -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CodingAgent.in",
+        "url": "https://codingagent.in/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://codingagent.in/pillars?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- Structured data: FAQ (mirrors the on-page FAQ section) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is CodingAgent.in?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CodingAgent.in is a sovereign, open-source, local-LLM-first agentic engineering project focused on AI coding agents, controlled tool use, MCP integrations, verification and practical developer workflows."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is an AI coding agent?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "An AI coding agent is a software system that can plan and execute engineering tasks using a language model, repository context, tools, permissions, tests and controlled execution. Unlike autocomplete alone, an agent can work across multi-step tasks and produce artifacts for verification."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does CodingAgent.in focus on local LLMs?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Local-LLM-first architecture is a core design direction. The routing model treats local runtimes as first-class targets for private repositories, offline work and hardware-aware inference."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does MCP fit into CodingAgent.in?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Model Context Protocol is treated as a governed capability layer. Agents can discover tools, but effective access is the intersection of available capabilities, agent scope, project policy and operator approval."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does CodingAgent.in approach agent security?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The architecture emphasizes least privilege, isolated workspaces, secret scoping, network controls, approval gates, audit trails and independent verification rather than unrestricted autonomous tool use."
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

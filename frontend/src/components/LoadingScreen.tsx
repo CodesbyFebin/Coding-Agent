@@ -16,7 +16,7 @@ export const LoadingScreen = ({ label = 'Loading...' }: LoadingScreenProps) => (
     aria-live="polite"
   >
     <Spinner size="xl" color="brand.500" thickness="3px" />
-    <Text fontSize="sm" color="gray.500">
+    <Text fontSize="sm" color="sovereign.muted">
       {label}
     </Text>
   </Box>
