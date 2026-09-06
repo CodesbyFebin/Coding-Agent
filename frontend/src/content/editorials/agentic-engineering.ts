@@ -76,6 +76,14 @@ export const agenticEngineering: PillarEditorial = {
         "Score each candidate against the four questions the platform answers architecturally: what verifies completion, what bounds tool authority, what records provenance, and what happens when it is wrong. Candidates with weak answers on two or more questions need governance work before automation work. This sequencing keeps early wins visible and prevents the over-automation that sours teams on the entire discipline."
       ]
     }
+,
+    {
+      "heading": "The minimum viable governance stack",
+      "paragraphs": [
+        "Teams often ask what governance is required before the first agent mission. The minimum stack is four mechanisms, and every one of them ships in the platform by default: a permission posture that separates ALLOW from ASK from DENY, an ephemeral workspace so nothing edits a working checkout directly, one independent verification gate appropriate to the stack (a build, a typecheck, or a test run), and an audit log with the mission\u2019s plan, diffs, and decisions. Anything less and the team is running on trust; anything more can be added as the risk profile demands.",
+        "The stack is deliberately small because governance that is heavy gets bypassed. Each mechanism earns its place by answering one of the four questions: what bounds authority, what verifies completion, what records provenance, and what happens when it is wrong. Start there, automate a low-risk workflow, and let the first incident \u2014 not imagination \u2014 justify the next control."
+      ]
+    }
   ],
   "faq": [
     {
