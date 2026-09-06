@@ -50,8 +50,72 @@ export const localLlmCoding: PillarEditorial = {
         'Local models lag frontier cloud models on the hardest tasks: very long cross-file reasoning, deeply unfamiliar frameworks, and niche languages. Hardware is a real constraint — capable agentic coding wants 24 GB+ VRAM for the larger model classes, and context windows at Q4 quantization trade memory for fidelity. Quantized models can degrade on subtle type-level reasoning; the verifier catches failures, but expect more retries on hard tasks. The architecture\u2019s answer is routing plus verification, not denial: use local for what verifies well, escalate deliberately, and let evidence — not vendor claims — draw the line.',
       ],
     },
+    {
+      heading: 'Context windows and memory on constrained hardware',
+      paragraphs: [
+        'The binding constraint in local inference is rarely compute; it is memory. A model\u2019s weights plus its key-value cache for the context window must fit in VRAM (or unified memory) together with the activation overhead of the runtime, and the cache grows with every token of repository context the agent carries. That is why context discipline is a local-first concern before it is a cost concern: AST-aware pruning, diff summarization and compaction decide whether a multi-file refactor fits a 32k window on a 24 GB card or thrashes into swapping that turns a two-minute task into a twenty-minute one.',
+        'Practical sizing guidance: on a 16 GB machine, a Q4-quantized 7B–8B model with an 8k–16k window leaves headroom for the agent\u2019s tool traffic; 24–32 GB unlocks 14B–32B models with larger windows; 48 GB+ runs 32B-class models at Q8 with comfortable context. Teams on constrained hardware should also exploit tiering inside a single mission: route symbol search and file reading to small models, reserve the large model for the synthesis step, and let the verifier arbitrate quality. The failure mode to watch for is silent context truncation mid-mission, which the router prevents by declaring window requirements before dispatch rather than discovering them at generation time.',
+      ],
+    },
+    {
+      heading: 'Team topologies for local inference',
+      paragraphs: [
+        'Individual workstations are the entry point, but the durable pattern is a tiered fleet. Tier one is developer-local Ollama for interactive, low-latency work. Tier two is a shared vLLM cluster sized to the team\u2019s concurrent-mission profile, providing batching efficiency that a single workstation cannot. Tier three is the policy ring: endpoints registered with declared jurisdictions and capability classes, so missions route across tiers by privacy classification rather than by whoever configured the endpoint first.',
+        'Operating the fleet well is ordinary platform engineering: capacity dashboards keyed to VRAM headroom and queue depth, model-version pinning with canary evaluation against your repository benchmark set, and budget guards that keep a single team\u2019s fan-out from starving another\u2019s. Because every routing decision is recorded with its policy reason, capacity planning gets real data — which tasks actually need the big tier — instead of anecdotes. Teams that start with one shared GPU and honest telemetry typically find they need less hardware than they feared, because verification-gated routing sends only the work that earns it.',
+      ],
+    },
+    {
+      heading: 'A practical adoption checklist for local-first agents',
+      paragraphs: [
+        'Local-first succeeds as an operating decision, not a manifesto. The checklist below sequences the rollout so each step produces evidence before the next grants more authority.',
+      ],
+      bullets: [
+        'Baseline: run the agent in read-only modes (Plan, Ask) against a local model for two weeks; record task graphs produced and verification pass rates by task type.',
+        'Classify and route: label repositories by privacy tier and confirm the router locks confidential work to local endpoints, with failed cloud dispatch attempts visible in the ledger.',
+        'Size honestly: measure VRAM headroom and context fit per model on your real missions; document the model-to-task matrix rather than trusting vendor claims.',
+        'Quantize with verification: evaluate Q4 versus Q8 on your benchmark set before standardizing; watch type-level reasoning tasks for retry-rate regressions.',
+        'Add a shared tier: stand up vLLM when concurrency, not capability, becomes the bottleneck; register it with the same policy and jurisdiction declarations.',
+        'Close the loop: feed per-model verification history back into routing so model promotion on your codebase is earned by evidence.',
+      ],
+    },
+    {
+      heading: 'The two failure patterns, and the fix',
+      paragraphs: [
+        'Two failure patterns account for most abandoned local-first programs. The first is capability mismatch: routing architecture-heavy reasoning to a model class that cannot verify it, then blaming local inference for the failures — the fix is the task matrix, not a bigger API bill. The second is operational neglect: unpinned model versions, no health probes, and silent context truncation that turns fast local models into a slow lottery. Both are solved by the same discipline that governs the rest of the platform — declare, verify, record — and teams that apply it find local inference becomes the boring, reliable majority of their agent compute, which is exactly the goal.',
+      ],
+    },
   ],
   faq: [
+    {
+      question: 'What hardware do I need for local-LLM coding?',
+      answer:
+        'A 16 GB-memory machine runs capable 7B–8B code models via Ollama or llama.cpp; 24–64 GB unlocks 32B-class models for heavier refactors. Team-serving deployments use vLLM on A100/H100 or multi-GPU workstations.'
+    },
+    {
+      question: 'Which open models are best for coding today?',
+      answer:
+        'The current open code families in the 7B to 32B class are strong on bounded engineering work; the routing policy tracks per-model verification history on your repository, which matters more than any general leaderboard.'
+    },
+    {
+      question: 'How do I keep context windows from truncating mid-mission?',
+      answer:
+        'Declare window requirements during routing, use AST-aware pruning and compaction, and let health probes confirm VRAM headroom before dispatch rather than discovering limits at generation time.'
+    },
+    {
+      question: 'Can local models run in CI?',
+      answer:
+        'Yes. llama.cpp runs GGUF models on standard runners without GPUs, and a shared vLLM endpoint can serve CI workers the same governed models the fleet uses, with the same policy checks.'
+    },
+    {
+      question: 'How often do local models need updating?',
+      answer:
+        'Pin versions, evaluate each new release against your benchmark set, and promote through the same verification gates as any dependency; the audit ledger makes each promotion reproducible.'
+    },
+    {
+      question: 'What is the single biggest operational mistake to avoid?',
+      answer:
+        'Routing work to a model class that cannot verify it. The task matrix plus verification history exists to prevent that failure, and it is the difference between local-first that works and local-first that gets abandoned.'
+    },
     {
       question: 'What hardware do I need for local-LLM coding?',
       answer:

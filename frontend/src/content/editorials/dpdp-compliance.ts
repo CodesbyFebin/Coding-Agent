@@ -48,8 +48,74 @@ export const dpdpCompliance: PillarEditorial = {
         'For public-sector and regulated deployments, pair the DPDP-oriented controls with the air-gapped agents pillar and the audit-provenance pillar; together they form the sovereign deployment pattern for Indian enterprises that cannot accept foreign processing under any configuration error.',
       ],
     },
+    {
+      heading: 'Consent, notice and the data-principal experience',
+      paragraphs: [
+        'The DPDP framework puts the data principal at the center: processing rests on lawful notice and, for most purposes, informed consent that can be withdrawn as easily as it was given. For an engineering platform the practical surface is the developer experience. Every identity that signs in should have been shown a notice describing what is collected and why, in plain language, with the processing purposes enumerated rather than bundled. Consent artifacts, including the version of the notice shown, belong in the audit store so the organization can answer "what did this person agree to and when" without guesswork.',
+        'Withdrawal is where most platforms leak compliance. When a developer revokes consent or leaves the organization, the platform must be able to deactivate their identity, reassign or archive their missions, and honor erasure for personal data that is no longer necessary for the stated purpose, all while preserving the tamper-evident audit record itself, which is typically kept under a lawful-obligation basis rather than consent. Engineering this distinction, separating operational logs from personal-data stores with different retention rules, is the difference between a rights request being a query and being a quarter-long project.',
+        'Because agent missions can process third-party personal data embedded in repositories (customer records in test fixtures, names in issue trackers), the platform\u2019s scrubbing and minimization controls extend there: personal data should be redacted from prompts and evidence where the task does not require it, and mission memory should not become an unmanaged shadow database of such data.',
+      ],
+    },
+    {
+      heading: 'Breach readiness and retention engineering',
+      paragraphs: [
+        'Reasonable security safeguards under the Act are proven by preparation, and the agent runtime gives teams unusually good instrumentation for it. The controls that matter: least-privilege access on every surface, cryptographic audit records that make tampering evident, sandboxing that contains any compromised workload, and secrets handling that keeps credentials out of contexts an attacker could read. On top of those, breach readiness is an engineering artifact: define what constitutes a personal-data breach in your deployment, wire the detection signals (anomalous egress, approval-gate overrides, audit gaps), and rehearse the notification path the way you rehearse incident response, because the Act imposes time-bounded reporting obligations to the Board and affected principals.',
+        'Retention is the quiet half of the discipline. Prompt histories, evidence artifacts, memory stores and audit logs each carry different sensitivity and different justified lifetimes; a retention matrix that says exactly how long each class survives, enforced by automated expiry rather than good intentions, both reduces breach exposure and makes any future erasure request tractable. The platform\u2019s artifact-hashing and provenance model is designed so that expiry can be verifiable: when something is deleted, the deletion itself is recorded without retaining the payload.',
+      ],
+    },
+    {
+      heading: 'A deployment checklist for DPDP-oriented operation',
+      paragraphs: [
+        'The controls only count when they are configured and verified, so the deployment checklist treats each one as a testable assertion rather than a statement of intent. Run it at onboarding and after every material change.',
+      ],
+      bullets: [
+        'Classify repositories: every project carries a data-classification label (public, internal, confidential, India-resident) that the routing fabric can enforce mechanically.',
+        'Register endpoints with jurisdictions: every model provider, cloud or local, is declared with its processing region; India-resident work fails closed to compliant endpoints only.',
+        'Verify egress: run the egress test suite with packet-level assertions for the air-gapped and resident profiles, and archive the results as audit evidence.',
+        'Configure telemetry ownership: confirm no third-party beacons, pin log destinations to operator-controlled infrastructure, and document retention per log class.',
+        'Bind approvals to identity: SSO-backed approval gates with signed decisions, so consequential processing always has an accountable authorizer.',
+        'Publish the data map: what personal data classes exist, where they live, who can access them, and how long each survives, ready for a DPIA or auditor on day one.',
+        'Rehearse rights and breach flows: execute an access request and an erasure request end-to-end, and run a breach-notification tabletop using the audit ledger as the factual record.',
+      ],
+    },
+    {
+      heading: 'Evidence over assertion',
+      paragraphs: [
+        'None of these steps requires the platform to make legal claims on your behalf; each produces evidence your counsel and auditors can evaluate. That is the honest division of labor: the architecture generates the artifacts of compliance, the organization owns the determination. Teams that maintain this checklist as living configuration, run in CI where possible, find that DPDP-oriented operation becomes a property of the system rather than a periodic scramble before reviews.',
+      ],
+    },
   ],
   faq: [
+    {
+      question: 'Is CodingAgent DPDP certified?',
+      answer:
+        'No certification is claimed. The platform provides DPDP-oriented controls — residency routing, minimal telemetry, PII hygiene, rights support, audit provenance — designed so your organisation can achieve and demonstrate compliance. Compliance is a legal determination specific to your deployment.'
+    },
+    {
+      question: 'Who decides compliance for a deployment using this platform?',
+      answer:
+        'Your organisation does, with its counsel and auditors. The platform produces the evidence, classifications, routing records, audit provenance, retention configuration, on which that determination rests, and deliberately avoids asserting a legal conclusion it cannot verify.'
+    },
+    {
+      question: 'How does the platform handle consent records?',
+      answer:
+        'Notice versions and consent artifacts are recorded with identity and timestamp in the audit store, so the organisation can answer what a principal agreed to and when, and prove withdrawal was honored.'
+    },
+    {
+      question: 'What happens to audit records when a principal requests erasure?',
+      answer:
+        'Operational personal data is erased per policy while the tamper-evident record of processing events is retained under the organisation\u2019s lawful basis, with deletions themselves recorded so the trail remains verifiable.'
+    },
+    {
+      question: 'Do agent missions create shadow copies of personal data?',
+      answer:
+        'The controls exist to prevent that: prompt and memory scrubbing, redaction where tasks do not require personal data, and retention matrices applied to mission memory so it never becomes an unmanaged store.'
+    },
+    {
+      question: 'Is cross-border inference ever permitted for resident repositories?',
+      answer:
+        'Only when policy explicitly allows it for the classification in force, and every grant or denial is recorded with its reason; the default posture for India-resident work is local or Indian-region endpoints only.'
+    },
     {
       question: 'Is CodingAgent DPDP certified?',
       answer:
