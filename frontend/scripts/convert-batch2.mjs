@@ -10,6 +10,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const FILES = [
   '/Users/cyberteck/.zcode/tmp/paste-attachments/2026-09-06/pasted-text-20260906-121600-43b2303f.txt',
   '/Users/cyberteck/.zcode/tmp/paste-attachments/2026-09-06/pasted-text-20260906-122248-e62dc486.txt',
+  '/Users/cyberteck/.zcode/tmp/paste-attachments/2026-09-06/pasted-text-20260906-122920-d6f192a8.txt',
+  '/Users/cyberteck/.zcode/tmp/paste-attachments/2026-09-06/pasted-text-20260906-123525-0c3d0b63.txt',
+  '/Users/cyberteck/.zcode/tmp/paste-attachments/2026-09-06/pasted-text-20260906-124659-fcd9a444.txt',
+  '/Users/cyberteck/.zcode/tmp/paste-attachments/2026-09-06/pasted-text-20260906-125733-58881096.txt',
 ];
 const EXISTING = new Set([
   'ai-coding-agents', 'model-context-protocol', 'dpdp-compliance', 'local-llm-coding',

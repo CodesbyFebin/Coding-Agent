@@ -19,6 +19,19 @@ import { mcpServerArchitecture } from './editorials/mcp-server-architecture';
 import { bidirectionalMcp } from './editorials/bidirectional-mcp';
 import { mcpToolDiscovery } from './editorials/mcp-tool-discovery';
 import { mcpPermissions } from './editorials/mcp-permissions';
+import { mcpAuthentication } from './editorials/mcp-authentication';
+import { mcpTransport } from './editorials/mcp-transport';
+import { mcpSecurity } from './editorials/mcp-security';
+import { buildingMcpIntegrations } from './editorials/building-mcp-integrations';
+import { vllmServing } from './editorials/vllm-serving';
+import { llamaCppRuntimes } from './editorials/llama-cpp-runtimes';
+import { lmStudio } from './editorials/lm-studio';
+import { ggufWorkflows } from './editorials/gguf-workflows';
+import { quantizedModels } from './editorials/quantized-models';
+import { vramAwareRouting } from './editorials/vram-aware-routing';
+import { offlineEmbeddings } from './editorials/offline-embeddings';
+import { airGappedAgents } from './editorials/air-gapped-agents';
+import { secretsIsolation } from './editorials/secrets-isolation';
 import { dpdpCompliance } from './editorials/dpdp-compliance';
 import { localLlmCoding } from './editorials/local-llm-coding';
 
@@ -46,6 +59,19 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [bidirectionalMcp.pillarId]: bidirectionalMcp,
   [mcpToolDiscovery.pillarId]: mcpToolDiscovery,
   [mcpPermissions.pillarId]: mcpPermissions,
+  [mcpAuthentication.pillarId]: mcpAuthentication,
+  [mcpTransport.pillarId]: mcpTransport,
+  [mcpSecurity.pillarId]: mcpSecurity,
+  [buildingMcpIntegrations.pillarId]: buildingMcpIntegrations,
+  [vllmServing.pillarId]: vllmServing,
+  [llamaCppRuntimes.pillarId]: llamaCppRuntimes,
+  [lmStudio.pillarId]: lmStudio,
+  [ggufWorkflows.pillarId]: ggufWorkflows,
+  [quantizedModels.pillarId]: quantizedModels,
+  [vramAwareRouting.pillarId]: vramAwareRouting,
+  [offlineEmbeddings.pillarId]: offlineEmbeddings,
+  [airGappedAgents.pillarId]: airGappedAgents,
+  [secretsIsolation.pillarId]: secretsIsolation,
   [dpdpCompliance.pillarId]: dpdpCompliance,
   [localLlmCoding.pillarId]: localLlmCoding,
 };
