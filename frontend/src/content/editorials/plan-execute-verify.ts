@@ -60,6 +60,21 @@ export const planExecuteVerify: PillarEditorial = {
         "The configuration system supports mission templates that capture common configurations for common task types. A \"documentation update\" template might have low verification requirements and high autonomy, while a \"security patch\" template might have high verification requirements and low autonomy.",
         "This configurability allows teams to tune the agent's behavior to their specific needs, risk tolerance, and workflow requirements without modifying the underlying execution engine."
       ]
+    },
+    {
+      "heading": "The economics of the loop: where tokens and time actually go",
+      "paragraphs": [
+        "Each phase has a distinct cost profile, and understanding it changes how teams configure missions. Planning is reasoning-heavy: reading repository context, generating the task graph, and validating it consumes a large share of total tokens relative to the work it authorizes. Execution is tool-heavy: most invocations are cheap, but each carries schema validation, permission evaluation, and audit logging. Verification is compute-heavy but token-light: compilers and test runners are deterministic processes that cost machine time, not model tokens, which is exactly why verification is the cheapest place to buy confidence.",
+        "This profile argues for spending tokens where they compound. A thorough plan that survives review prevents three failed execution cycles; hermetic verification prevents one bad diff from reaching review at all. Teams that skip planning to save tokens pay for it in retries, and teams that weaken verification to move faster pay for it in rollbacks. The loop makes those trade-offs explicit rather than emergent.",
+        "Wall-clock time follows the dependency structure of the task graph rather than its size. The critical path determines the floor; independent work units parallelize across sandboxes; and the verification phase parallelizes almost perfectly because gates are independent processes. In practice, a mission with a twenty-step critical path and forty parallelizable units completes in roughly the time of the critical path plus one verification sweep, not the sum of all steps."
+      ]
+    },
+    {
+      "heading": "Operating the loop in CI: headless missions and gates as policy",
+      "paragraphs": [
+        "The loop is not interactive-only. Headless missions run the identical three phases in CI: a failing pipeline triggers a debug mission, the plan is stored as an artifact, execution happens in ephemeral sandboxes, and verification gates are the same ones the pipeline itself runs. The output is not a merged change, it is a pull request with attached evidence: the plan, the diffs, and the verification report. Human review remains the merge authority.",
+        "Treating gates as pipeline policy keeps the contract symmetric: whatever the CI requires of human contributors, the agent’s verification must meet or exceed before a pull request is even opened. This is why the loop integrates cleanly with GitHub Actions, GitLab CI, or Jenkins without special plumbing: it respects the existing authority structure and simply arrives at the review step with more evidence than a human-authored branch typically carries."
+      ]
     }
   ],
   "faq": [
