@@ -60,6 +60,28 @@ export const parallelSubagents: PillarEditorial = {
         "The governance model for parallel execution is one of CodingAgent's key differentiators: it enables the performance benefits of parallelism without sacrificing the safety and correctness guarantees that make agents trustworthy in production."
       ]
     }
+,
+{
+  heading: 'Approval Analytics and Continuous Improvement',
+  paragraphs: [
+    'Approval analytics provide insights into the approval process: how many approvals are requested, how long approvals take, which approvers are most active, and which actions are most frequently approved or denied. These analytics enable continuous improvement of the approval system by identifying bottlenecks, optimizing approval routing, and refining approval policies.',
+    'Approval time analysis reveals how long it takes for approvals to be granted or denied. Long approval times indicate bottlenecks: approvers are overwhelmed, approval requests are not reaching the right people, or the approval process is too complex. Solutions include: adding more approvers, improving approval routing to reach the right people faster, and simplifying the approval process by providing better information or automating routine decisions.',
+    'Approval pattern analysis reveals which actions are most frequently approved, which are most frequently denied, and which require modification. Actions that are always approved without modification are candidates for reclassification from ASK to ALLOW, reducing approval overhead. Actions that are always denied indicate a misalignment between agent behavior and organizational policies, requiring either agent reconfiguration or policy revision.',
+    'Approver workload analysis reveals how approval requests are distributed across approvers. Uneven distribution indicates routing problems: some approvers are overwhelmed while others are underutilized. Solutions include: improving routing rules to distribute requests more evenly, adding more approvers for high-volume action types, and implementing load balancing to redirect requests from overloaded approvers to available ones.',
+    'Approval quality analysis assesses the quality of approval decisions: are approvers making correct decisions, are they providing useful feedback, and are they following established policies. Poor quality decisions indicate a need for better training, clearer policies, or improved approval interfaces that provide better information to approvers.',
+    'Continuous improvement uses these analytics to iteratively refine the approval system: adjusting approval policies based on patterns, optimizing routing based on workload, improving interfaces based on feedback, and training approvers based on quality analysis. The goal is to minimize approval overhead while maintaining the governance benefits of human oversight.'
+  ]
+},
+{
+  heading: 'Integration with External Approval Systems',
+  paragraphs: [
+    'Many organizations have existing approval systems: IT service management (ITSM) tools like ServiceNow, workflow automation platforms like Zapier, or custom approval systems built for specific purposes. Integrating CodingAgent approval gates with these external systems enables organizations to leverage existing workflows, maintain consistency across approval processes, and avoid duplicating approval infrastructure.',
+    'ITSM integration enables approval requests to be created as tickets in ITSM systems, routed through existing approval workflows, and tracked in the same system as other IT requests. This integration is valuable for organizations that require all changes to go through ITSM for compliance or audit purposes. The integration must handle bidirectional communication: approval requests flow from CodingAgent to ITSM, and approval decisions flow from ITSM back to CodingAgent.',
+    'Workflow automation integration enables approval requests to trigger automated workflows: notifications to approvers, escalation if approvals are not granted within a time limit, and integration with other systems based on approval decisions. This integration reduces manual effort and ensures that approval processes are followed consistently.',
+    'Custom system integration enables integration with organization-specific approval systems through APIs, webhooks, or message queues. Custom integration is valuable for organizations with unique approval requirements that cannot be met by off-the-shelf systems. The integration must handle authentication, authorization, data format translation, and error handling to ensure reliable communication between CodingAgent and the custom system.',
+    'Integration challenges include: handling latency (external systems may be slow to respond, delaying agent execution), ensuring consistency (approval decisions in external systems must be reflected in CodingAgent state), managing failures (what happens if the external system is unavailable), and maintaining security (approval requests may contain sensitive information that must be protected in transit and at rest). These challenges require careful design, thorough testing, and robust error handling to ensure reliable operation.'
+  ]
+}
   ],
   "faq": [
     {

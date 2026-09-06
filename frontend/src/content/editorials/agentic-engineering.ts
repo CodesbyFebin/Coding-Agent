@@ -75,8 +75,7 @@ export const agenticEngineering: PillarEditorial = {
         "Not every candidate deserves automation first. The selection rule that works: high verification clarity, bounded blast radius, and meaningful repetition. Dependency upgrades, test backfill, migration mechanics, documentation generation from verified code, and security triage all score well. Novel product architecture, ambiguous requirements, and anything whose acceptance criteria cannot be written down score poorly \u2014 automate those last, or not at all.",
         "Score each candidate against the four questions the platform answers architecturally: what verifies completion, what bounds tool authority, what records provenance, and what happens when it is wrong. Candidates with weak answers on two or more questions need governance work before automation work. This sequencing keeps early wins visible and prevents the over-automation that sours teams on the entire discipline."
       ]
-    }
-,
+    },
     {
       "heading": "The minimum viable governance stack",
       "paragraphs": [
@@ -84,6 +83,27 @@ export const agenticEngineering: PillarEditorial = {
         "The stack is deliberately small because governance that is heavy gets bypassed. Each mechanism earns its place by answering one of the four questions: what bounds authority, what verifies completion, what records provenance, and what happens when it is wrong. Start there, automate a low-risk workflow, and let the first incident \u2014 not imagination \u2014 justify the next control."
       ]
     }
+,
+{
+  heading: 'Task Graph Optimization Strategies',
+  paragraphs: [
+    'Task graph optimization is the process of restructuring a task graph to minimize execution time while respecting dependency constraints. The critical path—the longest chain of dependent work units—determines the minimum possible execution time. Optimization focuses on reducing the critical path length and maximizing parallelism in non-critical work units.',
+    'One optimization strategy is work unit splitting: breaking a large work unit into smaller units that can execute in parallel. For example, if a work unit involves refactoring 20 files, it can be split into 4 work units of 5 files each, assuming the files have no interdependencies. The splitting must preserve correctness: each sub-unit must be independently verifiable, and the aggregation of results must produce the same output as the monolithic unit.',
+    'Another strategy is dependency relaxation: identifying dependencies that are not strictly necessary and removing them. For example, if work unit B reads a file produced by work unit A, but the file content is predictable (e.g., a configuration file with known structure), B might be able to execute in parallel with A using the predicted content, then verify against the actual content after A completes. This speculative execution can reduce critical path length at the cost of potential rework.',
+    'Resource-aware scheduling is a third strategy: assigning work units to execution resources based on their requirements and the available resources. A work unit that requires GPU acceleration should be scheduled on a GPU-equipped sandbox, while a work unit that is CPU-bound can run on a CPU-only sandbox. The scheduler considers resource availability, work unit requirements, and dependency constraints to produce an optimal schedule.',
+    'These optimization strategies are not mutually exclusive and are often combined. The task graph optimizer evaluates multiple restructuring options, estimates the execution time for each, and selects the option with the shortest estimated time. The estimation is based on historical execution data: how long similar work units have taken in the past, what resources they used, and what the parallelism opportunities were.'
+  ]
+},
+{
+  heading: 'Task Graph Visualization and Debugging',
+  paragraphs: [
+    'Task graphs are inherently visual structures, and effective visualization is essential for understanding, debugging, and optimizing them. CodingAgent provides multiple visualization modes: hierarchical view (showing work units in a tree structure based on dependencies), timeline view (showing work units on a timeline based on execution order and duration), and dependency view (showing work units as nodes and dependencies as edges).',
+    'The hierarchical view is useful for understanding the overall structure of a plan: what are the major phases, what work units belong to each phase, and how do phases depend on each other. This view collapses low-level details and emphasizes the high-level structure, making it easier to communicate the plan to stakeholders.',
+    'The timeline view is useful for understanding execution dynamics: which work units are executing in parallel, where are the bottlenecks, and how long is each work unit taking. This view reveals performance issues that are not apparent in the hierarchical view: a work unit that takes much longer than expected, a parallelism opportunity that is not being exploited, or a resource contention issue that is slowing execution.',
+    'The dependency view is useful for understanding the dependency structure: which work units depend on which, what is the critical path, and where are the opportunities for optimization. This view highlights the critical path in a distinct color, making it easy to identify the work units that determine the minimum execution time.',
+    'Debugging task graphs involves identifying why a graph has a particular structure, why execution is slower than expected, or why verification is failing. The visualization tools support debugging by: highlighting the work unit that is currently executing, showing the inputs and outputs of each work unit, displaying verification results for each work unit, and providing access to the full execution log for each work unit. This comprehensive debugging support enables operators to quickly identify and resolve issues.'
+  ]
+}
   ],
   "faq": [
     {

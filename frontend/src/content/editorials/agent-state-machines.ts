@@ -60,6 +60,27 @@ export const agentStateMachines: PillarEditorial = {
         "This extensibility ensures that the state machine can evolve with organizational needs while maintaining the formal guarantees that make it trustworthy."
       ]
     }
+,
+{
+  heading: 'Conflict Detection and Resolution Strategies',
+  paragraphs: [
+    'Conflict detection is the process of identifying when parallel subagents have produced incompatible results. Conflicts can occur at multiple levels: file-level conflicts (two subagents modified the same file), semantic conflicts (two subagents made changes that are logically incompatible even though they modified different files), and verification conflicts (the aggregated result fails verification even though individual subagent results passed).',
+    'File-level conflicts are detected through diff analysis: comparing the modifications made by each subagent and identifying overlapping changes. If two subagents modified different parts of the same file, the modifications can be merged automatically. If they modified the same part, the conflict must be resolved through re-execution or human review.',
+    'Semantic conflicts are more challenging to detect because they require understanding the logical relationship between changes made by different subagents. For example, if one subagent adds a function and another subagent modifies the function signature, the changes are semantically incompatible even though they modified different lines of code. Semantic conflict detection uses type checking, dependency analysis, and test execution to identify incompatibilities.',
+    'Resolution strategies for conflicts include: automatic merging (for non-overlapping changes), subagent re-execution (for overlapping changes where one subagent can be modified to avoid the conflict), human review (for complex conflicts that require judgment), and abort (for conflicts that cannot be resolved without fundamental changes to the plan). The choice of strategy depends on the nature of the conflict, the cost of re-execution, and the urgency of the mission.',
+    'Conflict prevention is preferable to conflict resolution. Prevention strategies include: careful task decomposition that minimizes overlap between subagents, dependency-aware scheduling that serializes subagents with potential conflicts, and resource allocation that assigns exclusive access to shared resources. Prevention reduces the overhead of conflict resolution and improves the predictability of parallel execution.'
+  ]
+},
+{
+  heading: 'Resource Management and Scheduling',
+  paragraphs: [
+    'Resource management is critical for parallel subagent execution because resources are finite: CPU, memory, GPU, network bandwidth, and sandbox environments are all limited. Effective resource management ensures that resources are allocated efficiently, contention is minimized, and no single subagent monopolizes resources at the expense of others.',
+    'Resource allocation strategies include: static allocation (resources are allocated to subagents at the start of execution and held until completion), dynamic allocation (resources are allocated on-demand and released when no longer needed), and priority-based allocation (resources are allocated based on subagent priority, with higher-priority subagents receiving preferential access). The choice of strategy depends on the predictability of resource requirements, the cost of resource contention, and the importance of fairness between subagents.',
+    'Scheduling is the process of determining when each subagent should execute based on dependencies, resource availability, and priorities. Scheduling strategies include: FIFO (first-in, first-out, where subagents execute in the order they become ready), priority-based (where higher-priority subagents execute first), and critical-path-based (where subagents on the critical path execute first to minimize total execution time). The scheduler must balance these strategies to optimize overall execution time while respecting resource constraints.',
+    'Resource monitoring provides visibility into resource utilization: how much CPU, memory, GPU, and network bandwidth each subagent is consuming, and how much is available for other subagents. Monitoring enables the scheduler to make informed decisions: if a subagent is consuming more resources than expected, the scheduler might throttle it or reallocate resources to other subagents. Monitoring also enables anomaly detection: if a subagent is consuming resources at an unusual rate, it might indicate a bug or runaway behavior that requires intervention.',
+    'Resource limits prevent any single subagent from consuming excessive resources: CPU quotas limit CPU usage, memory limits prevent memory exhaustion, disk quotas prevent disk space exhaustion, and network bandwidth caps prevent network abuse. When a subagent exceeds its limits, it is terminated and the mission is marked as failed. This prevents runaway subagents from affecting other subagents or the host system.'
+  ]
+}
   ],
   "faq": [
     {

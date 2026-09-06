@@ -60,6 +60,28 @@ export const taskGraphs: PillarEditorial = {
         "The visualization system also supports historical comparison: comparing the current task graph with previous versions shows how the plan evolved during execution, which modifications were made, and why. This historical view is invaluable for post-mortem analysis and continuous improvement."
       ]
     }
+,
+{
+  heading: 'State Machine Composition Patterns',
+  paragraphs: [
+    'Complex agent behaviors are often composed from simpler state machines through well-defined composition patterns. These patterns enable reuse, modularity, and predictable behavior when combining multiple state machines into a larger system.',
+    'Hierarchical composition is the most common pattern: a parent state machine contains child state machines, each responsible for a specific aspect of agent behavior. For example, a parent state machine might manage the overall mission lifecycle (IDLE, PLANNING, EXECUTING, VERIFYING, COMPLETED), while child state machines manage specific concerns like tool execution (TOOL_IDLE, TOOL_EXECUTING, TOOL_WAITING, TOOL_COMPLETED, TOOL_FAILED) or approval workflows (APPROVAL_PENDING, APPROVAL_GRANTED, APPROVAL_DENIED). The parent delegates to children based on the current state and transitions children based on their completion.',
+    'Parallel composition is used when multiple state machines should execute concurrently: each state machine progresses independently, and the overall system state is the combination of all child states. This pattern is used for parallel subagents: each subagent has its own state machine, and the orchestrator tracks the state of all subagents. The orchestrator transitions to COMPLETED only when all subagents have reached their COMPLETED states.',
+    'State machine inheritance enables specialization: a base state machine defines common states and transitions, and specialized state machines extend the base with additional states or modified transitions. For example, a base agent state machine might define the core lifecycle, while a security-focused agent state machine extends it with additional states for security scanning and vulnerability remediation. This pattern enables reuse while allowing specialization for specific agent modes or mission types.',
+    'Composition patterns must preserve the formal properties of state machines: determinism (the same input always produces the same state transition), reachability (all states can be reached from the initial state), and termination (all execution paths eventually reach a terminal state). Violating these properties leads to unpredictable behavior: agents that get stuck in infinite loops, states that are never reached, or executions that never terminate. Formal verification of composed state machines ensures these properties are preserved.'
+  ]
+},
+{
+  heading: 'State Machine Testing Strategies',
+  paragraphs: [
+    'Testing state machines requires strategies that go beyond traditional unit testing. State machines have complex behavior that emerges from the interaction of states, transitions, and inputs. Testing must cover not just individual transitions but also sequences of transitions, edge cases, and error recovery paths.',
+    'State coverage testing ensures that every state in the state machine is visited at least once during testing. This is the most basic form of testing and catches states that are unreachable due to configuration errors or logic bugs. State coverage is necessary but not sufficient: a state might be reachable but the transitions into and out of it might be incorrect.',
+    'Transition coverage testing ensures that every transition in the state machine is executed at least once. This catches transitions that are never taken due to incorrect guard conditions or missing event handlers. Transition coverage is more thorough than state coverage but still does not catch all bugs: a transition might be executed but with incorrect inputs or in an incorrect context.',
+    'Path coverage testing ensures that every possible path through the state machine is executed at least once. This is the most thorough form of testing but is often impractical for complex state machines due to the exponential number of paths. In practice, path coverage is approximated by testing representative paths that cover the most common and most critical scenarios.',
+    'Error injection testing deliberately introduces errors to verify that the state machine handles them correctly. Errors include: invalid inputs (inputs that violate schema or guard conditions), missing events (expected events that do not occur), timeout events (events that do not occur within the expected time), and concurrent events (multiple events that occur simultaneously). Error injection testing verifies that the state machine transitions to appropriate error states, recovers correctly, and maintains formal properties even in the presence of errors.',
+    'Property-based testing generates random inputs and sequences of events to explore the state space and verify that formal properties hold. This approach can uncover edge cases that are not apparent from manual test design. Property-based testing is particularly valuable for verifying properties like determinism (the same input sequence always produces the same state sequence) and safety (the state machine never enters an invalid state).'
+  ]
+}
   ],
   "faq": [
     {
