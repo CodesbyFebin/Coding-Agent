@@ -84,6 +84,13 @@ export const dpdpCompliance: PillarEditorial = {
         'None of these steps requires the platform to make legal claims on your behalf; each produces evidence your counsel and auditors can evaluate. That is the honest division of labor: the architecture generates the artifacts of compliance, the organization owns the determination. Teams that maintain this checklist as living configuration, run in CI where possible, find that DPDP-oriented operation becomes a property of the system rather than a periodic scramble before reviews.',
       ],
     },
+    {
+      heading: 'Vendor and model-provider obligations under the policy fabric',
+      paragraphs: [
+        'A DPDP-oriented deployment is only as resident as its weakest vendor, so the routing fabric treats model providers and integrations as governed vendors rather than opaque utilities. Every endpoint registration carries a declared jurisdiction, a data-retention statement and a capability class; the policy layer evaluates those declarations exactly as it evaluates tool permissions, and the audit ledger records which vendor processed which mission. When a vendor changes regions or retention terms, the registration is updated and the change is visible in review, not discovered in a migration bill.',
+        'The same discipline extends to sub-processors: a cloud model provider that logs prompts in another region, a monitoring SaaS with global beacons, or a vector database replicated abroad each breaks residency silently. The platform\u2019s contribution is making the data map enumerable: endpoints, destinations, retention and egress are configuration that can be exported for review, so vendor risk assessments start from facts instead of questionnaires. Teams should refresh vendor attestations on a schedule and treat an unattested endpoint exactly like an unreviewed MCP server, which is to say, DENY until proven otherwise.',
+      ],
+    },
   ],
   faq: [
     {

@@ -84,6 +84,13 @@ export const localLlmCoding: PillarEditorial = {
         'Two failure patterns account for most abandoned local-first programs. The first is capability mismatch: routing architecture-heavy reasoning to a model class that cannot verify it, then blaming local inference for the failures — the fix is the task matrix, not a bigger API bill. The second is operational neglect: unpinned model versions, no health probes, and silent context truncation that turns fast local models into a slow lottery. Both are solved by the same discipline that governs the rest of the platform — declare, verify, record — and teams that apply it find local inference becomes the boring, reliable majority of their agent compute, which is exactly the goal.',
       ],
     },
+    {
+      heading: 'The energy, cost and sustainability case',
+      paragraphs: [
+        'Local inference changes the cost curve in ways that compound over an agent program\u2019s lifetime. After the hardware is owned, the marginal cost of a token is electricity; a workstation running a 14B model through a full working day of missions costs a fraction of the equivalent API spend, and a shared vLLM server amortizes that further across the team. Budget guards that would throttle cloud usage simply stop applying, which removes the quiet pressure to under-use agents and therefore under-benefit from them.',
+        'Sustainability and predictability follow the same arithmetic. Batch-efficient serving on shared hardware converts spiky per-developer API demand into steady, schedulable load; electricity and depreciation replace per-token volatility; and because routing decisions are recorded, finance gets a defensible attribution of compute to outcomes rather than an inscrutable invoice. The honest caveats: hardware has an upfront carbon and capital cost, idle GPU fleets waste both, and the largest frontier workloads still justify cloud spend. The routing ledger is the arbiter, publish the per-task cost comparison quarterly and let the numbers draw the line.',
+      ],
+    },
   ],
   faq: [
     {
