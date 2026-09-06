@@ -1,6 +1,15 @@
 import type { PillarEditorial } from './types';
 import { wordCount } from './types';
 import { aiCodingAgents } from './editorials/ai-coding-agents';
+import { agenticEngineering } from './editorials/agentic-engineering';
+import { planExecuteVerify } from './editorials/plan-execute-verify';
+import { taskGraphs } from './editorials/task-graphs';
+import { agentStateMachines } from './editorials/agent-state-machines';
+import { parallelSubagents } from './editorials/parallel-subagents';
+import { humanApprovalGates } from './editorials/human-approval-gates';
+import { agentObservability } from './editorials/agent-observability';
+import { durableRuntimes } from './editorials/durable-runtimes';
+import { productionOperations } from './editorials/production-operations';
 import { modelContextProtocol } from './editorials/model-context-protocol';
 import { dpdpCompliance } from './editorials/dpdp-compliance';
 import { localLlmCoding } from './editorials/local-llm-coding';
@@ -10,21 +19,27 @@ import { localLlmCoding } from './editorials/local-llm-coding';
 // a substantive editorial exists here — the single indexability policy that
 // every public discovery surface shares.
 export const REGISTRY: Record<string, PillarEditorial> = {
+  [agenticEngineering.pillarId]: agenticEngineering,
+  [planExecuteVerify.pillarId]: planExecuteVerify,
+  [taskGraphs.pillarId]: taskGraphs,
+  [agentStateMachines.pillarId]: agentStateMachines,
+  [parallelSubagents.pillarId]: parallelSubagents,
+  [humanApprovalGates.pillarId]: humanApprovalGates,
+  [agentObservability.pillarId]: agentObservability,
+  [durableRuntimes.pillarId]: durableRuntimes,
+  [productionOperations.pillarId]: productionOperations,
   [aiCodingAgents.pillarId]: aiCodingAgents,
   [modelContextProtocol.pillarId]: modelContextProtocol,
   [dpdpCompliance.pillarId]: dpdpCompliance,
   [localLlmCoding.pillarId]: localLlmCoding,
 };
-
 export function getEditorial(pillarId: string): PillarEditorial | undefined {
   return REGISTRY[pillarId];
 }
-
 // Publish bar: a pillar editorial is indexable only at substantive depth
 // (>= MIN_EDITORIAL_WORDS). Shorter entries remain drafts: rendered with
 // noindex and excluded from the sitemap until extended.
 export const MIN_EDITORIAL_WORDS = 2000;
-
 export function isContentIndexable(pillarId: string): boolean {
   const e = REGISTRY[pillarId];
   return Boolean(e) && wordCount(e) >= MIN_EDITORIAL_WORDS;
