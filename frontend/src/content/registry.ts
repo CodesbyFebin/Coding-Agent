@@ -11,6 +11,14 @@ import { agentObservability } from './editorials/agent-observability';
 import { durableRuntimes } from './editorials/durable-runtimes';
 import { productionOperations } from './editorials/production-operations';
 import { modelContextProtocol } from './editorials/model-context-protocol';
+import { ollamaIntegration } from './editorials/ollama-integration';
+import { inrPricingBilling } from './editorials/inr-pricing-billing';
+import { hallucinationDefense } from './editorials/hallucination-defense';
+import { mcpClientArchitecture } from './editorials/mcp-client-architecture';
+import { mcpServerArchitecture } from './editorials/mcp-server-architecture';
+import { bidirectionalMcp } from './editorials/bidirectional-mcp';
+import { mcpToolDiscovery } from './editorials/mcp-tool-discovery';
+import { mcpPermissions } from './editorials/mcp-permissions';
 import { dpdpCompliance } from './editorials/dpdp-compliance';
 import { localLlmCoding } from './editorials/local-llm-coding';
 
@@ -30,6 +38,14 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [productionOperations.pillarId]: productionOperations,
   [aiCodingAgents.pillarId]: aiCodingAgents,
   [modelContextProtocol.pillarId]: modelContextProtocol,
+  [ollamaIntegration.pillarId]: ollamaIntegration,
+  [inrPricingBilling.pillarId]: inrPricingBilling,
+  [hallucinationDefense.pillarId]: hallucinationDefense,
+  [mcpClientArchitecture.pillarId]: mcpClientArchitecture,
+  [mcpServerArchitecture.pillarId]: mcpServerArchitecture,
+  [bidirectionalMcp.pillarId]: bidirectionalMcp,
+  [mcpToolDiscovery.pillarId]: mcpToolDiscovery,
+  [mcpPermissions.pillarId]: mcpPermissions,
   [dpdpCompliance.pillarId]: dpdpCompliance,
   [localLlmCoding.pillarId]: localLlmCoding,
 };
