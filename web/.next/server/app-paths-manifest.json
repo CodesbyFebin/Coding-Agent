@@ -1,14 +1,14 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/faq/page": "app/faq/page.js",
   "/pillars/page": "app/pillars/page.js",
-  "/platform/page": "app/platform/page.js",
   "/agent-modes/page": "app/agent-modes/page.js",
-  "/page": "app/page.js",
+  "/faq/page": "app/faq/page.js",
+  "/platform/page": "app/platform/page.js",
   "/security-matrix/page": "app/security-matrix/page.js",
-  "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/page": "app/page.js",
+  "/[slug]/page": "app/[slug]/page.js",
   "/pillars/[slug]/page": "app/pillars/[slug]/page.js",
   "/local-runtimes/page": "app/local-runtimes/page.js",
-  "/[slug]/page": "app/[slug]/page.js",
+  "/sitemap.xml/route": "app/sitemap.xml/route.js",
   "/robots.txt/route": "app/robots.txt/route.js"
 }

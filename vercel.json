@@ -1,6 +1,43 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
   "buildCommand": "cd web && npm ci && npm run build",
-  "outputDirectory": "web/.next"
+  "outputDirectory": "web/out",
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/login", "destination": "https://app.codingagent.in/login", "permanent": false },
+    { "source": "/register", "destination": "https://app.codingagent.in/register", "permanent": false },
+    { "source": "/projects/:path*", "destination": "https://app.codingagent.in/projects/:path*", "permanent": false },
+    { "source": "/missions", "destination": "https://app.codingagent.in/projects", "permanent": false },
+    { "source": "/analytics", "destination": "https://app.codingagent.in/analytics", "permanent": false },
+    { "source": "/code", "destination": "https://app.codingagent.in/code", "permanent": false },
+    { "source": "/terminal", "destination": "https://app.codingagent.in/terminal", "permanent": false },
+    { "source": "/browser", "destination": "https://app.codingagent.in/browser", "permanent": false },
+    { "source": "/memory", "destination": "https://app.codingagent.in/memory", "permanent": false },
+    { "source": "/skills", "destination": "https://app.codingagent.in/skills", "permanent": false },
+    { "source": "/mcp", "destination": "/model-context-protocol", "permanent": true },
+    { "source": "/schedules", "destination": "https://app.codingagent.in/schedules", "permanent": false },
+    { "source": "/security", "destination": "/security-matrix", "permanent": false },
+    { "source": "/settings", "destination": "https://app.codingagent.in/settings", "permanent": false },
+    { "source": "/workspaces", "destination": "https://app.codingagent.in/projects", "permanent": false },
+    { "source": "/about", "destination": "/platform", "permanent": true },
+    { "source": "/learn", "destination": "/pillars", "permanent": true },
+    { "source": "/compare", "destination": "/pillars", "permanent": true },
+    { "source": "/research", "destination": "/platform", "permanent": true },
+    { "source": "/sovereign-ai", "destination": "/india-sovereign-ai", "permanent": true },
+    { "source": "/glossary", "destination": "/pillars", "permanent": true },
+    { "source": "/status", "destination": "/", "permanent": true },
+    { "source": "/guides/:path*", "destination": "/pillars", "permanent": true },
+    { "source": "/blog/:path*", "destination": "/pillars", "permanent": true },
+    { "source": "/sitemaps/:path*", "destination": "/sitemap.xml", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Robots-Tag", "value": "all" }
+      ]
+    }
+  ]
 }
