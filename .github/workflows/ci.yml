@@ -50,6 +50,6 @@ jobs:
           grep -q "PILLAR DIRECTORY" dist/pillars/index.html
           grep -q "Task decomposition" dist/ai-coding-agents/index.html
           grep -q "Questions and answers" dist/ai-coding-agents/index.html
-          grep -q "noindex, follow" dist/dpdp-compliance/index.html
+          grep -q "noindex, follow" dist/ollama-integration/index.html
           grep -q "rel=\"canonical\" href=\"https://codingagent.in/dpdp-compliance\"" dist/dpdp-compliance/index.html
-          grep -c "<loc>" dist/sitemap.xml | grep -qx "9"
+          grep -c "<loc>" dist/sitemap.xml | grep -qx "11"
