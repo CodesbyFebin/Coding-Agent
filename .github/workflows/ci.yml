@@ -52,4 +52,4 @@ jobs:
           grep -q "Questions and answers" dist/ai-coding-agents/index.html
           grep -q "noindex, follow" dist/dpdp-compliance/index.html
           grep -q "rel=\"canonical\" href=\"https://codingagent.in/dpdp-compliance\"" dist/dpdp-compliance/index.html
-          grep -c "<loc>" dist/sitemap.xml | grep -qx "8"
+          grep -c "<loc>" dist/sitemap.xml | grep -qx "9"
