@@ -87,6 +87,18 @@ export const agenticEngineering: PillarEditorial = {
   ],
   "faq": [
     {
+      "question": "What does day-one adoption look like?",
+      "answer": "Enable read-only modes on one repository, run five real missions, and review the plans and verification reports. Grant write access to an ephemeral workspace only after those reviews. The whole onboarding is a week, and every step produces evidence you would want anyway."
+    },
+    {
+      "question": "How does the team keep knowledge when people rotate?",
+      "answer": "The audit ledger and versioned skills are the institutional memory: what was changed, why, under which policy, and which workflows were verified. New engineers read the ledger instead of inheriting folklore, and skills carry the verified patterns forward."
+    },
+    {
+      "question": "What is the biggest cultural objection, honestly?",
+      "answer": "Fear that agents replace judgment. The architecture answers structurally: agents propose, humans authorize consequential actions, and verification bounds what can ship. Teams that publish their approval-gate design internally see the objection fade faster than any memo could manage."
+    },
+    {
       "question": "What is agentic engineering?",
       "answer": "Agentic engineering is the disciplined methodology for designing, governing, testing, and deploying semi-autonomous software engineering agents that operate within explicit permission boundaries, produce verifiable evidence of completion, and integrate into production development workflows."
     },

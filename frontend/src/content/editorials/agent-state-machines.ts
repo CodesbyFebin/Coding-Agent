@@ -63,6 +63,22 @@ export const agentStateMachines: PillarEditorial = {
   ],
   "faq": [
     {
+      "question": "Which states does a mission typically move through?",
+      "answer": "A standard lifecycle covers planned, executing, verifying, waiting-approval, completed, failed, and cancelled. Transitions are explicit: an executing mission cannot skip to completed without verification evidence, and a waiting-approval mission resumes only after a recorded decision."
+    },
+    {
+      "question": "How do state machines prevent runaway agent loops?",
+      "answer": "Loops appear as repeated transitions between the same states with no progress, which transition counters monitor. Budgets and circuit breakers trip on anomalous frequency, pausing the mission for review instead of burning tokens indefinitely."
+    },
+    {
+      "question": "Can a mission be paused and resumed?",
+      "answer": "Yes. Durable runtimes serialize the full state machine with completed work units and evidence, so a pause, restart, or crash resumes from the first incomplete node with history intact."
+    },
+    {
+      "question": "Who can force a state transition?",
+      "answer": "Only declared operator actions through governed interfaces: approval decisions, cancellations, escalations. Every forced transition is recorded with identity and reason, keeping the mission history tamper-evident."
+    },
+    {
       "question": "What is an agent state machine?",
       "answer": "An agent state machine is a deterministic finite state machine that governs agent lifecycle transitions, defining what states an agent can be in (IDLE, PLANNING, EXECUTING, VERIFYING, COMPLETED, FAILED, PAUSED), what transitions between states are valid, and what tools are available in each state."
     },

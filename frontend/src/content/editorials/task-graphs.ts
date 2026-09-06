@@ -63,6 +63,26 @@ export const taskGraphs: PillarEditorial = {
   ],
   "faq": [
     {
+      "question": "How does the agent decide dependencies between work units?",
+      "answer": "From data flow and file ownership: a unit that produces an artifact another unit consumes creates a dependency; two units editing the same file are serialized; units touching disjoint files with no data flow are independent and parallelizable."
+    },
+    {
+      "question": "What happens when a work unit fails mid-graph?",
+      "answer": "The engine retries transient failures within budget, and permanent failures mark the node failed so downstream dependents are withheld while independent branches continue. A failed node can be re-planned and re-executed without discarding completed siblings."
+    },
+    {
+      "question": "Can humans edit a task graph before execution?",
+      "answer": "Yes, and plan review is the recommended default. Operators can remove, merge, or re-scope nodes and tighten acceptance criteria; the edited graph is re-validated for cycles and schema before any tool runs."
+    },
+    {
+      "question": "How large can a task graph grow?",
+      "answer": "Practically bounded by verification capacity and context discipline, not the data structure. Graphs of hundreds of units execute fine when each node stays atomic; graphs fail when nodes become vague, which schema validation and acceptance-criteria checks catch early."
+    },
+    {
+      "question": "Do task graphs help with cost as well as speed?",
+      "answer": "Yes. Parallelization shortens wall-clock time, while node-level scoping keeps each tool call small: the agent reads only what its node needs. Combined with context compaction, this is where most token savings come from."
+    },
+    {
       "question": "What is a task graph in CodingAgent?",
       "answer": "A task graph is a directed acyclic graph (DAG) that represents a complex engineering goal decomposed into interdependent work units. Each node is an atomic work unit with specific tools, inputs, and acceptance criteria. Each edge is a dependency relationship that determines execution order."
     },
