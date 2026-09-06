@@ -60,6 +60,21 @@ export const agenticEngineering: PillarEditorial = {
         "The platform's architecture supports this evolution through its modular design: the execution runtime, the permission system, the verification pipeline, and the observability layer are all independently extensible. New capabilities can be added without modifying the core governance architecture.",
         "The discipline also benefits from the open-source model: the community can contribute new agent modes, new tool integrations, new verification methods, and new governance patterns. Each contribution is reviewed against the six principles to ensure it maintains the production-grade safety and correctness that define agentic engineering."
       ]
+    },
+    {
+      "heading": "Operating agreements: how teams keep agent programs healthy",
+      "paragraphs": [
+        "Agentic engineering succeeds or fails on operating agreements that outlive individual enthusiasm. The ones that matter are short. First, a scope charter per repository: which modes are enabled, which directories are writable, which capabilities stay behind approval gates. Second, an evidence contract: every mission must produce its plan, diffs, and verification report before review \u2014 no evidence, no review. Third, a rollback covenant: any verified change can still be reverted by a human without negotiation, and rollbacks are never punished. These three agreements prevent most of the failure modes teams discover the hard way.",
+        "The second discipline is review hygiene. Agent-produced pull requests carry more evidence than human branches, which changes the review task: reviewers verify the acceptance criteria were the right ones and spot-check the diff, rather than hunting for syntax errors the verifier already caught. Teams should retrain review expectations explicitly, because applying token-level review habits to task-level agent output wastes the evidence advantage.",
+        "The third is incident practice. When an agent mission fails in production, run the same post-mortem process as any other incident: timeline from the audit ledger, contributing factors from the failure classification, and corrective actions that change policy or verification rather than blame. Teams that treat agent failures as ordinary engineering signals iterate faster and trust the system more \u2014 because the trust is anchored in evidence, not hope."
+      ]
+    },
+    {
+      "heading": "Choosing the next workflow to automate",
+      "paragraphs": [
+        "Not every candidate deserves automation first. The selection rule that works: high verification clarity, bounded blast radius, and meaningful repetition. Dependency upgrades, test backfill, migration mechanics, documentation generation from verified code, and security triage all score well. Novel product architecture, ambiguous requirements, and anything whose acceptance criteria cannot be written down score poorly \u2014 automate those last, or not at all.",
+        "Score each candidate against the four questions the platform answers architecturally: what verifies completion, what bounds tool authority, what records provenance, and what happens when it is wrong. Candidates with weak answers on two or more questions need governance work before automation work. This sequencing keeps early wins visible and prevents the over-automation that sours teams on the entire discipline."
+      ]
     }
   ],
   "faq": [
