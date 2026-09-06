@@ -32,6 +32,7 @@ import { vramAwareRouting } from './editorials/vram-aware-routing';
 import { offlineEmbeddings } from './editorials/offline-embeddings';
 import { airGappedAgents } from './editorials/air-gapped-agents';
 import { secretsIsolation } from './editorials/secrets-isolation';
+import { independentVerification } from './editorials/independent-verification';
 import { dpdpCompliance } from './editorials/dpdp-compliance';
 import { localLlmCoding } from './editorials/local-llm-coding';
 
@@ -72,6 +73,7 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [offlineEmbeddings.pillarId]: offlineEmbeddings,
   [airGappedAgents.pillarId]: airGappedAgents,
   [secretsIsolation.pillarId]: secretsIsolation,
+  [independentVerification.pillarId]: independentVerification,
   [dpdpCompliance.pillarId]: dpdpCompliance,
   [localLlmCoding.pillarId]: localLlmCoding,
 };
