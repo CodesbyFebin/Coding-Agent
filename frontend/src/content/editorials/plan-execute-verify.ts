@@ -79,6 +79,26 @@ export const planExecuteVerify: PillarEditorial = {
   ],
   "faq": [
     {
+      "question": "How long should a typical mission take end to end?",
+      "answer": "It depends on the task graph\u2019s critical path, not its size. A focused bug fix commonly completes in minutes; a multi-module refactor scales with its longest dependency chain plus one verification sweep. The plan makes the critical path visible before execution, so duration surprises are rare."
+    },
+    {
+      "question": "Who reviews the plan in practice?",
+      "answer": "For low-risk missions, schema validation and policy checks review the plan automatically. For consequential work, the operator sees the full task graph, file boundaries, and acceptance criteria, and signs approval before any file is touched. The reviewer\u2019s decision is recorded in the mission ledger."
+    },
+    {
+      "question": "Can the loop resume after an interruption?",
+      "answer": "Yes. Completed work units and their verification evidence are persisted with the mission state, so a restart resumes from the first incomplete node rather than replaying finished work. This is what makes long migrations survivable across process restarts and network interruptions."
+    },
+    {
+      "question": "What stops the loop from retrying forever?",
+      "answer": "Retry budgets and failure classification. Transient failures retry with backoff up to a configured budget; permanent failures escalate instead of looping. Circuit breakers trip on anomalous invocation frequency, and every retry decision is written to the audit trail."
+    },
+    {
+      "question": "Does verification guarantee the code is good?",
+      "answer": "Verification guarantees the declared gates passed: compilation, types, tests, security checks. It cannot judge whether the feature is the right feature. That is why acceptance criteria are defined at planning time by humans, and why the loop ends at human review for anything consequential."
+    },
+    {
       "question": "What is the plan-execute-verify loop?",
       "answer": "The plan-execute-verify loop is CodingAgent's core execution model that separates planning (decomposing goals into task graphs), execution (invoking governed tools in sandboxed workspaces), and verification (running independent acceptance checks through compilers, tests, and security scanners)."
     },
