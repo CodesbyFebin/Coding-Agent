@@ -99,6 +99,18 @@ export const mcpPermissions: PillarEditorial = {
     {
       "question": "Can permissions integrate with existing authorization systems?",
       "answer": "Yes. MCP permissions integrate with LDAP/Active Directory, OAuth, RBAC, ABAC, and policy-as-code systems. This integration enables organizations to leverage existing identity and access management infrastructure."
+    {
+      "question": "How are permission conflicts resolved?",
+      "answer": "Permission conflicts are resolved through configurable precedence rules that determine which policy takes priority when multiple policies apply to the same action. The system supports deny-overrides-allow, allow-overrides-deny, and first-match-wins strategies. Administrators can define custom precedence hierarchies based on security requirements and organizational policies."
+    },
+    {
+      "question": "What is policy simulation mode?",
+      "answer": "Policy simulation mode allows agents to test tool calls against permission policies without executing actual system operations. This enables safe policy development and validation. Policy test suites can be created with expected permit/deny outcomes for various scenarios and automatically executed during CI/CD pipelines ensuring permission policies remain correct as the codebase evolves."
+    },
+    {
+      "question": "Can permissions be scoped to specific code paths?",
+      "answer": "Yes. Permissions can be scoped to specific file paths, directories, or branches using path-based and branch-based access controls. This granular scoping prevents agents from accessing sensitive files outside their designated workspace. Path normalization and canonicalization verify that targets remain within the declared task scope before any file operation is permitted."
+    },
     }
   ],
   "sources": [

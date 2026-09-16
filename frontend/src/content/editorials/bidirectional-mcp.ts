@@ -98,6 +98,10 @@ export const bidirectionalMcp: PillarEditorial = {
     {
       "question": "Can the network scale to thousands of agents?",
       "answer": "Yes. The network uses distributed registries, capability caching, load balancing, and federation to scale. The architecture supports various topologies (hub-and-spoke, peer-to-peer, hierarchical, mesh) to match different collaboration patterns."
+    {
+      "question": "What are the main topology patterns supported by bidirectional MCP?",
+      "answer": "Bidirectional MCP supports hub-and-spoke for centralized control, peer-to-peer for decentralization, hierarchical for enterprise structures, and mesh for fully distributed networks. Each pattern has distinct advantages for different deployment scenarios. Hybrid topologies combine multiple patterns for optimization. The system can dynamically adjust topology based on network conditions, load requirements, and security policies to maintain optimal performance and resilience."
+    },
     }
   ],
   "sources": [

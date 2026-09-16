@@ -1,0 +1,52 @@
+import type { PillarEditorial } from '../types';
+
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+export const privateDeployment: PillarEditorial = {
+  "pillarId": "private-deployment",
+  "updated": "2026-09-24",
+  "definition": "Helm charts, Terraform modules, and Kubernetes manifests for deploying the entire CodingAgent control plane in private VPCs — giving regulated industries complete control over their agent infrastructure without external SaaS dependencies.",
+  ,    {"heading": "Disaster Recovery and High Availability Configurations", "paragraphs": ["Private deployments require comprehensive disaster recovery and high availability configurations to ensure continuous agent operations during infrastructure failures. The system supports multi-region deployments with automatic failover capabilities ensuring agent workloads continue uninterrupted during data center outages. Backup strategies include regular snapshots of agent state databases model configurations and audit logs with automated recovery procedures tested through regular disaster recovery drills. High availability configurations enable horizontal scaling of agent runtimes across multiple Kubernetes nodes with load balancing distributing incoming missions evenly across available instances. The system monitors node health automatically removing unhealthy nodes from the pool and spinning up replacement instances ensuring consistent service availability."],"bullets": ["Multi-region disaster recovery", "Automatic failover capabilities", "Regular backup snapshots", "Horizontal scaling configurations", "Health monitoring and auto-recovery"]}","faq": [
+    {
+      "question": "What does private deployment provide?",
+      "answer": "Helm charts, Terraform modules, and Kubernetes manifests for deploying the CodingAgent control plane in private VPCs."
+    },
+    {
+      "question": "Which industries benefit most from private deployment?",
+      "answer": "Regulated industries such as banking, healthcare, and defense that require complete control over their agent infrastructure."
+    },
+    {
+      "question": "Can the deployment be in a hybrid cloud?",
+      "answer": "Yes. The Helm charts and Terraform modules are designed for portability across on-premise and cloud Kubernetes clusters."
+    },
+    {
+      "question": "How is network isolation enforced?",
+      "answer": "Through VPC subnets, security groups with default-deny rules, and Kubernetes network policies that restrict pod-to-pod communication."
+    },
+    {
+      "question": "Are the manifests auditable?",
+      "answer": "Yes. Every resource includes labels for ownership, environment, and compliance tier, and the manifests include OPA Rego policy enforcement and trivy security scanning."
+    },
+    {
+      "question": "Can I use existing Kubernetes clusters?",
+      "answer": "Yes. The Terraform modules and Helm charts are cluster-agnostic and work with any conformant Kubernetes cluster."
+    },
+    {
+      "question": "How does the framework handle secret management?",
+      "answer": "The framework uses Kubernetes secrets stores for model credentials, with automatic rotation and rotation expiration. Secrets are never hardcoded in manifests, preventing credentials from being embedded in infrastructure code."
+    },
+    {
+      "question": "Can the deployment be automated?",
+      "answer": "Yes. The entire deployment pipeline can be automated via CI/CD, with Terraform plan/apply and Helm chart deployment steps integrated into the organization's existing CI/CD pipeline. The CI/CD integration ensures that infrastructure changes are subject the same review and testing processes as application code changes."
+    },
+    {
+      "question": "How does the framework prevent credentials from being exposed in infrastructure code?",
+      "answer": "The framework uses Kubernetes secrets stores for model credentials, with automatic rotation and rotation expiration. Secrets are never hardcoded in manifests, preventing credentials from being embedded in infrastructure code that might be accidentally committed to version control."
+    }
+  ],
+  "sources": [
+    {
+      "label": "CodingAgent source repository",
+      "href": "https://github.com/CodesbyFebin/Coding-Agent"
+    }
+  ]
+};

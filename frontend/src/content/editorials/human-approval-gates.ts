@@ -104,6 +104,10 @@ export const humanApprovalGates: PillarEditorial = {
     {
       "question": "How is approval fatigue prevented?",
       "answer": "Through intelligent routing that minimizes unnecessary approvals, batch approval for repetitive actions, context-aware presentation of only relevant information, and learning from approval patterns to suggest reclassification of routinely-approved actions."
+    {
+      "question": "How does the approval workflow handle time-sensitive decisions?",
+      "answer": "The system supports time-bound approval windows with configurable escalation policies. If an approver does not respond within the specified timeframe, the system can automatically escalate to backup approvers, trigger notifications, or in low-risk scenarios auto-approve based on the defined policy. Escalation chains ensure that critical decisions are never blocked by unavailable approvers."
+    },
     }
   ],
   "sources": [

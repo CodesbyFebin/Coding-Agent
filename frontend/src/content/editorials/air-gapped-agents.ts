@@ -108,6 +108,10 @@ export const airGappedAgents: PillarEditorial = {
     {
       "question": "Can these agents meet compliance requirements?",
       "answer": "Yes. The distribution is designed to meet defense (NIST 800-171), banking (PCI-DSS, SOX), healthcare (HIPAA), and critical infrastructure compliance requirements through comprehensive audit trails, access controls, and security controls."
+    {
+      "question": "How does the air-gapped agent handle software updates?",
+      "answer": "Air-gapped agents handle software updates through manual package transfer or dedicated offline update channels. Updates are prepared on a separate network, verified through cryptographic signatures, and transferred via physical media or approved sneakernet channels. The system validates update integrity before installation and maintains rollback capabilities to previous verified versions."
+    },
     }
   ],
   "sources": [

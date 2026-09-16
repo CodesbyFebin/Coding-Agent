@@ -93,6 +93,10 @@ export const mcpClientArchitecture: PillarEditorial = {
     {
       "question": "Is the client secure against malicious servers?",
       "answer": "Yes. The client implements multiple security layers: server authentication, manifest validation, response validation, taint tracking, and capability isolation. These measures protect against server impersonation, tool poisoning, response tampering, and privilege escalation."
+    {
+      "question": "How does the MCP client handle policy evaluation?",
+      "answer": "The MCP client evaluates policies through multiple layers including static analysis during tool registration, dynamic policy checks before each invocation, and post-execution verification of tool outputs. Policies are compiled into efficient decision trees that execute in microseconds, enabling enforcement without introducing latency bottlenecks in high-throughput agent workflows."
+    },
     }
   ],
   "sources": [

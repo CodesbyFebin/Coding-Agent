@@ -1,0 +1,38 @@
+import type { PillarEditorial } from '../types';
+
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+export const organizationPolicy: PillarEditorial = {
+  "pillarId": "organization-policy",
+  "updated": "2026-09-24",
+  "definition": "Framework for designing, implementing, and enforcing organizational policies that govern agent behavior, resource access, and compliance requirements across enterprise agent deployments.",
+  ,    {"heading": "Version Control and Change Management for Policies", "paragraphs": ["Organization policies require robust version control and change management processes to ensure consistency across the enterprise. The system integrates policy definitions into Git repositories enabling code review processes change tracking and rollback capabilities for policy modifications. Each policy change requires approval through defined review workflows with appropriate stakeholders signing off on modifications before deployment. The policy engine supports blue-green deployments where new policy versions are tested alongside existing policies in production validating behavior with real agent workloads before full cutover. Automated regression tests validate policy changes against historical agent missions ensuring new policies do not break existing workflows."],"bullets": ["Git-based policy version control", "Code review workflows", "Blue-green policy deployments", "Automated regression testing", "Rollback capabilities"]}","faq": [
+    {
+      "question": "What is organization policy?",
+      "answer": "Framework for designing, implementing, and enforcing organizational policies that govern agent behavior, resource access, and compliance requirements across enterprise agent deployments."
+    },
+    {
+      "question": "What data access policies are supported?",
+      "answer": "Repository-level access, data category classification (public, internal, confidential, restricted), and data usage restrictions (purpose limitations, read-only permissions). Policies can be time-based and integrate with RBAC."
+    },
+    {
+      "question": "What compliance frameworks are supported?",
+      "answer": "SOC 2, ISO 27001, HIPAA, GDPR, SOX, and custom frameworks. The system can generate compliance reports automatically from audit logs."
+    },
+    {
+      "question": "How are resource policies enforced?",
+      "answer": "Resource policies are enforced at runtime: token budgets trigger throttling/stopping, execution time limits trigger pausing, and resource quotas trigger mission rejection. Violations are logged and trigger alerts."
+    },
+    {
+      "question": "Can I define custom compliance frameworks?",
+      "answer": "Yes. Organizations can define their own report templates, mapping audit log fields to their specific compliance requirements, including control mapping, evidence extraction, integrity verification, and executive summaries."
+    },
+    {
+      "question": "How do data access policies integrate with RBAC?",
+      "answer": "Data access policies determine which roles can access which data categories, with the intersection of the agent's role and the data access policy deciding access."
+    },
+    {
+      "question": "What resource overage mechanisms exist?",
+      "answer": "Organizations can configure hard stops (hard enforcement of budget limits) or approval-based overages (missions allowed with operator approval when budgets are exceeded). The mechanism is configurable per team and per budget type."
+    }
+  ],
+};

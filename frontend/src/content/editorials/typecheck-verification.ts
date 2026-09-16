@@ -1,0 +1,59 @@
+import type { PillarEditorial } from '../types';
+
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+export const typecheckVerification: PillarEditorial = {
+  "pillarId": "typecheck-verification",
+  "updated": "2026-09-24",
+  "definition": "Rigorous static type analysis ensuring strict adherence to interfaces, non-nullability, and function signature contracts — catching subtle runtime bugs and interface mismatch errors instantly across large polyglot codebases.",
+  "sections": [
+    {
+      "heading": "Typecheck Verification Fundamentals",
+      "paragraphs": [
+        "Typecheck verification provides rigorous static type analysis that ensures code adheres to defined interfaces, respects non-nullability guarantees, and maintains correct function signature contracts. In large polyglot codebases (containing multiple programming languages), subtle type errors can escape traditional testing and cause runtime failures. The typecheck verification system catches these errors early, before the code reaches production, by running the language-specific type checker across the entire codebase.",
+        "The verification process runs the language's native type checker: tsc for TypeScript, mypy for Python, dialyzer for Elixir, go vet for Go, and cargo check for Rust. Each tool is configured with strict flags that maximize error detection: --noEmit for TypeScript (produces no output file but performs full type checking), --strict for Python mypy, and --warn for Go vet. All type errors are recorded with the file path, line number, error message, and suggested fix."
+      ]
+    },
+    {
+      "heading": "Interface Adherence and Non-Nullability",
+      "paragraphs": [
+        "The typecheck system ensures that: all implemented interfaces satisfy the declared contract (no missing methods or properties), optional types are properly handled (nullable values are distinguished from non-nullable values), and function signatures are respected (callers provide the correct number and types of arguments). Non-nullability is enforced through type system features like TypeScript's non-null assertion operator, Python's Optional type hints, and Rust's Option type. The system catches the common error of passing null where a non-null value is expected.",
+        "For polyglot codebases, the system provides cross-language type consistency: a TypeScript interface must be compatible with the corresponding Python type hints, and a Go struct must align with the expected Rust struct. The typecheck verification reports any cross-language mismatches, ensuring that interop code between languages is type-safe."
+      ]
+    },
+    {
+      "heading": "Runtime Bug Prevention",
+      "paragraphs": [
+        "Many runtime bugs stem from subtle type errors that are difficult to detect through testing: passing a string where a number is expected, accessing a property that doesn't exist on an object, or calling a function with the wrong number of arguments. The typecheck verification catches these errors at compile time, eliminating entire classes of runtime failures. The system reports: the error location (file and line), the expected type versus the actual type, the function or expression where the error occurred, and a suggested fix (often auto-fixable via the IDE).",
+        "The verification also catches: type mismatches in interop code (TypeScript calling Python modules via PyO3, Rust FFI calls from Cython), incorrect generic type instantiation, and deprecated API usage. All findings are recorded in the audit trail with the mission identifier and the tool used."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is typecheck verification?",
+      "answer": "Rigorous static type analysis ensuring strict adherence to interfaces, non-nullability, and function signature contracts, catching runtime bugs instantly across large polyglot codebases."
+    },
+    {
+      "question": "What type checkers are supported?",
+      "answer": "tsc for TypeScript, mypy for Python, dialyzer for Elixir, go vet for Go, and cargo check for Rust. Each is configured with strict flags for maximum error detection."
+    },
+    {
+      "question": "How does non-nullability work?",
+      "answer": "Enforced through type system features: TypeScript's non-null assertion, Python's Optional type hints, Rust's Option type. The system catches passing null where a non-null value is expected."
+    },
+    {
+      "question": "Can it catch cross-language type errors?",
+      "answer": "Yes. The system reports cross-language mismatches (e.g., TypeScript interop with Python, Rust FFI calls from Cython), ensuring interop code between languages is type-safe."
+    },
+    {
+      "question": "Are type errors recorded in the audit trail?",
+      "answer": "Yes. All type checker findings are recorded with the mission identifier, tool used, file path, line number, error message, and suggested fix."
+    }
+  ],
+  "sources": [
+    {
+      "label": "CodingAgent source repository",
+      "href": "https://github.com/CodesbyFebin/Coding-Agent"
+    }
+  ]
+};

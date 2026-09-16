@@ -1,0 +1,56 @@
+import type { PillarEditorial } from '../types';
+
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+export const ideIntegrations: PillarEditorial = {
+  "pillarId": "ide-integrations",
+  "updated": "2026-09-24",
+  "definition": "Native extensions for VS Code, JetBrains IDEs, and Neovim providing inline diffs, gutter approvals, and chat panels that bring sovereign agent capabilities directly into the editor where developers spend their working hours.",
+  ,    {"heading": "Multi-IDE Support and Language Server Protocol Integration", "paragraphs": ["IDE integrations support multiple development environments through standardized Language Server Protocol implementations ensuring consistent agent capabilities across VS Code JetBrains IDEs and Neovim. Each IDE integration provides context-aware agent commands that understand the current file symbols workspace structure and active editor session. The integration maintains real-time synchronization between the agent runtime and IDE state ensuring that agent modifications are immediately reflected in the editor with proper syntax highlighting and error diagnostics. Language Server Protocol extensions enable agent actions like code generation refactoring and test execution to integrate natively with IDE features like IntelliSense debugging and integrated terminal support."],"bullets": ["VS Code extension support", "JetBrains IDE plugins", "Neovim integration", "LSP protocol compliance", "Real-time state synchronization"]}","faq": [
+    {
+      "question": "What IDEs are supported?",
+      "answer": "VS Code, JetBrains IDEs (IntelliJ, PyCharm, WebStorm, etc.), and Neovim."
+    },
+    {
+      "question": "What capabilities does the extension provide?",
+      "answer": "Inline diffs, gutter approval prompts, integrated chat panels, and on-demand agent invocation from the editor."
+    },
+    {
+      "question": "How are approvals recorded?",
+      "answer": "Gutter prompts record cryptographic signatures of operator authorization in the mission ledger."
+    },
+    {
+      "question": "Is the extension free to use?",
+      "answer": "Yes. The extensions are open-source and available in respective marketplaces."
+    },
+    {
+      "question": "Can the extension work offline?",
+      "answer": "Yes. Local model support enables offline agent operations within the editor."
+    },
+    {
+      "question": "Does the extension send code to remote servers?",
+      "answer": "No. The extension respects a local-first philosophy; only model invocations (which may be cloud or local) leave the developer's machine."
+    },
+    {
+      "question": "How does the extension handle different programming languages?",
+      "answer": "The extension supports all languages supported by the language server protocol (LSP), providing syntax-aware diffs and type checking for virtually all major programming languages."
+    },
+    {
+      "question": "Can the extension be customized?",
+      "answer": "Yes. Key mappings, approval gate behavior, and chat panel configuration are all customizable through the extension settings."
+    },
+    {
+      "question": "How does the extension ensure code safety?",
+      "answer": "The extension provides AST-based validation of proposed diffs, type checking integration, and approval recording with mission ledger integration, ensuring that only safe, validated changes are applied. The AST-based validation is the first line of defense, preventing syntactically invalid diffs from being presented to the user. The type checking integration is the second line of defense, ensuring that the diffs maintain the project's type invariants. The approval recording with mission ledger integration is the third line of defense, providing a tamper-evident record of all human decisions."
+    },
+    {
+      "question": "How does the extension integrate with the agent's memory architecture?",
+      "answer": "The extension maintains context across turns using the agent's memory architecture, enabling multi-turn conversations within the editor. The chat panel preserves conversation context, allowing developers to continue multi-turn agent interactions without losing the thread of the conversation."
+    }
+  ],
+  "sources": [
+    {
+      "label": "CodingAgent source repository",
+      "href": "https://github.com/CodesbyFebin/Coding-Agent"
+    }
+  ]
+};

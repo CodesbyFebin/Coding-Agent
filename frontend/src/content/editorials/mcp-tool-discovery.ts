@@ -92,7 +92,22 @@ export const mcpToolDiscovery: PillarEditorial = {
     {
       "question": "How is discovery secured against malicious servers?",
       "answer": "Through server authentication, manifest integrity verification (cryptographic signatures), schema validation, capability isolation, and comprehensive audit logging. These measures prevent server impersonation, manifest tampering, and tool poisoning."
-    }
+    {
+      "question": "How does tool discovery optimize performance?",
+      "answer": "The system uses intelligent caching with configurable TTL values to reduce latency and resource consumption during tool enumeration. Cache invalidation occurs automatically when MCP servers emit change notifications or when tools are modified during development. The discovery process supports incremental loading where only changed tools are retrieved during subsequent scans reducing network traffic and improving agent responsiveness. Advanced caching strategies include prefetching frequently used tools and lazy loading rarely accessed tools on demand."
+    },
+    {
+      "question": "How does tool discovery handle version compatibility?",
+      "answer": "The system maintains version metadata for all discovered tools and performs compatibility checks between the agent's capability requirements and the tool's provided version. When incompatibilities are detected, the system can suggest alternative tools, negotiate version upgrades, or fall back to compatible versions. This ensures agents only use tools that match their expected interfaces and behaviors."
+    },
+    {
+      "question": "Can tool discovery be customized for specific workflows?",
+      "answer": "Yes. The discovery process supports workflow-specific filtering where agents can declare their intended use cases and the system will prioritize tools relevant to those workflows. Custom discovery policies can be defined per team, project, or agent type, enabling tailored tool sets that reduce noise and improve discovery efficiency."
+    },
+    {
+      "question": "How does the system handle tool deprecation?",
+      "answer": "When tools are deprecated, the system marks them in the registry with deprecation warnings and suggested alternatives. Agents using deprecated tools receive notifications and are guided toward replacement tools. The deprecation timeline is configurable, and the system can enforce migration deadlines to ensure timely adoption of updated tools."
+    }    }
   ],
   "sources": [
     {

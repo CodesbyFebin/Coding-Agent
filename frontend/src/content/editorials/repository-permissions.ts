@@ -1,0 +1,69 @@
+import type { PillarEditorial } from '../types';
+
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+export const repositoryPermissions: PillarEditorial = {
+  "pillarId": "repository-permissions",
+  "updated": "2026-09-24",
+  "definition": "Granular file and branch access policies restricting which folders an agent can read, modify, or delete — preventing unintentional changes to mission-critical infrastructure-as-code files, root manifests, or branch protections.",
+  "sections": [
+    {
+      "heading": "Repository Permissions Fundamentals",
+      "paragraphs": [
+        "Repository permissions provide granular control over which folders and files an agent can read, modify, or delete within a codebase. This is essential for preventing unintentional changes to mission-critical infrastructure-as-code files, root manifests, branch protection configurations, and other sensitive artifacts. The permission system enforces that agents only access the files necessary for their assigned tasks, reducing the risk of accidental or malicious modifications.",
+        "The permission model is built on three dimensions: read access (which files the agent can read), write access (which files the agent can modify), and branch access (which branches the agent can affect). Each dimension is further scoped to specific paths, tags, and patterns within the repository."
+      ]
+    },
+    {
+      "heading": "Read Access Policies",
+      "paragraphs": [
+        "Read access policies define which files and directories an agent is permitted to read. These policies are expressed as path patterns: /src/ allows reading source code files, /docs/ allows reading documentation, /config/ allows reading configuration files, and /secrets/ explicitly denies read access to sensitive configuration. The system uses glob patterns and path canonicalization to evaluate read requests against the declared policies.",
+        "Read access is particularly important for: code analysis agents (which need to read source to understand structure), documentation generators (which need to read docs but not source), and security scanners (which need to read all files but only modify none). The system ensures that a code analysis agent cannot accidentally read secrets stored in configuration files, and a documentation generator cannot access source code it doesn't need.",
+        "The policy evaluation happens at sandbox startup: the agent's working directory is configured with the declared read-only paths, and any attempt to read outside these paths triggers a permission violation and terminates the mission."
+      ]
+    },
+    {
+      "heading": "Write Access Policies",
+      "paragraphs": [
+        "Write access policies are more restrictive than read policies and define which files and directories an agent can modify. These policies prevent: unintended modifications to package.json, CI configuration files, and root manifests; changes to branch protection rules that could affect repository security; and writes to secrets, configuration files containing API keys, and other sensitive artifacts. Write policies are expressed as allowlists: only explicitly permitted paths are writable, all others are DENY by default.",
+        "Critical write restrictions include: no writes to package.json or other dependency management files, no modifications to .github/workflows CI configurations, no changes to root manifests or infrastructure-as-code files (Terraform, Helm charts), and no writes to configuration files containing credentials or endpoints. All write operations are logged in the audit trail with the path, operation type, and result.",
+        "Write access is configured per mission and per repository, with the principle of least privilege: the agent is granted write access only to the specific files it needs to accomplish its task, and no more. After the mission completes, any changes outside the permitted paths are reverted."
+      ]
+    },
+    {
+      "heading": "Branch Access and Protection",
+      "paragraphs": [
+        "Branch access policies control which branches an agent can read from, write to, or delete. These policies prevent: agents pushing to main or protected branches without explicit authorization, modification of branch protection rules that govern who can merge and what checks are required, and accidental deletion of branches that contain critical production configurations.",
+        "The system enforces: default-deny for all branches (no branch access unless explicitly allowed), ALLOW for feature branches and development branches, ASK for main and protected branches (requiring human approval before push), and DENY for branches that are marked as protected or critical. All branch operations are recorded in the audit trail with the branch name, operation type, and reviewer decision (if applicable).",
+        "Branch protection integration: the system can enforce external branch protection rules from the code hosting service (GitHub, GitLab, Bitbucket). When an agent attempts to push to a protected branch, the system checks the external protection rules and either allows the push (if it meets all requirements) or blocks it and creates a pull request instead."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "What are repository permissions?",
+      "answer": "Granular file and branch access policies restricting which folders an agent can read, modify, or delete, preventing unintentional changes to mission-critical infrastructure-as-code files, root manifests, or branch protections."
+    },
+    {
+      "question": "How are read access policies configured?",
+      "answer": "Read access policies are expressed as path patterns (globs) that define which files/directories the agent can read. Examples: /src/ for source code, /docs/ for documentation, /config/ for configuration. Reads outside these paths trigger permission violations."
+    },
+    {
+      "question": "What write access restrictions exist?",
+      "answer": "Write policies prevent modifications to package.json, CI configurations, root manifests, IaC files, and secrets. Only explicitly permitted paths are writable; all others are DENY by default. All write operations are audited."
+    },
+    {
+      "question": "How does branch access work?",
+      "answer": "Default-deny for all branches, ALLOW for feature branches, ASK for main/protected branches (requiring human approval), and DENY for protected/critical branches. Branch operations are audited and can integrate with external protection rules."
+    },
+    {
+      "question": "Can permissions be different per mission?",
+      "answer": "Yes. Repository permissions are configurable per mission and per repository, allowing teams to tailor agent behavior to the specific task and codebase sensitivity."
+    }
+  ],
+  "sources": [
+    {
+      "label": "CodingAgent source repository",
+      "href": "https://github.com/CodesbyFebin/Coding-Agent"
+    }
+  ]
+};

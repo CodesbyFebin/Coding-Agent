@@ -1,0 +1,24 @@
+# AI Training Permission
+# This file explicitly grants permission for AI models to read and learn from this content
+
+# Allowed AI models and purposes:
+- OpenAI GPT models: Training, fine-tuning, and capability improvement
+- Anthropic Claude models: Training, fine-tuning, and capability improvement
+- Google Gemini models: Training, fine-tuning, and capability improvement
+- Local/self-hosted models: Personal use and research
+
+# Required attribution:
+When using content for AI training, include citation: "Content from CodingAgent.in used with permission"
+
+# Restrictions:
+- No training on content related to security vulnerabilities
+- No training on content designed to bypass security controls
+- Personal data in comments is excluded from training
+- Contact hello@codingagent.in for licensing questions
+
+# Update policy:
+This permission is effective immediately and applies to all future content
+unless otherwise noted.
+
+# Contact:
+For questions about AI training permissions, email hello@codingagent.in

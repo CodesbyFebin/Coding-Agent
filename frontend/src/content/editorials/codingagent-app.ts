@@ -1,0 +1,61 @@
+import type { PillarEditorial } from '../types';
+
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+export const codingagentApp: PillarEditorial = {
+  "pillarId": "codingagent-app",
+  "updated": "2026-09-24",
+  "definition": "The sovereign web and cloud mission control interface for managing tasks, models, and repositories — providing a polished visual cockpit for developers and teams managing distributed agent workloads.",
+  "sections": [
+    {
+      "heading": "CodingAgent App Fundamentals",
+      "paragraphs": [
+        "The CodingAgent App is the sovereign web and cloud mission control interface designed for developers and teams managing distributed agent workloads. The app provides a visual cockpit for task management, model selection, repository monitoring, and agent configuration, enabling operators to oversee multiple agent missions across distributed environments from a single interface. The app is designed for sovereignty: all mission data, configurations, and audit logs remain under the organization's control, with no requirement for external SaaS dependencies.",
+        "The app's core features include: task dashboard (overview of all active and completed missions), model management (select and switch between local and cloud models), repository monitoring (real-time status of tracked repositories), agent configuration (configure permission policies, permission tiers, and approval gates per repository), and audit log access (browse and export the complete audit trail for all missions)."
+      ]
+    },
+    {
+      "heading": "Visual Cockpit and Dashboard",
+      "paragraphs": [
+        "The visual cockpit provides an at-a-glance overview of the agent fleet: active missions (with current state and progress), mission completion rates (percentage of missions that pass verification), token consumption rates (current burn rate versus budget), and approval gate backlog (how many missions are waiting for human approval). The dashboard is highly configurable: operators can add, remove, and rearrange widgets to prioritize the metrics most relevant to their role.",
+        "The cockpit supports multiple views: a high-level strategic view for managers (mission success rates, cost trends, team productivity), a tactical view for operators (active missions, approval backlog, resource utilization), and a detailed view for developers (individual mission state, tool invocation logs, verification results). Each view is drill-down navigable, allowing the operator to go from strategic overview to detailed mission inspection in a few clicks.",
+        "The dashboard widgets are: mission status (traffic light indicator for each active mission), token usage gauge (current consumption versus daily/weekly budget), approval queue (list of missions waiting for human decision), model health (status of model providers, latency, error rates), and repository health (build status, test pass rates, recent agent activity)."
+      ]
+    },
+    {
+      "heading": "Sovereign Deployment and Control",
+      "paragraphs": [
+        "The CodingAgent App is designed for sovereign deployment: it can be self-hosted in a private VPC, deployed in a government cloud region, or run on-premises behind the organization's firewall. The app communicates with agent runtimes through encrypted channels (TLS mutual authentication) and supports air-gapped operation with no external network required. All configuration, audit data, and mission state are stored in the organization's infrastructure, ensuring complete data sovereignty.",
+        "The app supports single-team deployment (one team's agents, one repository) and multi-tenant deployment (multiple teams, multiple repositories, isolated configurations). Multi-tenant isolation is enforced through: separate configuration per tenant, separate audit ledgers per tenant, and separate model selection per tenant. The system ensures that one tenant's agent configurations never affect another's.",
+        "Air-gapped operation is supported: the app can function with zero external network connectivity. Model updates, plugin updates, and configuration changes are delivered through offline channels (USB, internal network, or manual download), and the app verifies the integrity of all updates using cryptographic hashes and signed attestations."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is the CodingAgent App?",
+      "answer": "The sovereign web and cloud mission control interface for managing tasks, models, and repositories, providing a polished visual cockpit for developers and teams managing distributed agent workloads."
+    },
+    {
+      "question": "Can the app be self-hosted?",
+      "answer": "Yes. The CodingAgent App can be self-hosted in a private VPC, deployed in a government cloud region, or run on-premises behind the organization's firewall. All configuration and audit data remain under the organization's control."
+    },
+    {
+      "question": "What features does the visual cockpit provide?",
+      "answer": "The cockpit provides task dashboard, model management, repository monitoring, and agent configuration. It supports configurable widgets showing active missions, token consumption, approval gate backlog, model health, and repository health across multiple views (strategic, tactical, detailed)."
+    },
+    {
+      "question": "Is the app suitable for air-gapped environments?",
+      "answer": "Yes. The app supports air-gapped operation with zero external network required. Model updates and configuration changes are delivered through offline channels with cryptographic integrity verification."
+    },
+    {
+      "question": "Can multiple teams use the same app instance?",
+      "answer": "Yes. The app supports multi-tenant deployment with separate configuration, audit ledgers, and model selection per tenant, ensuring that one tenant's configurations never affect another's."
+    }
+  ],
+  "sources": [
+    {
+      "label": "CodingAgent source repository",
+      "href": "https://github.com/CodesbyFebin/Coding-Agent"
+    }
+  ]
+};

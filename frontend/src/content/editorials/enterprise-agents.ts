@@ -1,0 +1,63 @@
+import type { PillarEditorial } from '../types';
+
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+export const enterpriseAgents: PillarEditorial = {
+  "pillarId": "enterprise-agents",
+  "updated": "2026-09-24",
+  "definition": "Scalable enterprise deployment patterns for agentic systems, including multi-tenant isolation, role-based access controls, and centralized policy management across thousands of concurrent agent missions.",
+  "sections": [
+    {
+      "heading": "Enterprise Agent Deployment Fundamentals",
+      "paragraphs": [
+        "Enterprise agent deployment addresses the challenges of scaling autonomous agent systems from development teams to organization-wide adoption. When thousands of agents run concurrently, the operational complexities increase significantly: resource contention, policy compliance, monitoring overhead, and security risks. The enterprise deployment framework provides: multi-tenant isolation (each tenant's agent configuration is logically separated, ensuring that one team's agent settings do not affect another's), role-based access controls (determining which agents can run in which repositories and with what permissions), and centralized policy management (approval policies, permission tiers, and sandbox configurations are defined centrally and propagated to all agent instances). The framework also includes: a mission broker (distributes incoming coding tasks across available agent instances, ensuring fair resource utilization and preventing bottlenecks), queue management (prioritizes missions based on urgency, business criticality, and SLA requirements), and health monitoring (real-time dashboards showing active missions, error rates, token consumption, and approval gate bottlenecks). These capabilities enable organization-wide agent adoption while maintaining the security and governance controls required for production environments.",
+        "At the core of enterprise deployment is the recognition that agent operations at scale require different patterns than individual or team-level usage. The system must handle concurrent execution, enforce consistent policies across the organization, provide visibility into agent behavior, and manage costs effectively. Without these capabilities, organizations risk security vulnerabilities, uncontrolled cost growth, and operational chaos as the number of agents grows."
+      ]
+    },
+    {
+      "heading": "Multi-Tenant Isolation",
+      "paragraphs": [
+        "Multi-tenant isolation ensures that each organization's agent deployment is logically separated from others, even when sharing the same infrastructure. Tenant isolation includes: configuration isolation (each tenant has its own permission policies, approval gates, and sandbox settings), data isolation (agent workspaces and scratchpads are confined to the tenant's repositories and directories), and resource isolation (each tenant's agent instances are allocated a fair share of CPU, memory, and disk resources). The isolation is enforced by the agent runtime, which verifies the tenant identity (via authenticated JWT or SSO) before applying the tenant's policies.",
+        "Tenant isolation also supports: dedicated infrastructure (organizations can opt for isolated Kubernetes clusters or virtual machines for each tenant), shared infrastructure with logical isolation (the common case, where tenants share the underlying infrastructure but have logically separated configurations), and hybrid isolation (critical tenants have dedicated resources while non-critical tenants share infrastructure). This flexibility allows organizations to balance cost, security, and operational complexity based on their risk tolerance and regulatory requirements. For example, a financial services organization might choose dedicated infrastructure for all tenants, while a startup might start with shared infrastructure and logical isolation, upgrading to dedicated as they grow."
+      ]
+    },
+    {
+      "heading": "Role-Based Access Control",
+      "paragraphs": [
+        "Role-based access control (RBAC) determines which agents can run in which repositories and with what permissions. RBAC is organized into roles: viewer (can observe agent missions and read audit logs, but cannot start or modify missions), operator (can start missions with ALLOW-tier permissions, can approve ASK-tier actions), administrator (can configure agent settings, manage tenants, and create custom policies), and super-admin (full access across all tenants and configurations). RBAC is configured per tenant and integrated with the organization's identity provider (SSO/OAuth2, LDAP, Active Directory).",
+        "The RBAC system also supports: resource-level permissions (which repositories, branches, or file paths each role can affect), mission-type permissions (which mission categories each role can execute, e.g., refactoring, testing, documentation), and time-based permissions (certain roles are only active during business hours or compliance periods). RBAC policies are version-controlled and go through the same review process as code changes, ensuring that access control changes are tracked, reviewable, and reversible. This ensures that security changes are subject to the same governance as code changes, with pull requests, review comments, and approval gates."
+      ]
+    },
+    {
+      "heading": "Mission Broker and Fleet Management",
+      "paragraphs": [
+        "The mission broker is the central component that distributes incoming coding tasks across available agent instances. It provides: scheduling based on priority and resource availability, ensuring that high-priority missions are handled first while lower-priority missions wait for resources; resource quota enforcement, limiting each agent or team's token consumption, execution time, and resource usage; automatic recovery, if an agent fails the platform can automatically restart it or escalate to human review; and load balancing, distributing missions evenly across available instances to prevent bottlenecks. The fleet management component complements the broker by providing: a real-time dashboard showing all active agents and missions, resource utilization metrics (CPU, memory, token consumption per agent), and alerting for anomalous conditions (e.g., unexpectedly high token consumption, security policy violations, agent failures). The fleet dashboard also provides: mission completion rate (percentage of missions completing successfully), average mission duration (time from mission start to completion), and resource quota violations (instances where an agent exceeded its allocated resources). These capabilities enable organizations to operate thousands of agents effectively while maintaining visibility and control."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is enterprise agent deployment?",
+      "answer": "Scalable deployment patterns for agentic systems including multi-tenant isolation, RBAC, and centralized policy management across thousands of concurrent missions."
+    },
+    {
+      "question": "How does multi-tenant isolation work?",
+      "answer": "Tenant isolation includes configuration isolation, data isolation, and resource isolation. Each tenant's agent configuration is logically separated, ensuring that one team's settings do not affect another's."
+    },
+    {
+      "question": "How does RBAC work for agents?",
+      "answer": "RBAC determines which agents can run in which repositories and with what permissions. Roles include viewer, operator, administrator, and super-admin, with resource-level, mission-type, and time-based permissions."
+    },
+    {
+      "question": "What is a mission broker?",
+      "answer": "A mission broker distributes incoming coding tasks across available agent instances, ensuring fair resource utilization and preventing bottlenecks. It handles scheduling, prioritization, resource quotas, and automatic recovery."
+    },
+    {
+      "question": "Can RBAC be integrated with existing SSO?",
+      "answer": "Yes. RBAC is integrated with the organization's identity provider (SSO/OAuth2, LDAP, Active Directory), mapping existing user roles to agent RBAC roles."
+    },
+    {
+      "question": "Can I have dedicated infrastructure for critical tenants?",
+      "answer": "Yes. Organizations can opt for dedicated Kubernetes clusters or virtual machines for critical tenants, while non-critical tenants share infrastructure with logical isolation."
+    }
+  ],
+};

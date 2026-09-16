@@ -1,0 +1,66 @@
+import type { PillarEditorial } from '../types';
+
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+export const codingagentFullstackTypescript: PillarEditorial = {
+  "pillarId": "codingagent-fullstack-typescript",
+  "updated": "2026-09-24",
+  "definition": "End-to-end agentic pipelines for TypeScript, React, Next.js, and Node.js with strict type-safety and component validation — automating boilerplate, handling complex state transitions, and enforcing modern component design patterns.",
+  "sections": [
+    {
+      "heading": "Full-Stack TypeScript Fundamentals",
+      "paragraphs": [
+        "Full-stack TypeScript support provides end-to-end agentic pipelines for the entire TypeScript ecosystem, including frontend frameworks like React and Next.js, and the Node.js runtime. The agent can generate type-safe code across the entire stack: component interfaces, API routes, server-side logic, database schemas, and build configurations. The key advantage is strict type-safety throughout the stack, ensuring that the generated code integrates correctly with the existing codebase and doesn't introduce type errors at runtime.",
+        "The agent's TypeScript pipeline includes: type-aware code generation (the agent considers the project's existing type interfaces, extends them appropriately, and avoids introducing type conflicts), React component generation (JSX with proper TypeScript typings, prop interfaces, and event handlers), Next.js API route generation (type-safe route handlers, request validation using Zod or Yup, and error middleware), and Node.js server generation (type-safe Express or Hono handlers, database Prisma schemas, and middleware composition). All generated code follows the project's existing type conventions and styling guidelines."
+      ]
+    },
+    {
+      "heading": "Component Generation and Validation",
+      "paragraphs": [
+        "The agent can generate React components with full TypeScript support: functional components with hooks, class components with proper typings, component interfaces (props and state types), and event handler typings. The generation system uses the project's existing component library conventions (e.g., using shadcn/ui, MUI, or custom components), and ensures that the generated components: export proper TypeScript interfaces, use the correct hook signatures, follow the project's styling approach (CSS-in-JS, Tailwind, CSS modules), and include JSDoc documentation for complex props.",
+        "Component validation runs the project's type checker (tsc) on the generated code, and any type errors are reported to the agent for correction. The agent can iteratively refine the generated component until tsc passes with zero errors. This ensures that the generated components are fully type-safe and can be immediately used in the project."
+      ]
+    },
+    {
+      "heading": "State Management and Transitions",
+      "paragraphs": [
+        "For complex applications, the agent handles state management using the project's preferred state management library (React Context, Redux, Zustand, Jotai, or Recoil). The agent generates: state interfaces (type definitions for the state shape), action types (discriminated unions for action types), reducer functions (pure functions that handle state transitions), and hooks (custom hooks that expose the state and dispatch functions to components). The agent ensures that all state transitions are type-safe and that the generated code follows the project's state management patterns.",
+        "The agent also generates: middleware for side effects (async actions, API calls), selector functions (extracting specific state slices for components), and type-safe context providers (context with proper TypeScript typings). All generated state management code is verified through tsc and the project's test suite."
+      ]
+    },
+    {
+      "heading": "Node.js and API Route Generation",
+      "paragraphs": [
+        "The agent can generate Node.js server code with type safety: Express or Hono handlers with proper request validation using Zod or Yup, API route handlers for Next.js with type-safe query parameters and request bodies, and database operations using Prisma or Typegoose with proper type definitions. The agent ensures that all API routes include: input validation (schema-based validation before handler execution), error handling (structured error responses with appropriate HTTP status codes), and authentication middleware (JWT verification, session validation, role-based access checks).",
+        "The generated API code follows the project's existing patterns and conventions, and is verified through the project's type checker and test suite. The agent can also generate OpenAPI specifications from the generated routes, enabling automatic API documentation and client code generation."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is full-stack TypeScript support?",
+      "answer": "End-to-end agentic pipelines for TypeScript, React, Next.js, and Node.js with strict type-safety and component validation, automating boilerplate and enforcing modern component design patterns."
+    },
+    {
+      "question": "Can the agent generate React components?",
+      "answer": "Yes. The agent generates functional components with hooks, class components with proper typings, component interfaces, event handler typings, and validates through the project's type checker."
+    },
+    {
+      "question": "How does state management work?",
+      "answer": "The agent generates state interfaces, action types, reducer functions, hooks, middleware for side effects, selectors, and context providers, all with proper TypeScript typings and verified through tsc and the test suite."
+    },
+    {
+      "question": "Can the agent generate API routes and server code?",
+      "answer": "Yes. The agent generates Express/Hono handlers with Zod/Yup validation, Next.js API routes with type-safe parameters, and database operations with Prisma/Typegoose schemas. OpenAPI specifications can also be generated."
+    },
+    {
+      "question": "How is type safety ensured?",
+      "answer": "All generated code is verified through the project's type checker (tsc) with zero errors. The agent iteratively refines the generated code until it passes type checking."
+    }
+  ],
+  "sources": [
+    {
+      "label": "CodingAgent source repository",
+      "href": "https://github.com/CodesbyFebin/Coding-Agent"
+    }
+  ]
+};

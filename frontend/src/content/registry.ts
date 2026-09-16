@@ -31,10 +31,51 @@ import { quantizedModels } from './editorials/quantized-models';
 import { vramAwareRouting } from './editorials/vram-aware-routing';
 import { offlineEmbeddings } from './editorials/offline-embeddings';
 import { airGappedAgents } from './editorials/air-gapped-agents';
-import { secretsIsolation } from './editorials/secrets-isolation';
-import { independentVerification } from './editorials/independent-verification';
-import { dpdpCompliance } from './editorials/dpdp-compliance';
-import { localLlmCoding } from './editorials/local-llm-coding';
+import { coreAgents } from './editorials/core-agents';
+import { approvalPolicyDesign } from './editorials/approval-policy-design';
+import { artifactHashing } from './editorials/artifact-hashing';
+import { auditLogsProvenance } from './editorials/audit-logs-provenance';
+import { auditReadyEngineering } from './editorials/audit-ready-engineering';
+import { agentMemoryArchitecture } from './editorials/agent-memory-architecture';
+import { agentCostGovernance } from './editorials/agent-cost-governance';
+import { agentSandboxing } from './editorials/agent-sandboxing';
+import { aiAgentSecurity } from './editorials/ai-agent-security';
+import { promptInjectionDefenses } from './editorials/prompt-injection-defenses';
+import { secureToolCalling } from './editorials/secure-tool-calling';
+import { networkEgressControls } from './editorials/network-egress-controls';
+import { repositoryPermissions } from './editorials/repository-permissions';
+import { verificationMemory } from './editorials/verification-memory';
+import { buildVerification } from './editorials/build-verification';
+import { typecheckVerification } from './editorials/typecheck-verification';
+import { unitTestVerification } from './editorials/unit-test-verification';
+import { browserVerification } from './editorials/browser-verification';
+import { workingMissionMemory } from './editorials/working-mission-memory';
+import { agentSkillsVersioning } from './editorials/agent-skills-versioning';
+import { contextCompaction } from './editorials/context-compaction';
+import { enterpriseTooling } from './editorials/enterprise-tooling';
+import { enterpriseAgents } from './editorials/enterprise-agents';
+import { organizationPolicy } from './editorials/organization-policy';
+import { secureMcpServers } from './editorials/secure-mcp-servers';
+import { codingagentDpdpCompliance } from './editorials/codingagent-dpdp-compliance';
+import { codingagentInrPricing } from './editorials/codingagent-inr-pricing';
+import { codingagentIndicWorkflows } from './editorials/codingagent-indic-workflows';
+import { codingagentHallucinationDefense } from './editorials/codingagent-hallucination-defense';
+import { codingagentTokenOptimization } from './editorials/codingagent-token-optimization';
+import { codingagentPythonDataScience } from './editorials/codingagent-python-data-science';
+import { codingagentFullstackTypescript } from './editorials/codingagent-fullstack-typescript';
+import { codingagentDevopsPipelines } from './editorials/codingagent-devops-pipelines';
+import { codingagentMcpConnectionResilience } from './editorials/codingagent-mcp-connection-resilience';
+import { codingagentIndiaSovereign } from './editorials/codingagent-india-sovereign';
+import { cicdPipelineAgents } from './editorials/cicd-pipeline-agents';
+import { developerCli } from './editorials/developer-cli';
+import { ideIntegrations } from './editorials/ide-integrations';
+import { modelGovernance } from './editorials/model-governance';
+import { privateDeployment } from './editorials/private-deployment';
+import { codingagentDpdpCompliance } from './editorials/codingagent-dpdp-compliance';
+import { codingagentInrPricing } from './editorials/codingagent-inr-pricing';
+import { codingagentIndicWorkflows } from './editorials/codingagent-indic-workflows';
+import { codingagentHallucinationDefense } from './editorials/codingagent-hallucination-defense';
+import { codingagentTokenOptimization } from './editorials/codingagent-token-optimization';
 
 // Registry of completed long-form editorials. A pillar page is only
 // considered publishable (indexable, in the sitemap, in llms surfaces) when
@@ -72,14 +113,52 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [vramAwareRouting.pillarId]: vramAwareRouting,
   [offlineEmbeddings.pillarId]: offlineEmbeddings,
   [airGappedAgents.pillarId]: airGappedAgents,
-  [secretsIsolation.pillarId]: secretsIsolation,
-  [independentVerification.pillarId]: independentVerification,
-  [dpdpCompliance.pillarId]: dpdpCompliance,
-  [localLlmCoding.pillarId]: localLlmCoding,
+  [coreAgents.pillarId]: coreAgents,
+  [approvalPolicyDesign.pillarId]: approvalPolicyDesign,
+  [artifactHashing.pillarId]: artifactHashing,
+  [auditLogsProvenance.pillarId]: auditLogsProvenance,
+  [auditReadyEngineering.pillarId]: auditReadyEngineering,
+  [agentMemoryArchitecture.pillarId]: agentMemoryArchitecture,
+  [agentCostGovernance.pillarId]: agentCostGovernance,
+  [agentSandboxing.pillarId]: agentSandboxing,
+  [aiAgentSecurity.pillarId]: aiAgentSecurity,
+  [promptInjectionDefenses.pillarId]: promptInjectionDefenses,
+  [secureToolCalling.pillarId]: secureToolCalling,
+  [networkEgressControls.pillarId]: networkEgressControls,
+  [verificationMemory.pillarId]: verificationMemory,
+  [buildVerification.pillarId]: buildVerification,
+  [codingagentFullstackTypescript.pillarId]: codingagentFullstackTypescript,
+  [codingagentDevopsPipelines.pillarId]: codingagentDevopsPipelines,
+  [codingagentMcpConnectionResilience.pillarId]: codingagentMcpConnectionResilience,
+  [typecheckVerification.pillarId]: typecheckVerification,
+  [unitTestVerification.pillarId]: unitTestVerification,
+  [browserVerification.pillarId]: browserVerification,
+  [workingMissionMemory.pillarId]: workingMissionMemory,
+  [agentSkillsVersioning.pillarId]: agentSkillsVersioning,
+  [contextCompaction.pillarId]: contextCompaction,
+  [enterpriseTooling.pillarId]: enterpriseTooling,
+  [enterpriseAgents.pillarId]: enterpriseAgents,
+  [organizationPolicy.pillarId]: organizationPolicy,
+  [roleBasedAccess.pillarId]: roleBasedAccess,
+  [secureMcpServers.pillarId]: secureMcpServers,
+  [codingagentIndiaSovereign.pillarId]: codingagentIndiaSovereign,
+  [cicdPipelineAgents.pillarId]: cicdPipelineAgents,
+  [developerCli.pillarId]: developerCli,
+  [ideIntegrations.pillarId]: ideIntegrations,
+  [modelGovernance.pillarId]: modelGovernance,
+  [privateDeployment.pillarId]: privateDeployment,
+[codingagentDpdpCompliance.pillarId]: codingagentDpdpCompliance,
+[codingagentInrPricing.pillarId]: codingagentInrPricing,
+[codingagentIndicWorkflows.pillarId]: codingagentIndicWorkflows,
+[codingagentHallucinationDefense.pillarId]: codingagentHallucinationDefense,
+[codingagentTokenOptimization.pillarId]: codingagentTokenOptimization,
+[codingagentPythonDataScience.pillarId]: codingagentPythonDataScience,
 };
+
 export function getEditorial(pillarId: string): PillarEditorial | undefined {
   return REGISTRY[pillarId];
 }
+
 // Publish bar: a pillar editorial is indexable only at substantive depth
 // (>= MIN_EDITORIAL_WORDS). Shorter entries remain drafts: rendered with
 // noindex and excluded from the sitemap until extended.
