@@ -71,11 +71,6 @@ import { developerCli } from './editorials/developer-cli';
 import { ideIntegrations } from './editorials/ide-integrations';
 import { modelGovernance } from './editorials/model-governance';
 import { privateDeployment } from './editorials/private-deployment';
-import { codingagentDpdpCompliance } from './editorials/codingagent-dpdp-compliance';
-import { codingagentInrPricing } from './editorials/codingagent-inr-pricing';
-import { codingagentIndicWorkflows } from './editorials/codingagent-indic-workflows';
-import { codingagentHallucinationDefense } from './editorials/codingagent-hallucination-defense';
-import { codingagentTokenOptimization } from './editorials/codingagent-token-optimization';
 
 // Registry of completed long-form editorials. A pillar page is only
 // considered publishable (indexable, in the sitemap, in llms surfaces) when
