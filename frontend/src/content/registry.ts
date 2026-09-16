@@ -1,6 +1,7 @@
 import type { PillarEditorial } from './types';
 import { wordCount } from './types';
 import { publishReadyEditorial } from './publishReadyExtensions';
+import { finalPublishTopup } from './finalPublishTopups';
 import { aiCodingAgents } from './editorials/ai-coding-agents';
 import { agenticEngineering } from './editorials/agentic-engineering';
 import { planExecuteVerify } from './editorials/plan-execute-verify';
@@ -46,8 +47,8 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [planExecuteVerify.pillarId]: planExecuteVerify,
   [taskGraphs.pillarId]: taskGraphs,
   [agentStateMachines.pillarId]: agentStateMachines,
-  [parallelSubagents.pillarId]: publishReadyEditorial(parallelSubagents),
-  [humanApprovalGates.pillarId]: publishReadyEditorial(humanApprovalGates),
+  [parallelSubagents.pillarId]: finalPublishTopup(publishReadyEditorial(parallelSubagents)),
+  [humanApprovalGates.pillarId]: finalPublishTopup(publishReadyEditorial(humanApprovalGates)),
   [agentObservability.pillarId]: publishReadyEditorial(agentObservability),
   [durableRuntimes.pillarId]: publishReadyEditorial(durableRuntimes),
   [productionOperations.pillarId]: publishReadyEditorial(productionOperations),
@@ -56,7 +57,7 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [ollamaIntegration.pillarId]: publishReadyEditorial(ollamaIntegration),
   [inrPricingBilling.pillarId]: publishReadyEditorial(inrPricingBilling),
   [hallucinationDefense.pillarId]: publishReadyEditorial(hallucinationDefense),
-  [mcpClientArchitecture.pillarId]: publishReadyEditorial(mcpClientArchitecture),
+  [mcpClientArchitecture.pillarId]: finalPublishTopup(publishReadyEditorial(mcpClientArchitecture)),
   [mcpServerArchitecture.pillarId]: mcpServerArchitecture,
   [bidirectionalMcp.pillarId]: publishReadyEditorial(bidirectionalMcp),
   [mcpToolDiscovery.pillarId]: publishReadyEditorial(mcpToolDiscovery),
