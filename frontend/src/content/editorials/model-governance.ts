@@ -57,40 +57,6 @@ export const modelGovernance: PillarEditorial = {
       "answer": "The system supports immediate failover (switch instantly on SLA breach), graceful degradation (continue with current model at reduced capability), and hybrid approach (combine current and backup models for parallel processing). Policies can be specified per mission, per agent type, or globally."
     },
     {
-      "question": "How is license compliance monitored?",
-import type { PillarEditorial } from '../types';
-
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
-export const modelGovernance: PillarEditorial = {
-  "pillarId": "model-governance",
-  "updated": "2026-09-24",
-  "definition": "Comprehensive governance framework for AI models covering monitoring, compliance, and cost controls — enabling audit-ready oversight of model deployments and usage patterns across the organization.",
-  "sections": [
-    {
-      "heading": "Model Governance Fundamentals",
-      "paragraphs": [
-        "Model governance provides the framework for monitoring, compliance, and cost controls for AI model deployments across an organization. Without structured governance, model usage can become opaque, making it difficult to track performance, ensure compliance, or manage costs effectively. The governance framework ensures that: model behavior is monitored and logged, compliance requirements (SOC 2, ISO 27001, HIPAA, GDPR) are met, and spending is tracked and controllable. This framework is essential for any organization running multiple AI models in production, where oversight must scale across teams, projects, and missions.",
-        "The need for model governance arises from the limitations of informal model management: no centralized tracking of model usage, no visibility into compliance gaps, and no systematic approach to cost containment. Model governance replaces these patterns with a first-class system that provides comprehensive oversight of the entire model lifecycle, from deployment through retirement. The framework is designed to be framework-agnostic and can be integrated with any model serving infrastructure, observability platform, or financial system.",
-        "Key principles: centralized visibility (single pane of glass for all model monitoring), compliance tracking (automated checks against regulatory frameworks), cost transparency (granular breakdown of model spending), and audit readiness (structured data enabling compliance reports)."
-      ]
-    },
-    {
-      "heading": "Model Monitoring and SLA Tracking",
-      "paragraphs": [
-        "The model monitoring subsystem tracks operational metrics for every deployed model: uptime and availability (percentage of time the model is responsive), latency percentiles (p50, p95, p99 response times), error rates (per-model and per-endpoint failures), and throughput (requests per second). SLA tracking compares actual performance against agreed-upon service level agreements, triggering alerts when thresholds are breached. The monitoring system stores historical data enabling trend analysis and capacity planning. Operators can query the observability dashboard to see real-time status and historical trends for any model in the catalog.",
-        "Alerting is configured per SLA dimension: latency breaches trigger warnings when p99 exceeds the threshold, error rate breaches trigger critical alerts, and uptime violations trigger system-level notifications. All alerts include the affected model, the metric that breached, the current value, and the SLA target. Alert history is maintained for trend analysis and continuous improvement of SLA targets."
-      ]
-    },
-    {
-      "heading": "License Compliance and License Tracking",
-      "paragraphs": [
-        "Model governance extends to license compliance, ensuring that all model usage respects the terms of the underlying model licenses. The license tracker maintains: per-model license identifiers (the exact license under which each model is distributed), usage metrics (token consumption per model per time period), compliance status (COMPLIANT, WARNING, VIOLATION), and violation details (which license terms are being breached). The system compares actual usage against license terms (e.g., per-token limits, subscription minima, redistribution restrictions) and flags potential violations before they become legal risks. License compliance reports can be generated on-demand or scheduled, providing evidence of compliance for auditors and regulators.",
-        "The system also supports license versioning: when a model is updated to a new version, the license terms may change. The tracker identifies version migrations and ensures that the new version's license terms are understood and accepted before the model is deployed. This prevents accidental migration to a license that doesn't match the organization's usage patterns."
-      ]
-    }
-  ],
-  "faq": [
-    {
       "question": "How are audit reports generated for compliance frameworks?",
       "answer": "Audit reports synthesize data from the model catalog, SLA tracker, and license compliance system into framework-specific formats (SOC 2, ISO 27001, custom). Reports include model inventory, SLA compliance summary, license compliance status, failover event log, and cost analysis, accessible through the observability dashboard or API."
     },
@@ -101,6 +67,12 @@ export const modelGovernance: PillarEditorial = {
     {
       "question": "How does the anomaly detection system work in cost governance?",
       "answer": "The cost governance system also supports anomaly detection: machine learning models identify unusual spending patterns (e.g., sudden spike in token consumption, unexpected model version usage, cost outliers compared to historical trends). Anomaly alerts are triggered when spending deviates from the expected range by more than a configurable threshold (e.g., 20% above the rolling 7-day average). Anomaly details include: the affected model, the time period, the deviation magnitude, and suggested investigation steps. Anomaly history is maintained for trend analysis and continuous improvement of the cost governance model."
+    }
+  ],
+  "sources": [
+    {
+      "label": "CodingAgent source repository",
+      "href": "https://github.com/CodesbyFebin/Coding-Agent"
     }
   ]
 };

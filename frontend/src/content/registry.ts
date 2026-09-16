@@ -56,26 +56,21 @@ import { enterpriseTooling } from './editorials/enterprise-tooling';
 import { enterpriseAgents } from './editorials/enterprise-agents';
 import { organizationPolicy } from './editorials/organization-policy';
 import { secureMcpServers } from './editorials/secure-mcp-servers';
-import { codingagentDpdpCompliance } from './editorials/codingagent-dpdp-compliance';
-import { codingagentInrPricing } from './editorials/codingagent-inr-pricing';
+import { codingagentDpdpCompliance } from './editorials/codingagentDpdpCompliance';
+import { codingagentInrpricing as codingagentInrPricing } from './editorials/codingagentInrPricing';
 import { codingagentIndicWorkflows } from './editorials/codingagent-indic-workflows';
 import { codingagentHallucinationDefense } from './editorials/codingagent-hallucination-defense';
-import { codingagentTokenOptimization } from './editorials/codingagent-token-optimization';
-import { codingagentPythonDataScience } from './editorials/codingagent-python-data-science';
-import { codingagentFullstackTypescript } from './editorials/codingagent-fullstack-typescript';
+import { codingagentTokenOptimization } from './editorials/codingagentTokenOptimization';
+import { codingagentPythonDataScience } from './editorials/codingagentPythonDataScience';
+import { codingagentFullstackTypescript } from './editorials/codingagentFullstackTypescript';
 import { codingagentDevopsPipelines } from './editorials/codingagent-devops-pipelines';
-import { codingagentMcpConnectionResilience } from './editorials/codingagent-mcp-connection-resilience';
 import { codingagentIndiaSovereign } from './editorials/codingagent-india-sovereign';
+import { codingagentRoleBasedAccess as roleBasedAccess } from './editorials/codingagentRoleBasedAccess';
 import { cicdPipelineAgents } from './editorials/cicd-pipeline-agents';
 import { developerCli } from './editorials/developer-cli';
 import { ideIntegrations } from './editorials/ide-integrations';
 import { modelGovernance } from './editorials/model-governance';
 import { privateDeployment } from './editorials/private-deployment';
-import { codingagentDpdpCompliance } from './editorials/codingagent-dpdp-compliance';
-import { codingagentInrPricing } from './editorials/codingagent-inr-pricing';
-import { codingagentIndicWorkflows } from './editorials/codingagent-indic-workflows';
-import { codingagentHallucinationDefense } from './editorials/codingagent-hallucination-defense';
-import { codingagentTokenOptimization } from './editorials/codingagent-token-optimization';
 
 // Registry of completed long-form editorials. A pillar page is only
 // considered publishable (indexable, in the sitemap, in llms surfaces) when
@@ -125,11 +120,11 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [promptInjectionDefenses.pillarId]: promptInjectionDefenses,
   [secureToolCalling.pillarId]: secureToolCalling,
   [networkEgressControls.pillarId]: networkEgressControls,
+  [repositoryPermissions.pillarId]: repositoryPermissions,
   [verificationMemory.pillarId]: verificationMemory,
   [buildVerification.pillarId]: buildVerification,
   [codingagentFullstackTypescript.pillarId]: codingagentFullstackTypescript,
   [codingagentDevopsPipelines.pillarId]: codingagentDevopsPipelines,
-  [codingagentMcpConnectionResilience.pillarId]: codingagentMcpConnectionResilience,
   [typecheckVerification.pillarId]: typecheckVerification,
   [unitTestVerification.pillarId]: unitTestVerification,
   [browserVerification.pillarId]: browserVerification,
