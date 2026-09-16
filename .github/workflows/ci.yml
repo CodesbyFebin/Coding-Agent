@@ -50,6 +50,10 @@ jobs:
           grep -q "PILLAR DIRECTORY" dist/pillars/index.html
           grep -q "Task decomposition" dist/ai-coding-agents/index.html
           grep -q "Questions and answers" dist/ai-coding-agents/index.html
-          grep -q "noindex, follow" dist/ollama-integration/index.html
           grep -q "rel=\"canonical\" href=\"https://codingagent.in/dpdp-compliance\"" dist/dpdp-compliance/index.html
-          grep -c "<loc>" dist/sitemap.xml | grep -qx "28"
+          grep -c "<loc>" dist/sitemap.xml | grep -qx "84"
+          # noindex/isContentIndexable regression coverage lives in
+          # src/content/registry.test.ts (unit test, above) rather than a
+          # grep pinned to a specific pillar page here: that pillar's
+          # content crossing the publish bar is expected to happen over
+          # time and isn't itself a regression.
