@@ -47,9 +47,12 @@ jobs:
           test -f dist/pillars/index.html
           test -f dist/ai-coding-agents/index.html
           test -f dist/dpdp-compliance/index.html
+          test -f dist/ollama-integration/index.html
+          test -f dist/independent-verification/index.html
           grep -q "PILLAR DIRECTORY" dist/pillars/index.html
           grep -q "Task decomposition" dist/ai-coding-agents/index.html
           grep -q "Questions and answers" dist/ai-coding-agents/index.html
-          grep -q "noindex, follow" dist/ollama-integration/index.html
+          ! grep -q "noindex, follow" dist/ollama-integration/index.html
+          ! grep -q "noindex, follow" dist/independent-verification/index.html
           grep -q "rel=\"canonical\" href=\"https://codingagent.in/dpdp-compliance\"" dist/dpdp-compliance/index.html
-          grep -c "<loc>" dist/sitemap.xml | grep -qx "28"
+          grep -c "<loc>" dist/sitemap.xml | grep -qx "42"
