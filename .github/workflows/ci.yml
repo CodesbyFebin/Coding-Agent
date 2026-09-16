@@ -55,4 +55,37 @@ jobs:
           ! grep -q "noindex, follow" dist/ollama-integration/index.html
           ! grep -q "noindex, follow" dist/independent-verification/index.html
           grep -q "rel=\"canonical\" href=\"https://codingagent.in/dpdp-compliance\"" dist/dpdp-compliance/index.html
-          grep -c "<loc>" dist/sitemap.xml | grep -qx "42"
+          test "$(grep -o '<loc>' dist/sitemap.xml | wc -l | tr -d ' ')" -eq 42
+
+      - name: Install production public web
+        working-directory: web
+        run: npm ci
+
+      - name: Typecheck production public web
+        working-directory: web
+        run: npx tsc --noEmit
+
+      - name: Build production public SSG
+        working-directory: web
+        run: npm run build
+
+      - name: Assert production public SSG editorial surface
+        working-directory: web
+        run: |
+          test -f out/parallel-subagents.html
+          test -f out/human-approval-gates.html
+          test -f out/mcp-client-architecture.html
+          test -f out/inr-pricing-billing.html
+          test -f out/agent-observability.html
+          test -f out/air-gapped-agents.html
+          test -f out/ollama-integration.html
+          test -f out/independent-verification.html
+          ! grep -qi "noindex" out/parallel-subagents.html
+          ! grep -qi "noindex" out/human-approval-gates.html
+          ! grep -qi "noindex" out/mcp-client-architecture.html
+          ! grep -qi "noindex" out/inr-pricing-billing.html
+          ! grep -qi "noindex" out/agent-observability.html
+          ! grep -qi "noindex" out/air-gapped-agents.html
+          grep -q "Cost-aware concurrency and deterministic scheduling" out/parallel-subagents.html
+          grep -q "Approval evidence, delegation, and emergency controls" out/human-approval-gates.html
+          grep -q "Compatibility, contract tests, and safe client upgrades" out/mcp-client-architecture.html
