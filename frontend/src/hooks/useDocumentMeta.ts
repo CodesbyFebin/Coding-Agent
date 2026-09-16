@@ -59,5 +59,5 @@ export function useDocumentMeta(
         link!.remove();
       }
     };
-  }, [title, description]);
+  }, [title, description, noindex]);
 }

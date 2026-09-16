@@ -101,9 +101,9 @@ export const LocalRuntimesPage = () => {
         </Box>
       </Heading>
       <Text fontFamily="mono" fontSize="xs" color="sovereign.muted" mb={6} maxW="2xl">
-        Four rules decide where inference runs: the repository's privacy
+        Four rules decide where inference runs: the repository&apos;s privacy
         classification, real GPU memory headroom, the required context window,
-        and each model's empirical verification history.
+        and each model&apos;s empirical verification history.
       </Text>
       <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3}>
         {ROUTING_DIMENSIONS.map((dim) => (

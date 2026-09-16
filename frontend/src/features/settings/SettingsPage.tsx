@@ -19,9 +19,9 @@ export const SettingsPage = () => {
   // Save config when user types — update sessionStorage
   const onInputChange = (field: 'baseUrl' | 'apiKey' | 'functionName', value: string) => {
     const updates: { baseUrl?: string; apiKey?: string; functionName?: string } = {};
-    if (field === 'baseUrl') updates.baseUrl = value;
-    if (field === 'apiKey') updates.apiKey = value;
-    if (field === 'functionName') updates.functionName = value;
+    if (field === 'baseUrl') {updates.baseUrl = value;}
+    if (field === 'apiKey') {updates.apiKey = value;}
+    if (field === 'functionName') {updates.functionName = value;}
     store.save(updates);
   };
 

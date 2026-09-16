@@ -38,7 +38,7 @@ export const MissionListPage = () => {
   const [mode, setMode] = useState<MissionMode>('INSTANT');
 
   const handleCreate = async () => {
-    if (!goal.trim() || !projectId) return;
+    if (!goal.trim() || !projectId) {return;}
     try {
       await createMission.mutateAsync({ goal: goal.trim(), mode });
       setGoal('');
