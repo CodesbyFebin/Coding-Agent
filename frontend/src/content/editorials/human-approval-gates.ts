@@ -1,119 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const humanApprovalGates: PillarEditorial = {
-  "pillarId": "human-approval-gates",
-  "updated": "2026-09-06",
-  "definition": "Explicit interactive checkpoints that interrupt autonomous agent execution when the agent touches sensitive resources — network access, production deployments, database modifications, or any operation classified as requiring human judgment before proceeding.",
-  "sections": [
+  pillarId: 'human-approval-gates',
+  updated: '2026-09-16',
+  definition: 'Explicit interactive checkpoints interrupting autonomous execution when an agent touches sensitive network, deployment, or database resources.',
+  sections: [
     {
-      "heading": "The Role of Human Approval in Agent Systems",
-      "paragraphs": [
-        "Human approval gates are the mechanism by which CodingAgent preserves human authority over consequential agent actions. While agents can operate autonomously for routine tasks, certain actions require human judgment: deploying to production, accessing external networks, modifying shared databases, or any operation where the cost of an error exceeds the cost of a brief delay.",
-        "Approval gates are not a sign that agents are untrustworthy — they are a recognition that some decisions require context that the agent does not have, judgment that the agent cannot exercise, or authority that the agent does not possess. The gate pauses execution, presents the relevant information to a human, and waits for a decision.",
-        "The approval interface presents: what the agent wants to do, why it wants to do it, what the risks are, what the alternatives are, and what evidence supports the proposed action. This information allows the human to make an informed decision without needing to understand every detail of the agent's reasoning.",
-        "Approval gates are configurable per mission, per repository, and per organization. Different environments have different approval requirements: a development environment might have minimal gates, while a production environment has gates for every consequential action."
-      ]
+      heading: 'What CodingAgent Human Approval Gates Actually Does',
+      paragraphs: [
+        'Explicit interactive checkpoints interrupting autonomous execution when an agent touches sensitive network, deployment, or database resources. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Core & Agents components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Maintains human sovereignty over consequential actions: models propose changes, humans authorize external side effects. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: sovereignty',
+        'Tag: hitl',
+        'Tag: governance',
+      ],
     },
     {
-      "heading": "Classification of Actions Requiring Approval",
-      "paragraphs": [
-        "CodingAgent classifies agent actions into three tiers: ALLOW (proceed automatically within defined boundaries), ASK (pause and request human approval), and DENY (absolutely prohibited). The classification is based on the potential impact of the action and the reversibility of its consequences.",
-        "Actions classified as ASK include: network requests to external services (potential data egress), git push operations (modifying shared history), production deployments (impacting live users), database schema modifications (risk of data loss), and any operation not explicitly covered by the mission's tool declarations.",
-        "The classification is configurable and can be tuned to the organization's risk tolerance. A startup might classify git push as ALLOW for development branches but ASK for main. An enterprise might classify all network access as ASK regardless of destination.",
-        "Actions classified as DENY include: arbitrary shell execution with unvalidated parameters, access to secret files without explicit authorization, and any operation that the permission system has not been configured to handle. DENY is the default for unknown operations — the system is deny-first by design."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "The Approval Workflow",
-      "paragraphs": [
-        "When an agent encounters an action classified as ASK, the execution engine pauses the mission and creates an approval request. The request contains: the mission identifier, the action description, the tool and arguments, the risk assessment, the evidence supporting the action, and the available decisions (approve, reject, modify, escalate).",
-        "The approval request is delivered through configured channels: web interface, IDE notification, mobile push notification, or integration with existing approval systems (Slack, Teams, email). The human reviewer can approve (allowing execution to continue), reject (causing the agent to skip or abort), modify (changing the arguments before approval), or escalate (forwarding to a more senior reviewer).",
-        "The approval workflow supports timeout policies: if no decision is received within a configured time, the mission can be automatically paused, automatically rejected, or escalated to an alternative reviewer. Timeout policies prevent missions from hanging indefinitely waiting for approval.",
-        "All approval decisions are logged in the audit trail with the reviewer identity, the decision, the timestamp, and any comments. This log provides accountability for approval decisions and supports post-mortem analysis when things go wrong."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Cryptographic signature of operator authorization recorded in the mission ledger. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Approval Delegation and Policy",
-      "paragraphs": [
-        "Organizations can define approval delegation policies that determine who can approve what. A junior developer might be able to approve documentation changes but not production deployments. A team lead might be able to approve deployments to staging but not production. A security officer might be required to approve any changes to authentication code.",
-        "Delegation policies are expressed as rules: \"if action is production deploy and environment is production, then approver must have role deployer and environment production.\" The approval system evaluates these rules when routing approval requests and only delivers requests to authorized approvers.",
-        "Policies also support time-based delegation: an approver can delegate their authority to a colleague during vacation, with automatic reversion when they return. Delegation is logged and auditable, preventing unauthorized approval through delegation chains.",
-        "The delegation system integrates with existing identity providers (SSO, SAML, LDAP) to use existing role definitions rather than requiring separate role management. This integration reduces administrative overhead and ensures consistency with existing access controls."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Human Approval Gates\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Reducing Approval Fatigue",
-      "paragraphs": [
-        "One risk of approval gates is approval fatigue: if humans are asked to approve too many actions, they begin approving without reviewing, defeating the purpose of the gate. CodingAgent addresses this through intelligent approval routing that minimizes unnecessary approvals.",
-        "The system learns from approval patterns: if a particular type of action is always approved without modification, the system can suggest reclassifying it as ALLOW for that specific context. This suggestion requires human confirmation, preventing automatic erosion of governance controls.",
-        "Batch approval is supported for repetitive actions: if an agent needs to make 20 similar network requests, a single approval can cover all of them if they share the same risk profile. This reduces approval overhead without reducing governance.",
-        "Context-aware approval presents only the information relevant to the decision: for a network request, the destination URL and data being sent; for a deployment, the diff and the test results. Irrelevant information is hidden, allowing faster decisions."
-      ]
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Core & Agents area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
     },
     {
-      "heading": "Audit and Compliance",
-      "paragraphs": [
-        "Every approval gate interaction is recorded in the immutable audit log: who requested approval, who granted or denied it, when, what the decision was, and what happened as a result. This log satisfies compliance requirements for change management, access control, and operational accountability.",
-        "The audit log supports export in standard formats (JSON, CSV) for integration with compliance systems. It supports querying by approver, by action type, by time range, and by mission, enabling compliance officers to verify that approval policies are being followed.",
-        "Approval records include cryptographic hashes that prevent tampering: if someone attempts to modify an approval record after the fact, the hash mismatch is detected and flagged. This tamper-evidence is essential for regulatory compliance in industries like finance and healthcare.",
-        "The audit system also supports approval analytics: how many approvals were requested, how many were granted, average response time, and approval patterns by reviewer. These analytics help organizations tune their approval policies to balance governance with developer productivity."
-      ]
-    }
-,
-
-{
-  heading: 'Approval Analytics and Continuous Improvement',
-  paragraphs: [
-    'Approval analytics provide insights into the approval process: how many approvals are requested, how long approvals take, which approvers are most active, and which actions are most frequently approved or denied. These analytics enable continuous improvement of the approval system by identifying bottlenecks, optimizing approval routing, and refining approval policies.',
-    'Approval time analysis reveals how long it takes for approvals to be granted or denied. Long approval times indicate bottlenecks: approvers are overwhelmed, approval requests are not reaching the right people, or the approval process is too complex. Solutions include: adding more approvers, improving approval routing to reach the right people faster, and simplifying the approval process by providing better information or automating routine decisions.',
-    'Approval pattern analysis reveals which actions are most frequently approved, which are most frequently denied, and which require modification. Actions that are always approved without modification are candidates for reclassification from ASK to ALLOW, reducing approval overhead. Actions that are always denied indicate a misalignment between agent behavior and organizational policies, requiring either agent reconfiguration or policy revision.',
-    'Approver workload analysis reveals how approval requests are distributed across approvers. Uneven distribution indicates routing problems: some approvers are overwhelmed while others are underutilized. Solutions include: improving routing rules to distribute requests more evenly, adding more approvers for high-volume action types, and implementing load balancing to redirect requests from overloaded approvers to available ones.',
-    'Approval quality analysis assesses the quality of approval decisions: are approvers making correct decisions, are they providing useful feedback, and are they following established policies. Poor quality decisions indicate a need for better training, clearer policies, or improved approval interfaces that provide better information to approvers.',
-    'Continuous improvement uses these analytics to iteratively refine the approval system: adjusting approval policies based on patterns, optimizing routing based on workload, improving interfaces based on feedback, and training approvers based on quality analysis. The goal is to minimize approval overhead while maintaining the governance benefits of human oversight.'
-  ]
-},
-{
-  heading: 'Integration with External Approval Systems',
-  paragraphs: [
-    'Many organizations have existing approval systems: IT service management (ITSM) tools like ServiceNow, workflow automation platforms like Zapier, or custom approval systems built for specific purposes. Integrating CodingAgent approval gates with these external systems enables organizations to leverage existing workflows, maintain consistency across approval processes, and avoid duplicating approval infrastructure.',
-    'ITSM integration enables approval requests to be created as tickets in ITSM systems, routed through existing approval workflows, and tracked in the same system as other IT requests. This integration is valuable for organizations that require all changes to go through ITSM for compliance or audit purposes. The integration must handle bidirectional communication: approval requests flow from CodingAgent to ITSM, and approval decisions flow from ITSM back to CodingAgent.',
-    'Workflow automation integration enables approval requests to trigger automated workflows: notifications to approvers, escalation if approvals are not granted within a time limit, and integration with other systems based on approval decisions. This integration reduces manual effort and ensures that approval processes are followed consistently.',
-    'Custom system integration enables integration with organization-specific approval systems through APIs, webhooks, or message queues. Custom integration is valuable for organizations with unique approval requirements that cannot be met by off-the-shelf systems. The integration must handle authentication, authorization, data format translation, and error handling to ensure reliable communication between CodingAgent and the custom system.',
-    'Integration challenges include: handling latency (external systems may be slow to respond, delaying agent execution), ensuring consistency (approval decisions in external systems must be reflected in CodingAgent state), managing failures (what happens if the external system is unavailable), and maintaining security (approval requests may contain sensitive information that must be protected in transit and at rest). These challenges require careful design, thorough testing, and robust error handling to ensure reliable operation.'
-  ]
-}
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Human Approval Gates\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Human Approval Gates\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Core & Agents) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Human Approval Gates\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Human Approval Gates\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Human Approval Gates\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/human-approval-gates`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What are human approval gates?",
-      "answer": "Human approval gates are explicit checkpoints that pause agent execution when the agent attempts a consequential action — deploying to production, accessing external networks, modifying databases — requiring human judgment before proceeding."
+      question: 'What problem does CodingAgent Human Approval Gates actually solve?',
+      answer: 'Explicit interactive checkpoints interrupting autonomous execution when an agent touches sensitive network, deployment, or database resources. Maintains human sovereignty over consequential actions: models propose changes, humans authorize external side effects.',
     },
     {
-      "question": "What actions require human approval?",
-      "answer": "Actions classified as ASK: network requests to external services, git push operations, production deployments, database modifications, and any operation not explicitly declared in the mission configuration. The classification is configurable per organization."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Cryptographic signature of operator authorization recorded in the mission ledger.',
     },
     {
-      "question": "How does the approval workflow work?",
-      "answer": "The agent pauses, creates an approval request with full context (what, why, risks, evidence), delivers it through configured channels (web, IDE, mobile, Slack), and waits for a decision: approve, reject, modify, or escalate. All decisions are logged."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "Can approval requirements be customized?",
-      "answer": "Yes. Approval policies are configurable per mission, per repository, and per organization. Delegation policies determine who can approve what based on roles, environments, and action types. Policies integrate with existing identity providers."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Human Approval Gates\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "How is approval fatigue prevented?",
-      "answer": "Through intelligent routing that minimizes unnecessary approvals, batch approval for repetitive actions, context-aware presentation of only relevant information, and learning from approval patterns to suggest reclassification of routinely-approved actions."
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
     },
     {
-      "question": "How does the approval workflow handle time-sensitive decisions?",
-      "answer": "The system supports time-bound approval windows with configurable escalation policies. If an approver does not respond within the specified timeframe, the system can automatically escalate to backup approvers, trigger notifications, or in low-risk scenarios auto-approve based on the defined policy. Escalation chains ensure that critical decisions are never blocked by unavailable approvers."
-    }
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Core & Agents, tagged sovereignty, hitl, governance.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Human Approval Gates?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Human Approval Gates?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Human Approval Gates\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/human-approval-gates` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Human Approval Gates fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

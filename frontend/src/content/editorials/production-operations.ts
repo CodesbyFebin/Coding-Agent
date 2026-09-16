@@ -1,92 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const productionOperations: PillarEditorial = {
-  "pillarId": "production-operations",
-  "updated": "2026-09-06",
-  "definition": "Operational playbooks, rate limiters, cost governors, health monitors, and emergency killswitches for running AI coding agents reliably at scale across enterprise engineering organizations with SLA-bound availability and cost controls.",
-  "sections": [
+  pillarId: 'production-operations',
+  updated: '2026-09-16',
+  definition: 'Operational playbooks, rate limiters, cost governors, health monitors, and emergency killswitches for running agents at scale.',
+  sections: [
     {
-      "heading": "Operating Agents in Production",
-      "paragraphs": [
-        "Running AI coding agents in production is fundamentally different from running them in development. Production environments have SLA requirements, cost constraints, compliance obligations, and multiple concurrent users that development environments do not. Production operations addresses these challenges through a comprehensive operational framework.",
-        "Production agent operations encompasses: capacity planning (ensuring sufficient resources for expected agent load), rate limiting (preventing any single user or team from consuming disproportionate resources), cost governance (keeping token consumption within budget), health monitoring (detecting and responding to agent degradation), and incident response (handling failures gracefully).",
-        "The operational framework is designed for the specific characteristics of agent workloads: bursty demand (developers submit missions in batches), long-running tasks (missions can run for hours), expensive operations (each token costs money), and governance requirements (every action must be auditable).",
-        "This framework is what allows CodingAgent to scale from a single developer's laptop to an enterprise deployment serving thousands of developers across multiple repositories and teams."
-      ]
+      heading: 'What CodingAgent Production Operations Actually Does',
+      paragraphs: [
+        'Operational playbooks, rate limiters, cost governors, health monitors, and emergency killswitches for running agents at scale. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Core & Agents components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Protects cloud infrastructure budgets, prevents runaway API billings, and enforces compliance with organizational safety guidelines. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: sre',
+        'Tag: governance',
+        'Tag: killswitch',
+      ],
     },
     {
-      "heading": "Capacity Planning and Resource Management",
-      "paragraphs": [
-        "Agent workloads have specific resource characteristics that differ from traditional web applications: they are CPU-intensive (model inference), memory-intensive (large context windows), I/O-intensive (repository access, tool invocations), and time-intensive (missions run for extended periods). Capacity planning must account for all of these.",
-        "Resource management uses a combination of reservation and elasticity: baseline resources are reserved for expected load, with elastic capacity available for burst demand. The elastic capacity is bounded by cost constraints: the system will not scale beyond the configured budget, even if demand exceeds capacity.",
-        "When capacity is exhausted, new missions are queued rather than rejected. The queue is prioritized by: mission urgency (production incidents first), user priority (configured per user/team), and fairness (preventing any single team from monopolizing capacity). Queued missions are served in priority order as capacity becomes available.",
-        "Capacity metrics are monitored in real-time: resource utilization, queue depth, wait times, and rejection rates. Alerts fire when metrics approach thresholds, allowing proactive capacity adjustment before users are impacted."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Rate Limiting and Fair Use",
-      "paragraphs": [
-        "Rate limiting prevents any single user or team from consuming disproportionate agent resources. Limits are applied at multiple levels: per-user limits (preventing individual overuse), per-team limits (preventing team-level overuse), per-repository limits (preventing any single codebase from consuming all capacity), and global limits (preventing total system overload).",
-        "Rate limits are configurable and can be tuned to the organization's needs: a generous limit for development environments, a moderate limit for staging, and a strict limit for production. Limits can also be time-based: higher limits during business hours, lower limits overnight.",
-        "When a rate limit is hit, the user receives a clear message explaining the limit, when it will reset, and how to request a higher limit. The message is designed to be informative rather than punitive, helping users understand and work within the system's constraints.",
-        "Rate limit metrics are available to team managers, allowing them to understand their team's agent usage patterns and plan accordingly. This transparency prevents surprises and supports productive conversations about resource allocation."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Real-time circuit breakers tripping on anomalous tool invocation frequency or token consumption spikes. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Cost Governance at Scale",
-      "paragraphs": [
-        "Token consumption is the primary operational cost for agent systems. Cost governance ensures that this cost remains within budget through: budget allocation (assigning token budgets to teams/projects), consumption tracking (monitoring token usage in real-time), alerting (notifying when budgets are approached), and enforcement (throttling or stopping when budgets are exhausted).",
-        "Budget allocation is configurable at multiple levels: organization-wide budget, per-team budgets, per-project budgets, and per-mission-type budgets. Each level can have its own alerting thresholds and enforcement policies.",
-        "Consumption tracking attributes tokens to the appropriate budget level: a mission run by a developer on a project consumes that project's budget. This attribution supports chargeback/showback models where teams are accountable for their agent costs.",
-        "Cost governance also supports optimization: identifying missions that consume disproportionate tokens, suggesting configuration changes to reduce consumption, and tracking the effectiveness of optimization efforts over time."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Production Operations\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Health Monitoring and Incident Response",
-      "paragraphs": [
-        "Agent health monitoring tracks: model provider availability and latency, tool server availability and latency, verification gate pass rates, approval gate response times, and mission completion rates. Anomalies in any of these metrics indicate potential problems that require investigation.",
-        "Incident response follows a structured playbook: detect (automated alerting on metric anomalies), triage (determining severity and impact), mitigate (applying the appropriate response: failover, throttling, or pause), communicate (notifying affected users), and resolve (fixing the root cause and verifying recovery).",
-        "The incident response playbook is specific to agent systems: model provider failures trigger failover to alternative providers, tool server failures trigger mission pausing, verification degradation triggers increased human review, and approval bottlenecks trigger approval delegation.",
-        "Post-incident reviews produce improvement actions that strengthen the system against future occurrences. Each incident is documented with timeline, impact, root cause, and remediation, building an organizational knowledge base for operational excellence."
-      ]
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Core & Agents area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
     },
     {
-      "heading": "Emergency Killswitches",
-      "paragraphs": [
-        "Despite all precautions, situations arise where agent execution must be stopped immediately: a runaway agent consuming excessive resources, an agent producing harmful output, a security incident requiring immediate containment, or a compliance violation requiring immediate cessation.",
-        "Emergency killswitches operate at multiple levels: per-mission killswitch (stopping a specific mission), per-user killswitch (stopping all missions for a specific user), per-repository killswitch (stopping all missions touching a specific repository), and global killswitch (stopping all agent execution across the system).",
-        "Killswitches are designed for speed: a single action stops all affected execution within seconds. Stopped missions checkpoint their state for potential later resumption (if appropriate) or clean termination. The killswitch action is logged with the operator identity, the reason, and the scope.",
-        "Killswitches are tested regularly through drills that simulate emergency scenarios. These drills verify that killswitches work correctly, that operators know how to use them, and that the response time meets requirements."
-      ]
-    }
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Production Operations\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Production Operations\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Core & Agents) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Production Operations\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Production Operations\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Production Operations\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/production-operations`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What does production operations cover?",
-      "answer": "Capacity planning, rate limiting, cost governance, health monitoring, incident response, and emergency killswitches for running AI coding agents reliably at enterprise scale with SLA-bound availability and cost controls."
+      question: 'What problem does CodingAgent Production Operations actually solve?',
+      answer: 'Operational playbooks, rate limiters, cost governors, health monitors, and emergency killswitches for running agents at scale. Protects cloud infrastructure budgets, prevents runaway API billings, and enforces compliance with organizational safety guidelines.',
     },
     {
-      "question": "How are costs controlled at scale?",
-      "answer": "Through multi-level budget allocation (organization, team, project, mission-type), real-time consumption tracking, configurable alerting thresholds, and automatic enforcement when budgets are approached or exhausted."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Real-time circuit breakers tripping on anomalous tool invocation frequency or token consumption spikes.',
     },
     {
-      "question": "What happens when capacity is exhausted?",
-      "answer": "New missions are queued rather than rejected. The queue is prioritized by urgency, user priority, and fairness. Queued missions are served as capacity becomes available, with clear communication to users about wait times."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "How do emergency killswitches work?",
-      "answer": "Killswitches operate at per-mission, per-user, per-repository, and global levels. A single action stops all affected execution within seconds. Stopped missions checkpoint state. All actions are logged with operator identity and reason."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Production Operations\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "How is agent health monitored?",
-      "answer": "Through metrics tracking model provider availability/latency, tool server health, verification pass rates, approval response times, and mission completion rates. Anomalies trigger automated alerting and structured incident response playbooks."
-    }
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
+    },
+    {
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Core & Agents, tagged sre, governance, killswitch.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Production Operations?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Production Operations?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Production Operations\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/production-operations` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Production Operations fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

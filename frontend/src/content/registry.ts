@@ -71,6 +71,18 @@ import { developerCli } from './editorials/developer-cli';
 import { ideIntegrations } from './editorials/ide-integrations';
 import { modelGovernance } from './editorials/model-governance';
 import { privateDeployment } from './editorials/private-deployment';
+import { localLlmCoding } from './editorials/local-llm-coding';
+import { secretsIsolation } from './editorials/secrets-isolation';
+import { independentVerification } from './editorials/independent-verification';
+import { codingagentMcpConnectionResilience } from './editorials/codingagent-mcp-connection-resilience';
+import { codingagentArchitecture } from './editorials/codingagent-architecture';
+import { codingagentUseCases } from './editorials/codingagent-use-cases';
+import { codingagentDocs } from './editorials/codingagent-docs';
+import { codingagentGuides } from './editorials/codingagent-guides';
+import { codingagentKnowledgeGraph } from './editorials/codingagent-knowledge-graph';
+import { codingagentBlog } from './editorials/codingagent-blog';
+import { codingagentPillarDirectory } from './editorials/codingagent-pillar-directory';
+import { codingagentTerminalBenchmarks } from './editorials/codingagent-terminal-benchmarks';
 
 // Registry of completed long-form editorials. A pillar page is only
 // considered publishable (indexable, in the sitemap, in llms surfaces) when
@@ -148,6 +160,18 @@ export const REGISTRY: Record<string, PillarEditorial> = {
 [codingagentHallucinationDefense.pillarId]: codingagentHallucinationDefense,
 [codingagentTokenOptimization.pillarId]: codingagentTokenOptimization,
 [codingagentPythonDataScience.pillarId]: codingagentPythonDataScience,
+  [localLlmCoding.pillarId]: localLlmCoding,
+  [secretsIsolation.pillarId]: secretsIsolation,
+  [independentVerification.pillarId]: independentVerification,
+  [codingagentMcpConnectionResilience.pillarId]: codingagentMcpConnectionResilience,
+  [codingagentArchitecture.pillarId]: codingagentArchitecture,
+  [codingagentUseCases.pillarId]: codingagentUseCases,
+  [codingagentDocs.pillarId]: codingagentDocs,
+  [codingagentGuides.pillarId]: codingagentGuides,
+  [codingagentKnowledgeGraph.pillarId]: codingagentKnowledgeGraph,
+  [codingagentBlog.pillarId]: codingagentBlog,
+  [codingagentPillarDirectory.pillarId]: codingagentPillarDirectory,
+  [codingagentTerminalBenchmarks.pillarId]: codingagentTerminalBenchmarks,
 };
 
 export function getEditorial(pillarId: string): PillarEditorial | undefined {

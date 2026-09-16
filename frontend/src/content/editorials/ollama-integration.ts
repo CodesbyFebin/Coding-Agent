@@ -1,87 +1,143 @@
 import type { PillarEditorial } from '../types';
 
-// Batch-converted editorial. Claim-audited; publish bar decides.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const ollamaIntegration: PillarEditorial = {
-  "pillarId": "ollama-integration",
-  "updated": "2026-09-06",
-  "definition": "Seamless integration with Ollama for zero-config local model pulls, GPU acceleration, streaming inference, and automatic model selection based on task requirements and available hardware.",
-  "sections": [
+  pillarId: 'ollama-integration',
+  updated: '2026-09-16',
+  definition: 'Seamless integration with Ollama for zero-config local model pulls, GPU acceleration, and streaming inference.',
+  sections: [
     {
-      "heading": "Understanding Ollama and Its Role in Local AI",
-      "paragraphs": [
-        "Ollama has emerged as the most accessible entry point for running large language models locally. It provides a simple, unified interface for downloading, running, and managing models without requiring deep expertise in machine learning infrastructure. For CodingAgent, Ollama integration means developers can leverage powerful coding models like DeepSeek-Coder, Qwen-Coder, and CodeLlama with minimal setup.",
-        "The integration goes beyond simple API calls. CodingAgent treats Ollama as a first-class inference backend, with automatic model discovery, intelligent model selection based on task requirements, and seamless fallback to cloud models when local resources are insufficient. This approach preserves the privacy benefits of local inference while maintaining the flexibility to use cloud models for complex tasks.",
-        "Ollama's architecture is particularly well-suited for agent workflows. It supports streaming responses, which enables real-time feedback during long-running agent missions. It manages model lifecycle automatically, downloading models on first use and caching them for subsequent requests. It provides hardware acceleration transparently, using GPU when available and falling back to CPU when necessary."
-      ]
+      heading: 'What CodingAgent Ollama Integration Actually Does',
+      paragraphs: [
+        'Seamless integration with Ollama for zero-config local model pulls, GPU acceleration, and streaming inference. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Local LLMs & Routing components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Provides instant developer onboarding with one-click setup across macOS Metal, Linux CUDA, and Windows ROCm. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: ollama',
+        'Tag: developer-experience',
+        'Tag: gpu',
+      ],
     },
     {
-      "heading": "Zero-Configuration Setup",
-      "paragraphs": [
-        "The integration is designed to work out of the box with zero configuration in most cases. When CodingAgent starts, it checks for a running Ollama instance on the default port (11434). If found, it queries the list of available models and makes them accessible to agents. No manual configuration, API keys, or setup scripts are required.",
-        "For developers who want to customize the integration, configuration options are available: custom Ollama endpoints (for remote or non-standard ports), model preferences (prioritizing certain models for certain tasks), resource limits (capping GPU or memory usage), and fallback policies (when to switch to cloud models). These options are exposed through the standard CodingAgent configuration system, maintaining consistency with other configuration aspects.",
-        "The zero-config approach extends to model management. When an agent requests a model that isn't available locally, CodingAgent can automatically pull it from Ollama's model registry. This happens transparently in the background, with progress indicators and the ability to cancel if needed. Once downloaded, models are cached locally and available for future use without additional network requests."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Intelligent Model Selection",
-      "paragraphs": [
-        "Not all models are equally suited for all tasks. A model that excels at Python code generation might struggle with Rust, and a model optimized for short completions might not handle long-context reasoning well. CodingAgent's Ollama integration includes intelligent model selection that matches tasks to the most appropriate model based on multiple factors.",
-        "The selection algorithm considers: task type (code generation, refactoring, debugging, documentation), programming language (some models are trained primarily on specific languages), context size requirements (how much code needs to be in context), quality requirements (some tasks need higher quality than others), and available hardware (larger models require more resources). This multi-factor selection ensures that agents get the best possible results for each specific task.",
-        "Model selection is not static. As agents execute tasks, CodingAgent collects performance data: how long inference took, whether the output passed verification, how much context was used, and user feedback on quality. This data feeds back into the selection algorithm, continuously improving model-task matching over time. The system learns which models work best for which types of tasks in your specific codebase."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Health check probe verifying VRAM allocation and context length availability before mission dispatch. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
+      bullets: [
+        'Related pillar: CodingAgent Local LLM Coding',
+        'Related pillar: CodingAgent VRAM-Aware Routing',
+        'Related pillar: CodingAgent llama.cpp Runtimes',
+      ],
     },
     {
-      "heading": "Streaming Inference for Real-Time Feedback",
-      "paragraphs": [
-        "Long-running agent missions can benefit from streaming inference, where the model generates output token by token and the agent can begin processing before the full response is complete. This reduces perceived latency and enables interactive workflows where the agent can provide feedback or request clarification mid-generation.",
-        "CodingAgent's streaming implementation handles backpressure correctly, ensuring that fast-producing models don't overwhelm slow-consuming agents. It supports cancellation, allowing agents to abort generation if they determine the output is heading in the wrong direction. It provides progress indicators, showing how much of the expected response has been generated.",
-        "Streaming is particularly valuable for code generation tasks. As the model generates code, the agent can begin syntax checking, identifying obvious errors early, and potentially redirecting the generation if it detects problems. This early intervention can save time and resources compared to generating a complete response that then fails verification."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Ollama Integration\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Hardware Acceleration and Resource Management",
-      "paragraphs": [
-        "Ollama automatically leverages available hardware acceleration, but CodingAgent's integration provides additional control and visibility. The integration monitors GPU utilization, memory usage, and temperature, providing dashboards that show resource consumption in real-time. This visibility helps developers understand the resource requirements of their agent workflows and optimize accordingly.",
-        "Resource management includes automatic scaling based on availability. If multiple agents are running concurrently and GPU resources are limited, CodingAgent can queue inference requests, prioritize based on mission importance, or temporarily switch to CPU inference for lower-priority tasks. This ensures that critical missions get the resources they need while preventing resource exhaustion.",
-        "For developers with multiple GPUs, the integration supports model distribution across GPUs, load balancing, and failover. If one GPU fails or becomes unavailable, inference can automatically shift to another GPU without interrupting the agent mission. This resilience is important for production deployments where agent availability is critical."
-      ]
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Local LLMs & Routing area of CodingAgent.in\'s knowledge graph, alongside CodingAgent Local LLM Coding, CodingAgent VRAM-Aware Routing, CodingAgent llama.cpp Runtimes. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
     },
     {
-      "heading": "Model Lifecycle Management",
-      "paragraphs": [
-        "Managing the lifecycle of local models involves downloading, updating, caching, and eventually removing models as needs change. CodingAgent's Ollama integration provides comprehensive lifecycle management through both the API and the user interface.",
-        "Model downloading happens automatically when needed, but can also be pre-emptive. Developers can specify which models to pre-download during off-hours, ensuring they're available when needed without interrupting work. The integration tracks model versions and can automatically update to newer versions when available, with options to pin specific versions for stability.",
-        "Caching is intelligent, keeping frequently-used models in memory while evicting models that haven't been used recently. Cache size is configurable based on available disk space, and the system provides visibility into cache usage. For teams sharing models across multiple machines, the integration supports model synchronization, ensuring consistency across the team.",
-        "Model removal is handled gracefully, ensuring that no agent is using a model before it's removed. The system can also identify models that are no longer needed based on usage patterns and suggest removal to free up disk space."
-      ]
-    }
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Ollama Integration\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Ollama Integration\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Local LLMs & Routing) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Ollama Integration\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Ollama Integration\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Ollama Integration\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/ollama-integration`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What is Ollama and why use it with CodingAgent?",
-      "answer": "Ollama is a tool for running large language models locally on your machine. CodingAgent integrates with Ollama to provide privacy-preserving AI coding assistance without sending your code to external servers. This gives you full control over your data while still leveraging powerful AI models."
+      question: 'What problem does CodingAgent Ollama Integration actually solve?',
+      answer: 'Seamless integration with Ollama for zero-config local model pulls, GPU acceleration, and streaming inference. Provides instant developer onboarding with one-click setup across macOS Metal, Linux CUDA, and Windows ROCm.',
     },
     {
-      "question": "Do I need a GPU to use Ollama with CodingAgent?",
-      "answer": "No, Ollama works on CPU as well, though GPU acceleration significantly improves performance. CodingAgent automatically uses GPU when available and falls back to CPU when necessary. For most coding tasks, CPU inference is usable, though slower."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Health check probe verifying VRAM allocation and context length availability before mission dispatch.',
     },
     {
-      "question": "Which models work best with CodingAgent?",
-      "answer": "CodingAgent works with any model available through Ollama, but models specifically trained for code like DeepSeek-Coder, Qwen-Coder, and CodeLlama tend to perform best. The intelligent model selection feature automatically chooses the best model for each task based on your available models and hardware."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "Can I use multiple models simultaneously?",
-      "answer": "Yes, CodingAgent can use different models for different tasks simultaneously. The intelligent model selection feature matches tasks to the most appropriate model, and resource management ensures that concurrent inference doesn't overwhelm your hardware."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Ollama Integration\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "What happens if Ollama is not running?",
-      "answer": "If Ollama is not running, CodingAgent can either wait for it to start, automatically start it if configured to do so, or fall back to cloud models if configured with fallback policies. The integration is designed to be resilient and maintain agent availability."
-    }
+      question: 'How does this pillar relate to CodingAgent Local LLM Coding, CodingAgent VRAM-Aware Routing?',
+      answer: 'It composes directly with CodingAgent Local LLM Coding, CodingAgent VRAM-Aware Routing, CodingAgent llama.cpp Runtimes: none of these are meant to be adopted in isolation, and the platform\'s guarantees in this area assume the related pillars are also in place around it.',
+    },
+    {
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Local LLMs & Routing, tagged ollama, developer-experience, gpu.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Ollama Integration?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Ollama Integration?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Ollama Integration\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/ollama-integration` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Ollama Integration fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

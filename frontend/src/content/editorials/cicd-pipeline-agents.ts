@@ -1,99 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const cicdPipelineAgents: PillarEditorial = {
-  "pillarId": "cicd-pipeline-agents",
-  "updated": "2026-09-24",
-  "definition": "Headless agent runners embedded in CI/CD pipelines (GitHub Actions, GitLab CI, Jenkins) to perform automated PR reviews, security triage, and mechanical migrations — bridging the gap between code generation and production deployment with deterministic container builds.",
-  "sections": [
+  pillarId: 'cicd-pipeline-agents',
+  updated: '2026-09-16',
+  definition: 'Headless agent runners embedded in GitHub Actions, GitLab CI, and Jenkins to perform automated PR reviews and security triage.',
+  sections: [
     {
-      "heading": "CICD Pipeline Agents: Headless Agent Runners for CI/CD",
-      "paragraphs": [
-        "CICD pipeline agents are headless agent runners embedded in continuous integration and continuous deployment pipelines such as GitHub Actions, GitLab CI, and Jenkins. These agents autonomously perform PR reviews, security triage, and mechanical migrations, reducing the burden on human engineers and accelerating the feedback loop between code generation and production deployment. The core principle is that agentic capabilities should integrate naturally into existing CI/CD workflows without requiring custom infrastructure or significant configuration overhead. Without such integration, organizations face a widening gap between the speed of AI-assisted development and the rigor of production deployment pipelines. This gap is particularly dangerous because it creates a false sense of progress: code is being generated rapidly, but it is not being properly verified, tested, or deployed, leading to accumulating technical debt and potential security vulnerabilities.",
-        "The verification aspect includes: GitHub Checks API integration reporting detailed pass/fail verification evidence, deterministic container builds with trivy security vulnerability scanning, and pipeline-level acceptance gates that block merges when agent-generated changes fail verification. The system reports: agent task completion rate, security issue detection count, and pipeline pass rate attributed to agent assistance. These metrics provide engineering leadership with visibility into the ROI of agentic CI/CD adoption. Without these metrics, organizations cannot make data-driven decisions about whether agentic CI/CD is delivering the expected value.",
-        "A key distinction from traditional CI tools is that pipeline agents maintain persistent state across pipeline stages, enabling them to build on prior work rather than starting from scratch each stage. This statefulness, combined with the memory architecture described in the Working & Mission Memory pillar, allows agents to progressively refine code over multiple pipeline iterations, converging on higher-quality solutions than a single-pass approach could achieve. The persistent memory ensures that lessons learned in one pipeline run are carried forward to the next, creating a compounding effect of code quality improvements over time. Each iteration builds on the previous one, with the agent remembering what worked and what failed, leading to progressively better code.",
-        "The memory persistence also enables: cross-pipeline learning (patterns successful in one repository are applicable to others), reduced context window pressure (the agent's long-term knowledge store offloads the context window), and continuous improvement (the agent's performance improves as it learns from past pipeline runs). These benefits compound over time, making agentic CI/CD increasingly valuable as the system gains experience."
-      ]
+      heading: 'What CodingAgent CI/CD Pipeline Agents Actually Does',
+      paragraphs: [
+        'Headless agent runners embedded in GitHub Actions, GitLab CI, and Jenkins to perform automated PR reviews and security triage. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Enterprise & Tooling components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Automates repetitive triage and mechanical migrations before human engineers ever need to review a pull request. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: ci-cd',
+        'Tag: github-actions',
+        'Tag: automation',
+      ],
     },
     {
-      "heading": "Integration with GitHub Actions",
-      "paragraphs": [
-        "GitHub Actions provides the most native integration for CICD pipeline agents: the `actions/checkout` action prepares the repository, the `actions/setup-node` or `actions/setup-python` action configures the runtime, and custom agent execution steps invoke the CodingAgent CLI with appropriate flags. The agent can post results back as GitHub Checks, annotate files with review comments, and fail the workflow when critical issues are detected. Secrets such as API tokens and cloud credentials are injected through GitHub Secrets and never enter the model prompt context, preserving the principle of least privilege and preventing credentials from being exposed to the model. This is essential for security: credentials in the model prompt context could be leaked or misused.",
-        "A typical workflow includes: triggering the agent on pull request creation or update, running the agent in a sandboxed environment with limited repository access (as described in the Agent Sandboxing pillar), capturing the agent's diff output and verification results, and posting the agent's findings as a GitHub Check run. The workflow can be configured to run the agent on specific file patterns (e.g., only on source files) to minimize compute cost and risk. Artifacts from the agent run are stored in the GitHub Actions artifact store for later review and compliance auditing. The artifact store provides a durable record of the agent's output that can be queried for compliance audits or post-incident analysis.",
-        "The verification aspect includes: pipeline-stage gating (subsequent CI stages only run when the agent's verification passes), artifact persistence (the agent's diff and test results are stored as pipeline artifacts for later review), and compliance reporting (the agent's output is included in compliance audit reports for regulated industries). Each of these verification points ensures that the agentic CI/CD pipeline maintains the same rigor as a purely human-reviewed workflow. The audit trail created by these verification points is essential for regulated industries that must document all changes to code and configuration, providing evidence that due diligence was performed at each stage of the pipeline."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Integration with GitLab CI and Jenkins",
-      "paragraphs": [
-        "For GitLab CI, the agent is invoked via a `script` step in a .gitlab-ci.yml file, with the agent operating in a containerized environment that has access to the project repository. GitLab's artifact system stores the agent's output, and review comments are posted via the GitLab API. For Jenkins, the agent runs as a build step within a Pipeline script, with results published as Jenkins JUnit test results or custom annotations. Both platforms support pipeline gates that can block subsequent stages when the agent reports critical issues. The pipeline gate support is essential for combining autonomous efficiency with human sovereignty, ensuring that critical decisions remain under human control.",
-        "The verification aspect includes: pipeline-stage gating (subsequent CI stages only run when the agent's verification passes), artifact persistence (the agent's diff and test results are stored as pipeline artifacts for later review), and compliance reporting (the agent's output is included in compliance audit reports for regulated industries). Both GitLab and Jenkins also support pipeline-level approval gates that require human authorization before proceeding, combining autonomous efficiency with human sovereignty. The approval gateway mechanism, as described in the Human Approval Gates pillar, ensures that models propose changes but humans authorize external side effects. This combination of autonomous execution with human oversight creates a balanced approach that maximizes productivity while minimizing risk.",
-        "The verification aspect further includes: pipeline-stage gating (subsequent CI stages only run when the agent's verification passes), artifact persistence (the agent's diff and test results are stored as pipeline artifacts for later review), and compliance reporting (the agent's output is included in compliance audit reports for regulated industries). These verification points ensure that the agentic CI/CD pipeline maintains the same rigor as a purely human-reviewed workflow, with the added benefit of human oversight for critical decisions. The human oversight is particularly important for decisions that have significant business impact, such as production deployments or infrastructure changes."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'GitHub Checks API integration reporting detailed pass/fail verification evidence. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Cost Governance and Rate Limiting",
-      "paragraphs": [
-        "Running agents in CI/CD pipelines can incur significant LLM token costs if not governed properly. The system includes cost governance features such as: per-developer or per-repository token budgets that trigger automatic throttling when exceeded, rate limiters that cap the number of agent invocations per pipeline run, and cost attribution that links token consumption to specific teams or projects. Real-time billing webhook alerts notify operators when agent-driven CI costs approach defined thresholds. These cost governance features are essential for scaling agentic CI/CD across the organization without encountering budget overruns that would undermine the business case for automation.",
-        "The verification aspect includes: cost model accuracy (comparing predicted vs. actual token consumption), throttle effectiveness (ensuring budget caps are enforced without blocking legitimate work), and pipeline pass rate under cost constraints (measuring agent adoption success within budget). By integrating cost governance at the pipeline level, organizations can adopt agentic CI/CD at scale without encountering end-of-month billing surprises that would undermine the business case for automation. The cost attribution feature provides visibility into which teams or projects are consuming the most tokens, enabling data-driven decisions about resource allocation.",
-        "The system also supports: per-mission budget caps that terminate the mission when exceeded, cost attribution linking token consumption to specific repositories or teams, and historical cost tracking stored in the audit ledger for trend analysis. These features enable finance teams to plan and budget for agentic CI/CD operations with the same predictability as traditional software development operations. The audit ledger stores cost data that can be queried for trend analysis, capacity planning, and compliance reporting, providing a durable record of all cost data that can be audited by finance and compliance teams."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent CI/CD Pipeline Agents\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Safety and Human Oversight",
-      "paragraphs": [
-        "While CICD pipeline agents operate with significant autonomy, the system maintains human sovereignty over consequential actions. Critical operations such as production deployment, infrastructure modification, and sensitive data access are configured to require interactive ASK approval from human operators. The approval gateway mechanism, as described in the Human Approval Gates pillar, ensures that models propose changes but humans authorize external side effects. This separation of proposal and authorization is a key safety feature: it ensures that the model's suggestions are subject to human review before any consequential action is taken.",
-        "The verification aspect includes: cryptographic signature of operator authorization recorded in the mission ledger, audit logging of all approval gate interactions, and escalation paths when human operators are unavailable or when the agent encounters uncertain situations. The system also supports automatic rollback using git worktree operations if a mission fails verification after human approval, ensuring that failed missions leave no residual changes. The cryptographic signatures provide tamper-evident proof of human decisions, which is essential for compliance in regulated industries. The audit logging provides a complete record of all decisions, enabling traceability and accountability.",
-        "The verification aspect further includes: cryptographic signature of operator authorization recorded in the mission ledger, audit logging of all approval gate interactions, and escalation paths when human operators are unavailable or when the agent encounters uncertain situations. By combining autonomous efficiency with ironclad safety controls, CICD pipeline agents enable organizations to accelerate delivery while maintaining the compliance and governance standards required in regulated industries. The combination of autonomous execution with human oversight creates a balanced approach that maximizes productivity while minimizing risk. The ironclad safety controls ensure that the organization cannot accidentally deploy broken or insecure code, even with significant autonomous operation."
-      ]
-    }
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Enterprise & Tooling area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
+    },
+    {
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent CI/CD Pipeline Agents\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent CI/CD Pipeline Agents\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Enterprise & Tooling) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent CI/CD Pipeline Agents\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent CI/CD Pipeline Agents\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent CI/CD Pipeline Agents\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/cicd-pipeline-agents`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What are CICD pipeline agents?",
-      "answer": "Headless agent runners embedded in CI/CD pipelines (GitHub Actions, GitLab CI, Jenkins) to perform automated PR reviews, security triage, and mechanical migrations."
+      question: 'What problem does CodingAgent CI/CD Pipeline Agents actually solve?',
+      answer: 'Headless agent runners embedded in GitHub Actions, GitLab CI, and Jenkins to perform automated PR reviews and security triage. Automates repetitive triage and mechanical migrations before human engineers ever need to review a pull request.',
     },
     {
-      "question": "How do pipeline agents integrate with GitHub Actions?",
-      "answer": "Through native steps that invoke the CodingAgent CLI, with results posted as GitHub Checks and secrets injected via GitHub Secrets."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'GitHub Checks API integration reporting detailed pass/fail verification evidence.',
     },
     {
-      "question": "Can pipeline agents block merges?",
-      "answer": "Yes. Pipeline gates can block subsequent stages when the agent reports critical issues, and the workflow can be configured to fail when verification fails."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "How are token costs controlled?",
-      "answer": "Through per-repository token budgets, rate limiters, and real-time billing webhook alerts that notify operators when costs approach defined thresholds."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent CI/CD Pipeline Agents\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "What verification is performed by pipeline agents?",
-      "answer": "Security vulnerability scanning (trivy), deterministic container builds, acceptance testing of agent-generated diffs, and pipeline gating."
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
     },
     {
-      "question": "Can pipeline agents work with GitLab CI and Jenkins?",
-      "answer": "Yes. Both platforms support agent invocation via script steps, with results published as artifacts, test results, or custom annotations."
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
     },
     {
-      "question": "How does human oversight work in pipeline agents?",
-      "answer": "Critical operations require interactive ASK approval from human operators, with cryptographic signatures recorded in the mission ledger and audit logging of all interactions."
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Enterprise & Tooling, tagged ci-cd, github-actions, automation.',
     },
     {
-      "question": "Can pipeline agents roll back failed missions?",
-      "answer": "Yes. The system supports automatic rollback using git worktree operations if a mission fails verification after human approval."
+      question: 'Who should read this page before adopting CodingAgent CI/CD Pipeline Agents?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
     },
     {
-      "question": "How does persistent state across pipeline stages improve code quality?",
-      "answer": "Pipeline agents maintain state between stages, allowing them to build on prior work and converge on higher-quality solutions through iterative refinement. Lessons learned in one run are carried forward via the working mission memory system, creating a compounding effect of code quality improvements over time. Each iteration builds on the previous one, with the agent remembering what worked and what failed, leading to progressively better code."
+      question: 'What\'s the recommended rollout sequence for CodingAgent CI/CD Pipeline Agents?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
     },
     {
-      "question": "How does the system prevent credentials from being exposed to the model?",
-      "answer": "Secrets are injected through GitHub Secrets or similar secret management systems, never through the model prompt context. This preserves the principle of least privilege and prevents credentials from being leaked or misused."
-    }
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent CI/CD Pipeline Agents\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/cicd-pipeline-agents` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent CI/CD Pipeline Agents fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

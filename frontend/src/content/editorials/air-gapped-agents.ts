@@ -1,123 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Batch-converted editorial. Claim-audited; publish bar decides.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const airGappedAgents: PillarEditorial = {
-  "pillarId": "air-gapped-agents",
-  "updated": "2026-09-06",
-  "definition": "Hardened agent distribution packaged for defense, banking, and critical infrastructure environments with zero internet access, complete model bundling, and verified offline operation.",
-  "sections": [
+  pillarId: 'air-gapped-agents',
+  updated: '2026-09-16',
+  definition: 'Hardened agent distribution packaged for defense, banking, and critical infrastructure environments with zero internet access.',
+  sections: [
     {
-      "heading": "Understanding Air-Gapped Agent Requirements",
-      "paragraphs": [
-        "Air-gapped agents are CodingAgent distributions designed for environments with absolutely no internet connectivity. These environments exist in defense systems, banking infrastructure, healthcare records, critical infrastructure control systems, and other scenarios where network access is prohibited by policy, regulation, or security requirements.",
-        "The challenge of air-gapped deployment goes far beyond simply \"running without internet.\" It requires:\n- Complete self-containment: all dependencies, models, and tools must be included in the distribution\n- Verified installation: cryptographic verification that the distribution hasn't been tampered with\n- Offline operation: all agent capabilities must work without any network connectivity\n- Secure updates: a mechanism for updating the agent without introducing security risks\n- Compliance: meeting specific regulatory and security requirements for the deployment environment",
-        "Air-gapped deployments represent the most demanding use case for CodingAgent. They require the highest levels of security, the most rigorous verification, and the most comprehensive offline capabilities. Successfully deploying agents in air-gapped environments demonstrates the maturity and robustness of the entire system.",
-        "For organizations operating air-gapped environments, coding agents provide significant value:\n- Accelerating development of secure, certified software\n- Assisting with code review and security analysis\n- Generating documentation and compliance artifacts\n- Supporting maintenance and updates of legacy systems\n- Enabling knowledge transfer and training",
-        "However, these benefits must be balanced against the stringent security requirements. The agent must operate within strict boundaries, provide complete audit trails, and never compromise the security posture of the environment."
-      ]
+      heading: 'What CodingAgent Air-Gapped Agents Actually Does',
+      paragraphs: [
+        'Hardened agent distribution packaged for defense, banking, and critical infrastructure environments with zero internet access. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Local LLMs & Routing components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Guarantees that no external telemetry, DNS lookups, or package dependencies can compromise high-security air-gapped enclaves. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: air-gapped',
+        'Tag: defense',
+        'Tag: sovereignty',
+      ],
     },
     {
-      "heading": "Distribution Packaging and Verification",
-      "paragraphs": [
-        "The air-gapped distribution is a complete, self-contained package that includes everything needed to run CodingAgent without any external dependencies or network access.",
-        "**Complete Component Inventory** - The distribution includes:",
-        "- **Agent Runtime**: The core CodingAgent execution engine with all dependencies bundled\n- **Local Models**: Pre-downloaded and quantized language models optimized for coding tasks (DeepSeek-Coder, Qwen-Coder, CodeLlama in multiple sizes)\n- **Embedding Models**: Local embedding models for semantic code search\n- **Verification Tools**: Compilers, type checkers, test runners, and security scanners for all supported languages\n- **Documentation**: Complete offline documentation, guides, and examples\n- **Configuration Templates**: Pre-configured settings for common air-gapped deployment scenarios\n- **Verification Scripts**: Scripts to verify installation integrity and system readiness",
-        "**Cryptographic Verification** - Every component in the distribution is cryptographically signed and verified:",
-        "- **Distribution Signature**: The entire distribution package is signed with a private key held by the CodingAgent team. The signature is verified during installation using a public key that's distributed through secure channels.\n- **Component Hashes**: Each component has a SHA-256 hash that's recorded in a manifest file. During installation, each component's hash is verified against the manifest to ensure no tampering or corruption.\n- **Chain of Trust**: The verification process establishes a complete chain of trust from the distribution signature through each component, ensuring that every piece of software has been verified.",
-        "**Transfer Media** - The distribution is designed to be transferred via approved media:",
-        "- **Optical Media**: CD/DVD/Blu-ray for maximum security (write-once, no hidden storage)\n- **Approved USB**: Secure, verified USB drives with hardware write-protection\n- **Secure Network Transfer**: For environments with secure internal networks (but no internet), the distribution can be transferred via authenticated, encrypted channels\n- **Physical Courier**: For the most secure environments, distribution media can be physically couriered with chain-of-custody documentation",
-        "**Size and Optimization** - The distribution is optimized for size while maintaining completeness:",
-        "- **Model Selection**: Includes a curated set of models rather than all available models, focusing on the most useful for coding tasks\n- **Quantization**: Uses aggressive quantization (Q4_K_M) to reduce model sizes while maintaining quality\n- **Deduplication**: Shared dependencies are deduplicated to avoid redundancy\n- **Compression**: All components are compressed to minimize transfer size",
-        "A typical air-gapped distribution is 50-100GB, fitting on a single Blu-ray disc or a few USB drives. This size includes multiple model sizes, comprehensive verification tools, and complete documentation."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Installation and Verification Process",
-      "paragraphs": [
-        "Installing CodingAgent in an air-gapped environment is a rigorous, multi-step process that ensures security and correctness at every stage.",
-        "**Pre-Installation Preparation** - Before installation begins:",
-        "- **System Requirements Verification**: Verify that the target system meets minimum requirements (CPU, RAM, disk space, GPU if available)\n- **Security Clearance**: Ensure all personnel involved have appropriate security clearances\n- **Media Verification**: Verify the integrity of the distribution media using cryptographic signatures\n- **Environment Preparation**: Prepare the installation environment (directory structure, user accounts, permissions)",
-        "**Installation Steps** - The installation process is fully scripted and verified:",
-        "1. **Media Mounting**: Mount the distribution media on the target system\n2. **Signature Verification**: Verify the distribution signature using the pre-distributed public key\n3. **Component Extraction**: Extract all components from the distribution package\n4. **Hash Verification**: Verify the hash of each component against the manifest\n5. **Dependency Installation**: Install all bundled dependencies (no network access required)\n6. **Model Loading**: Load and verify all language models\n7. **Tool Configuration**: Configure verification tools (compilers, test runners, etc.)\n8. **System Testing**: Run comprehensive system tests to verify all components work correctly\n9. **Audit Initialization**: Initialize the audit system and verify it's recording correctly",
-        "**Post-Installation Verification** - After installation, comprehensive verification ensures everything works:",
-        "- **Component Tests**: Test each component individually (agent runtime, each model, each verification tool)\n- **Integration Tests**: Test components working together (agent using models, agent using verification tools)\n- **Performance Tests**: Verify performance meets requirements (inference speed, search speed, etc.)\n- **Security Tests**: Verify security controls are working (audit logging, permission enforcement, etc.)\n- **Compliance Tests**: Verify compliance with environment-specific requirements",
-        "**Documentation and Sign-Off** - The installation process generates comprehensive documentation:",
-        "- **Installation Log**: Detailed log of every installation step with timestamps and results\n- **Verification Report**: Report of all verification tests with pass/fail status\n- **Configuration Record**: Record of all configuration settings applied\n- **Sign-Off Documentation**: Documentation for formal sign-off by authorized personnel",
-        "This rigorous installation process ensures that the agent is installed correctly, securely, and in compliance with all requirements. Every step is documented and verifiable, providing complete accountability."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Network namespace lockdown with zero-byte egress verification in sandbox tests. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Operational Considerations",
-      "paragraphs": [
-        "Operating agents in air-gapped environments requires special considerations that differ significantly from networked deployments.",
-        "**Model Updates** - Without internet access, updating models requires the same transfer process as the initial installation:",
-        "- **Update Packages**: Model updates are packaged as signed, verified update packages\n- **Transfer and Verification**: Update packages are transferred via approved media and cryptographically verified\n- **Incremental Updates**: Updates include only changed components to minimize transfer size\n- **Rollback Capability**: The system maintains previous model versions to enable rollback if needed",
-        "Model updates are less frequent than in networked environments (quarterly rather than continuously), so the update process is designed for infrequent but critical updates.",
-        "**Configuration Changes** - Configuration changes follow a similar process:",
-        "- **Change Requests**: Configuration changes are formally requested and approved\n- **Change Packages**: Changes are packaged as signed configuration updates\n- **Verification and Testing**: Changes are verified and tested before deployment\n- **Audit Trail**: All configuration changes are recorded in the audit trail",
-        "This formal change management process ensures that configuration changes are controlled, verified, and auditable.",
-        "**Monitoring and Observability** - Monitoring in air-gapped environments uses local-only solutions:",
-        "- **Local Dashboards**: Web-based dashboards that run locally (no external monitoring services)\n- **Log Aggregation**: Local log aggregation and analysis (no cloud-based log services)\n- **Alerting**: Local alerting via email (internal mail servers) or other approved channels\n- **Metrics Export**: Metrics can be exported to approved internal systems for analysis",
-        "All monitoring data stays within the air-gapped environment, maintaining security while providing operational visibility.",
-        "**User Management** - User management is handled entirely locally:",
-        "- **Local Authentication**: Users authenticate against local user stores (no external identity providers)\n- **Permission Management**: Permissions are managed locally by authorized administrators\n- **Audit Logging**: All user actions are logged locally for audit and compliance",
-        "**Incident Response** - Incident response procedures are adapted for air-gapped environments:",
-        "- **Local Investigation**: All investigation happens locally (no cloud-based forensics tools)\n- **Internal Escalation**: Incidents are escalated through internal channels only\n- **Documentation**: All incident response activities are documented locally\n- **Lessons Learned**: Lessons learned are captured and applied locally",
-        "These operational considerations ensure that agents can be effectively operated, maintained, and secured in air-gapped environments while maintaining the highest levels of security and compliance."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Air-Gapped Agents\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Compliance and Certification",
-      "paragraphs": [
-        "Air-gapped deployments often must meet specific compliance requirements and obtain certifications before deployment is authorized.",
-        "**Regulatory Compliance** - Different industries have different regulatory requirements:",
-        "- **Defense (DoD, NATO)**: Must comply with security frameworks like NIST 800-171, FedRAMP, or equivalent national standards. Requires specific security controls, audit capabilities, and certification processes.\n- **Banking (PCI-DSS, SOX)**: Must comply with financial industry regulations. Requires specific controls for data protection, audit trails, and change management.\n- **Healthcare (HIPAA)**: Must comply with healthcare privacy regulations. Requires specific controls for protected health information (PHI).\n- **Critical Infrastructure**: Must comply with industry-specific regulations (NERC CIP for energy, etc.). Requires specific controls for operational technology.",
-        "CodingAgent's air-gapped distribution is designed to meet these requirements through:",
-        "- **Comprehensive Audit Trails**: Complete logging of all agent activities for compliance reporting\n- **Access Controls**: Fine-grained permission controls to enforce least privilege\n- **Data Protection**: Encryption and access controls for sensitive data\n- **Change Management**: Formal processes for configuration and model updates\n- **Security Controls**: Defense-in-depth security architecture",
-        "**Certification Process** - Before deployment, the agent distribution must be certified:",
-        "- **Security Assessment**: Independent security assessment of the distribution and deployment\n- **Vulnerability Scanning**: Comprehensive vulnerability scanning of all components\n- **Penetration Testing**: Penetration testing to identify potential security issues\n- **Compliance Review**: Review by compliance officers to verify regulatory compliance\n- **Formal Certification**: Formal certification by authorized bodies",
-        "The certification process can be extensive (months for defense deployments) but is essential for ensuring security and compliance.",
-        "**Ongoing Compliance** - Compliance is not a one-time event but an ongoing process:",
-        "- **Continuous Monitoring**: Continuous monitoring for compliance with security controls\n- **Regular Audits**: Regular audits (quarterly or annually) to verify ongoing compliance\n- **Update Management**: Careful management of updates to maintain compliance\n- **Incident Reporting**: Reporting of security incidents as required by regulations",
-        "**Documentation Requirements** - Compliance requires comprehensive documentation:",
-        "- **Security Plans**: Detailed security plans documenting all controls\n- **Audit Reports**: Regular audit reports documenting compliance status\n- **Incident Reports**: Reports of security incidents and response activities\n- **Change Records**: Records of all changes to the system",
-        "This documentation provides evidence of compliance and supports ongoing security and compliance management.",
-        "**Training and Awareness** - Personnel operating the system must be trained:",
-        "- **Security Training**: Training on security requirements and procedures\n- **Compliance Training**: Training on compliance requirements and responsibilities\n- **Operational Training**: Training on operating the agent system\n- **Incident Response Training**: Training on incident response procedures",
-        "Well-trained personnel are essential for maintaining security and compliance in air-gapped environments."
-      ]
-    }
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Local LLMs & Routing area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
+    },
+    {
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Air-Gapped Agents\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Air-Gapped Agents\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Local LLMs & Routing) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Air-Gapped Agents\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Air-Gapped Agents\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Air-Gapped Agents\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/air-gapped-agents`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What are air-gapped agents?",
-      "answer": "Air-gapped agents are CodingAgent distributions designed for environments with zero internet connectivity. They include all dependencies, models, and tools in a self-contained, cryptographically verified package."
+      question: 'What problem does CodingAgent Air-Gapped Agents actually solve?',
+      answer: 'Hardened agent distribution packaged for defense, banking, and critical infrastructure environments with zero internet access. Guarantees that no external telemetry, DNS lookups, or package dependencies can compromise high-security air-gapped enclaves.',
     },
     {
-      "question": "How are updates handled without internet?",
-      "answer": "Updates are packaged as signed, verified packages and transferred via approved media (optical discs, secure USB). The same cryptographic verification process ensures update integrity."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Network namespace lockdown with zero-byte egress verification in sandbox tests.',
     },
     {
-      "question": "What environments require air-gapped deployment?",
-      "answer": "Defense systems, banking infrastructure, healthcare records, critical infrastructure control systems, and other environments where network access is prohibited by policy, regulation, or security requirements."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "How is installation verified?",
-      "answer": "Every component is cryptographically signed and verified. Installation includes signature verification, hash verification, comprehensive testing, and detailed documentation for formal sign-off."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Air-Gapped Agents\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "Can these agents meet compliance requirements?",
-      "answer": "Yes. The distribution is designed to meet defense (NIST 800-171), banking (PCI-DSS, SOX), healthcare (HIPAA), and critical infrastructure compliance requirements through comprehensive audit trails, access controls, and security controls."
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
     },
     {
-      "question": "How does the air-gapped agent handle software updates?",
-      "answer": "Air-gapped agents handle software updates through manual package transfer or dedicated offline update channels. Updates are prepared on a separate network, verified through cryptographic signatures, and transferred via physical media or approved sneakernet channels. The system validates update integrity before installation and maintains rollback capabilities to previous verified versions."
-    }
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Local LLMs & Routing, tagged air-gapped, defense, sovereignty.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Air-Gapped Agents?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Air-Gapped Agents?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Air-Gapped Agents\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/air-gapped-agents` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Air-Gapped Agents fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

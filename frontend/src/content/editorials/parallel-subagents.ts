@@ -1,122 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const parallelSubagents: PillarEditorial = {
-  "pillarId": "parallel-subagents",
-  "updated": "2026-09-06",
-  "definition": "CodingAgent Parallel Subagents are isolated execution runtimes that tackle modular work units concurrently under strict parent orchestrator supervision, enabling significant performance improvements for tasks with parallelizable dependency structures while maintaining full governance and verification controls.",
-  "sections": [
+  pillarId: 'parallel-subagents',
+  updated: '2026-09-16',
+  definition: 'Isolated subagent execution runtimes tackling modular work units concurrently under strict parent orchestrator supervision.',
+  sections: [
     {
-      "heading": "The Case for Parallel Agent Execution",
-      "paragraphs": [
-        "Many engineering tasks contain work units that are independent of each other — they modify different files, have no data flow between them, and can execute simultaneously without conflict. Sequential execution of these independent units wastes time and resources.",
-        "Parallel subagents address this by spawning isolated execution environments for independent work units, allowing them to proceed concurrently. A refactoring task touching 50 independent modules can execute 10 subagents simultaneously, reducing wall-clock time by up to 80%.",
-        "Each subagent operates in its own sandboxed workspace with its own tool permissions, its own verification pipeline, and its own audit trail. The parent orchestrator coordinates the subagents, manages resource allocation, and aggregates results.",
-        "Parallel execution is not simply \"running multiple agents at once.\" It requires careful coordination to prevent resource conflicts, ensure consistent verification, and maintain the governance controls that make single-agent execution trustworthy."
-      ]
+      heading: 'What CodingAgent Parallel Subagents Actually Does',
+      paragraphs: [
+        'Isolated subagent execution runtimes tackling modular work units concurrently under strict parent orchestrator supervision. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Core & Agents components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Accelerates massive codebase audits, documentation generation, and multi-package refactorings without cross-contaminating workspace state. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: concurrency',
+        'Tag: isolation',
+        'Tag: subagents',
+      ],
     },
     {
-      "heading": "Orchestration and Coordination",
-      "paragraphs": [
-        "The parent orchestrator is responsible for: decomposing the task graph into parallelizable groups, allocating subagents to work units based on resource availability, monitoring subagent progress, handling subagent failures, and aggregating results into a unified verification report.",
-        "Coordination follows the dependency structure of the task graph: subagents assigned to independent work units execute simultaneously, while subagents assigned to dependent work units wait for their dependencies to complete. The orchestrator uses topological scheduling to maximize parallelism while respecting dependencies.",
-        "Resource allocation considers: available sandbox environments, memory and CPU requirements of each work unit, rate limits of external APIs, and the critical path of the task graph. The orchestrator prioritizes work units on the critical path to minimize total execution time.",
-        "When a subagent fails, the orchestrator decides whether to retry (for transient failures), reassign (for resource conflicts), or escalate (for permanent failures). The decision is governed by the mission's error recovery policy."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Isolation and Sandbox Boundaries",
-      "paragraphs": [
-        "Each subagent operates in a fully isolated sandbox: its own filesystem workspace, its own process space, its own network namespace, and its own resource limits. This isolation prevents subagents from interfering with each other — one subagent's file modifications cannot affect another's, one subagent's memory leak cannot starve another, and one subagent's network activity cannot conflict with another's.",
-        "Isolation is enforced at the operating system level using containerization (Docker, bubblewrap, or gVisor). Each sandbox has its own root filesystem derived from the repository snapshot at mission start, ensuring that all subagents work from a consistent baseline.",
-        "Resource limits prevent any single subagent from consuming disproportionate resources: CPU quotas, memory limits, disk quotas, and network bandwidth caps are applied per sandbox. These limits are configurable per mission type.",
-        "The isolation model means that subagent failures are contained: a subagent that crashes, hangs, or consumes excessive resources does not affect other subagents or the orchestrator. The orchestrator can simply replace the failed subagent with a new one."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Branch-isolated git worktrees merged only after merge conflict analysis and full test suite passes. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Result Aggregation and Conflict Resolution",
-      "paragraphs": [
-        "When parallel subagents complete, their results must be aggregated into a unified output. This aggregation must handle: merging file modifications from multiple subagents (ensuring no conflicts), combining verification results (all subagents must pass their verification gates), and producing a unified audit trail (recording which subagent did what).",
-        "Conflict resolution is needed when two subagents modify the same file. The orchestrator detects these conflicts during result aggregation and resolves them through: automatic merging (if the modifications are in different parts of the file), subagent re-execution (if the modifications overlap), or human review (if the conflict cannot be resolved automatically).",
-        "The aggregation process produces a single, unified diff that represents the combined output of all subagents. This diff is verified as a whole: the build, typecheck, and test gates run against the merged result, not just against individual subagent outputs.",
-        "This approach ensures that parallel execution does not introduce integration issues: the final result is verified as a coherent whole, not just as a collection of independently verified parts."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Parallel Subagents\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Performance Characteristics",
-      "paragraphs": [
-        "Parallel subagent execution provides significant performance improvements for tasks with parallelizable structure. The speedup depends on: the ratio of parallelizable to sequential work (Amdahl's law), the number of available sandbox environments, and the resource requirements of each work unit.",
-        "For a task with 80% parallelizable work and 10 available subagents, the theoretical speedup is approximately 4.2x. In practice, speedups of 3-5x are common for large refactoring tasks, dependency updates, and multi-file migrations.",
-        "The performance benefit must be weighed against the overhead of sandbox creation, result aggregation, and conflict resolution. For small tasks with few work units, the overhead may exceed the benefit. The orchestrator automatically determines whether parallel execution is beneficial based on the task graph structure.",
-        "Performance metrics are collected for each mission: wall-clock time, CPU time, sandbox creation time, aggregation time, and speedup ratio. These metrics inform future scheduling decisions and help teams understand when parallel execution provides the most value."
-      ]
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Core & Agents area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
     },
     {
-      "heading": "Governance in Parallel Execution",
-      "paragraphs": [
-        "Parallel execution does not reduce governance — each subagent is subject to the same permission controls, verification requirements, and audit logging as a single agent. The orchestrator itself is governed: its scheduling decisions are logged, its conflict resolution is audited, and its resource allocation is tracked.",
-        "Each subagent has its own permission profile derived from the mission configuration. A subagent assigned to modify documentation has write access to the docs/ directory but not to the src/ directory. A subagent assigned to run tests has shell access but not network access.",
-        "Verification is applied at two levels: each subagent's output is verified independently, and the aggregated result is verified as a whole. This dual verification ensures that both individual work units and the integrated result meet quality standards.",
-        "The governance model for parallel execution is one of CodingAgent's key differentiators: it enables the performance benefits of parallelism without sacrificing the safety and correctness guarantees that make agents trustworthy in production."
-      ]
-    }
-,
-{
-  heading: 'Approval Analytics and Continuous Improvement',
-  paragraphs: [
-    'Approval analytics provide insights into the approval process: how many approvals are requested, how long approvals take, which approvers are most active, and which actions are most frequently approved or denied. These analytics enable continuous improvement of the approval system by identifying bottlenecks, optimizing approval routing, and refining approval policies.',
-    'Approval time analysis reveals how long it takes for approvals to be granted or denied. Long approval times indicate bottlenecks: approvers are overwhelmed, approval requests are not reaching the right people, or the approval process is too complex. Solutions include: adding more approvers, improving approval routing to reach the right people faster, and simplifying the approval process by providing better information or automating routine decisions.',
-    'Approval pattern analysis reveals which actions are most frequently approved, which are most frequently denied, and which require modification. Actions that are always approved without modification are candidates for reclassification from ASK to ALLOW, reducing approval overhead. Actions that are always denied indicate a misalignment between agent behavior and organizational policies, requiring either agent reconfiguration or policy revision.',
-    'Approver workload analysis reveals how approval requests are distributed across approvers. Uneven distribution indicates routing problems: some approvers are overwhelmed while others are underutilized. Solutions include: improving routing rules to distribute requests more evenly, adding more approvers for high-volume action types, and implementing load balancing to redirect requests from overloaded approvers to available ones.',
-    'Approval quality analysis assesses the quality of approval decisions: are approvers making correct decisions, are they providing useful feedback, and are they following established policies. Poor quality decisions indicate a need for better training, clearer policies, or improved approval interfaces that provide better information to approvers.',
-    'Continuous improvement uses these analytics to iteratively refine the approval system: adjusting approval policies based on patterns, optimizing routing based on workload, improving interfaces based on feedback, and training approvers based on quality analysis. The goal is to minimize approval overhead while maintaining the governance benefits of human oversight.'
-  ]
-},
-{
-  heading: 'Integration with External Approval Systems',
-  paragraphs: [
-    'Many organizations have existing approval systems: IT service management (ITSM) tools like ServiceNow, workflow automation platforms like Zapier, or custom approval systems built for specific purposes. Integrating CodingAgent approval gates with these external systems enables organizations to leverage existing workflows, maintain consistency across approval processes, and avoid duplicating approval infrastructure.',
-    'ITSM integration enables approval requests to be created as tickets in ITSM systems, routed through existing approval workflows, and tracked in the same system as other IT requests. This integration is valuable for organizations that require all changes to go through ITSM for compliance or audit purposes. The integration must handle bidirectional communication: approval requests flow from CodingAgent to ITSM, and approval decisions flow from ITSM back to CodingAgent.',
-    'Workflow automation integration enables approval requests to trigger automated workflows: notifications to approvers, escalation if approvals are not granted within a time limit, and integration with other systems based on approval decisions. This integration reduces manual effort and ensures that approval processes are followed consistently.',
-    'Custom system integration enables integration with organization-specific approval systems through APIs, webhooks, or message queues. Custom integration is valuable for organizations with unique approval requirements that cannot be met by off-the-shelf systems. The integration must handle authentication, authorization, data format translation, and error handling to ensure reliable communication between CodingAgent and the custom system.',
-    'Integration challenges include: handling latency (external systems may be slow to respond, delaying agent execution), ensuring consistency (approval decisions in external systems must be reflected in CodingAgent state), managing failures (what happens if the external system is unavailable), and maintaining security (approval requests may contain sensitive information that must be protected in transit and at rest). These challenges require careful design, thorough testing, and robust error handling to ensure reliable operation.'
-  ]
-}
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Parallel Subagents\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Parallel Subagents\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Core & Agents) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Parallel Subagents\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Parallel Subagents\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Parallel Subagents\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/parallel-subagents`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What are parallel subagents?",
-      "answer": "Parallel subagents are isolated execution runtimes that tackle independent work units concurrently under orchestrator supervision. Each subagent operates in its own sandbox with its own permissions, verification pipeline, and audit trail."
+      question: 'What problem does CodingAgent Parallel Subagents actually solve?',
+      answer: 'Isolated subagent execution runtimes tackling modular work units concurrently under strict parent orchestrator supervision. Accelerates massive codebase audits, documentation generation, and multi-package refactorings without cross-contaminating workspace state.',
     },
     {
-      "question": "How much faster is parallel execution?",
-      "answer": "Speedups of 3-5x are common for large tasks with parallelizable structure. The actual speedup depends on the ratio of parallelizable to sequential work (Amdahl's law), available sandbox environments, and work unit resource requirements."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Branch-isolated git worktrees merged only after merge conflict analysis and full test suite passes.',
     },
     {
-      "question": "How are conflicts between subagents handled?",
-      "answer": "The orchestrator detects conflicts during result aggregation when multiple subagents modify the same file. Conflicts are resolved through automatic merging, subagent re-execution, or human review depending on the nature of the overlap."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "Does parallel execution reduce governance?",
-      "answer": "No. Each subagent is subject to the same permission controls, verification requirements, and audit logging as a single agent. Verification is applied at both the individual subagent level and the aggregated result level."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Parallel Subagents\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "When should I use parallel subagents?",
-      "answer": "Parallel subagents are most beneficial for large tasks with many independent work units: refactoring across many files, dependency updates, multi-file migrations, and bulk documentation changes. The orchestrator automatically determines if parallelism is beneficial."
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
     },
     {
-      "question": "How does the system handle subagent coordination failures?",
-      "answer": "The system implements coordinated recovery protocols that detect subagent failures through health monitoring and heartbeat mechanisms. When a subagent fails, the orchestrator redistributes its tasks to healthy subagents while preserving the overall mission context. Recovery strategies include task re-execution, checkpoint-based resumption, and manual intervention for complex failures."
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
     },
     {
-      "question": "What resource management features are available?",
-      "answer": "The system implements dynamic load balancing that monitors CPU usage, memory consumption, and I/O throughput across the subagent pool. Resource quotas per subagent prevent runaway processes from consuming excessive resources. Automatic throttling slows task dispatch when system resources approach critical thresholds. Predictive scaling uses historical performance metrics to proactively spawn additional subagents before anticipated workload increases."
-    }
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Core & Agents, tagged concurrency, isolation, subagents.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Parallel Subagents?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Parallel Subagents?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Parallel Subagents\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/parallel-subagents` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Parallel Subagents fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };
