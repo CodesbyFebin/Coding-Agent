@@ -103,6 +103,7 @@ export const parallelSubagents: PillarEditorial = {
     {
       "question": "When should I use parallel subagents?",
       "answer": "Parallel subagents are most beneficial for large tasks with many independent work units: refactoring across many files, dependency updates, multi-file migrations, and bulk documentation changes. The orchestrator automatically determines if parallelism is beneficial."
+    },
     {
       "question": "How does the system handle subagent coordination failures?",
       "answer": "The system implements coordinated recovery protocols that detect subagent failures through health monitoring and heartbeat mechanisms. When a subagent fails, the orchestrator redistributes its tasks to healthy subagents while preserving the overall mission context. Recovery strategies include task re-execution, checkpoint-based resumption, and manual intervention for complex failures."
@@ -110,7 +111,6 @@ export const parallelSubagents: PillarEditorial = {
     {
       "question": "What resource management features are available?",
       "answer": "The system implements dynamic load balancing that monitors CPU usage, memory consumption, and I/O throughput across the subagent pool. Resource quotas per subagent prevent runaway processes from consuming excessive resources. Automatic throttling slows task dispatch when system resources approach critical thresholds. Predictive scaling uses historical performance metrics to proactively spawn additional subagents before anticipated workload increases."
-    },
     }
   ],
   "sources": [

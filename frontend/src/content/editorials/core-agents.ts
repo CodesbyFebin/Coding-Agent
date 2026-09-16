@@ -95,77 +95,10 @@ export const coreAgents: PillarEditorial = {
       "answer": "Key best practices include starting with narrow permission scopes and gradually expanding as trust is implemented, implementing comprehensive test suites covering edge cases, designing missions with objectively verifiable acceptance criteria, and implementing a phased rollout beginning with low-risk tasks. Regular audit log review supports continuous improvement of agent configurations."
     }
   ],
-      "paragraphs": [
-        "Core agents are designed for enterprise deployment with features like multi-tenant isolation, role-based access controls, and audit-ready logging. Each tenant's agent configuration is isolated, ensuring that one team's agent settings do not affect another's. Role-based access controls determine which agents can run in which repositories and with what permissions. Audit logs provide tamper-evident records of all agent actions, supporting compliance with SOC 2, ISO 27001, and other regulatory frameworks.",
-        "Deployment options include self-hosted on developer workstations, private cloud environments, and air-gapped environments with no external network access. The agent runtime adapts to the deployment environment, using available hardware resources while maintaining consistent governance controls across all environments."
-      ]
-  },
-  "faq": [
-    {
-      "question": "What makes core agents different from regular AI coding tools?",
-      "answer": "Core agents combine generative model reasoning with deterministic execution, independent verification, and explicit permission boundaries. While regular AI tools generate code and claim completion, core agents require verification through compilers and test suites before any mission is considered complete."
-    },
-    {
-      "question": "How are permissions managed for core agents?",
-      "answer": "Permissions are organized into three tiers: ALLOW (proceed automatically within defined boundaries), ASK (pause for human approval), and DENY (absolute prohibition). This system is configurable per mission and per repository, allowing teams to tailor agent behavior to their risk tolerance. The permission system enforces least privilege by default, granting only the minimum access necessary for the agent's task."
-    },
-    {
-      "question": "What verification do core agents require?",
-      "answer": "Core agents require independent verification including type checking, unit test execution, linting, and any custom verification scripts defined for the mission. All verification results are recorded in the audit ledger with timestamps and pass/fail status."
-    },
-    {
-      "question": "Can core agents work in production environments?",
-      "answer": "Yes. Core agents are designed for enterprise deployment with multi-tenant isolation, role-based access controls, and audit-ready logging. They can be deployed in self-hosted, private cloud, or air-gapped environments, with governance controls consistent across all deployment models."
-    }
-  ],
   "sources": [
     {
       "label": "CodingAgent source repository",
       "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-import type { PillarEditorial } from '../types';
-
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
-export const coreAgents: PillarEditorial = {
-  "pillarId": "core-agents",
-  "updated": "2026-09-24",
-  "definition": "Enterprise-grade agent framework combining generative model reasoning with deterministic execution, independent verification, and explicit permission boundaries — designed for reliable, auditable, and scalable autonomous coding missions.",
-  "sections": [
-    {
-      "heading": "Core Agent Architecture",
-      "paragraphs": [
-        "Core agents combine the creative reasoning capabilities of generative AI models with deterministic execution environments that ensure accountability and correctness. The architecture separates concerns: the model handles reasoning and code generation, while a verification layer validates all outputs through compilation, testing, and linting before any mission is considered complete. This hybrid approach leverages the strengths of both AI reasoning and deterministic checks, providing the best of both worlds for enterprise-grade autonomous coding."
-      ]
-    },
-    {
-      "heading": "Permission Management System",
-      "paragraphs": [
-        "Permissions are organized into three tiers that give teams fine-grained control over agent behavior: ALLOW (proceed automatically within defined boundaries), ASK (pause for human approval before proceeding), and DENY (absolute prohibition on certain actions). This system is configurable per mission and per repository, allowing teams to tailor agent behavior to their risk tolerance. The permission system enforces least privilege by default, granting only the minimum access necessary for the agent's task, and can be escalated as trust is implemented over time."
-      ]
-    },
-    {
-      "heading": "Verification Pipeline",
-      "paragraphs": [
-        "Core agents require independent verification including type checking, unit test execution, linting, and any custom verification scripts defined for the mission. All verification results are recorded in the audit ledger with timestamps and pass/fail status. This creates a complete audit trail of every mission's vetting process, enabling operators to understand not just what the agent produced, but how it was validated. Verification is mandatory: a mission is not considered complete until all verification gates pass."
-      ]
-    }
-  ],
-  "faq": [
-    {
-      "question": "What makes core agents different from regular AI coding tools?",
-      "answer": "Core agents combine generative model reasoning with deterministic execution, independent verification, and explicit permission boundaries. While regular AI tools generate code and claim completion, core agents require verification through compilers and test suites before any mission is considered complete."
-    },
-    {
-      "question": "How are permissions managed for core agents?",
-      "answer": "Permissions are organized into three tiers: ALLOW (proceed automatically within defined boundaries), ASK (pause for human approval), and DENY (absolute prohibition). This system is configurable per mission and per repository, allowing teams to tailor agent behavior to their risk tolerance. The permission system enforces least privilege by default, granting only the minimum access necessary for the agent's task."
-    },
-    {
-      "question": "What verification do core agents require?",
-      "answer": "Core agents require independent verification including type checking, unit test execution, linting, and any custom verification scripts defined for the mission. All verification results are recorded in the audit ledger with timestamps and pass/fail status."
-    },
-    {
-      "question": "Can core agents work in production environments?",
-      "answer": "Yes. Core agents are designed for enterprise deployment with multi-tenant isolation, role-based access controls, and audit-ready logging. They can be deployed in self-hosted, private cloud, or air-gapped environments, with governance controls consistent across all deployment models."
     }
   ]
 };

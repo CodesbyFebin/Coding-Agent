@@ -92,6 +92,7 @@ export const mcpToolDiscovery: PillarEditorial = {
     {
       "question": "How is discovery secured against malicious servers?",
       "answer": "Through server authentication, manifest integrity verification (cryptographic signatures), schema validation, capability isolation, and comprehensive audit logging. These measures prevent server impersonation, manifest tampering, and tool poisoning."
+    },
     {
       "question": "How does tool discovery optimize performance?",
       "answer": "The system uses intelligent caching with configurable TTL values to reduce latency and resource consumption during tool enumeration. Cache invalidation occurs automatically when MCP servers emit change notifications or when tools are modified during development. The discovery process supports incremental loading where only changed tools are retrieved during subsequent scans reducing network traffic and improving agent responsiveness. Advanced caching strategies include prefetching frequently used tools and lazy loading rarely accessed tools on demand."
@@ -107,7 +108,7 @@ export const mcpToolDiscovery: PillarEditorial = {
     {
       "question": "How does the system handle tool deprecation?",
       "answer": "When tools are deprecated, the system marks them in the registry with deprecation warnings and suggested alternatives. Agents using deprecated tools receive notifications and are guided toward replacement tools. The deprecation timeline is configurable, and the system can enforce migration deadlines to ensure timely adoption of updated tools."
-    }    }
+    }
   ],
   "sources": [
     {
