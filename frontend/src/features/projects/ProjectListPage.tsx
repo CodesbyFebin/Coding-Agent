@@ -30,7 +30,7 @@ export const ProjectListPage = () => {
   const [description, setDescription] = useState('');
 
   const handleCreate = async () => {
-    if (!name.trim()) return;
+    if (!name.trim()) {return;}
     try {
       await createWorkspace.mutateAsync({ name: name.trim(), description });
       setName('');

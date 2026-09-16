@@ -176,8 +176,8 @@ export const PillarsDirectoryPage = () => {
           color="sovereign.flame"
           mb={6}
         >
-          Showing {totalMatches} of {ALL_PILLARS.length} pillars matching "
-          {query}"
+          Showing {totalMatches} of {ALL_PILLARS.length} pillars matching &quot;
+          {query}&quot;
         </Text>
       )}
 
@@ -191,7 +191,7 @@ export const PillarsDirectoryPage = () => {
           bg="sovereign.panel"
         >
           <Text fontFamily="mono" fontWeight={700} textTransform="uppercase" mb={3}>
-            No pillars found matching "{query}"
+            No pillars found matching &quot;{query}&quot;
           </Text>
           <Button
             size="sm"
