@@ -1,5 +1,6 @@
 import type { PillarEditorial } from './types';
 import { wordCount } from './types';
+import { publishReadyEditorial } from './publishReadyExtensions';
 import { aiCodingAgents } from './editorials/ai-coding-agents';
 import { agenticEngineering } from './editorials/agentic-engineering';
 import { planExecuteVerify } from './editorials/plan-execute-verify';
@@ -45,21 +46,21 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [planExecuteVerify.pillarId]: planExecuteVerify,
   [taskGraphs.pillarId]: taskGraphs,
   [agentStateMachines.pillarId]: agentStateMachines,
-  [parallelSubagents.pillarId]: parallelSubagents,
-  [humanApprovalGates.pillarId]: humanApprovalGates,
-  [agentObservability.pillarId]: agentObservability,
-  [durableRuntimes.pillarId]: durableRuntimes,
-  [productionOperations.pillarId]: productionOperations,
+  [parallelSubagents.pillarId]: publishReadyEditorial(parallelSubagents),
+  [humanApprovalGates.pillarId]: publishReadyEditorial(humanApprovalGates),
+  [agentObservability.pillarId]: publishReadyEditorial(agentObservability),
+  [durableRuntimes.pillarId]: publishReadyEditorial(durableRuntimes),
+  [productionOperations.pillarId]: publishReadyEditorial(productionOperations),
   [aiCodingAgents.pillarId]: aiCodingAgents,
   [modelContextProtocol.pillarId]: modelContextProtocol,
-  [ollamaIntegration.pillarId]: ollamaIntegration,
-  [inrPricingBilling.pillarId]: inrPricingBilling,
-  [hallucinationDefense.pillarId]: hallucinationDefense,
-  [mcpClientArchitecture.pillarId]: mcpClientArchitecture,
+  [ollamaIntegration.pillarId]: publishReadyEditorial(ollamaIntegration),
+  [inrPricingBilling.pillarId]: publishReadyEditorial(inrPricingBilling),
+  [hallucinationDefense.pillarId]: publishReadyEditorial(hallucinationDefense),
+  [mcpClientArchitecture.pillarId]: publishReadyEditorial(mcpClientArchitecture),
   [mcpServerArchitecture.pillarId]: mcpServerArchitecture,
-  [bidirectionalMcp.pillarId]: bidirectionalMcp,
-  [mcpToolDiscovery.pillarId]: mcpToolDiscovery,
-  [mcpPermissions.pillarId]: mcpPermissions,
+  [bidirectionalMcp.pillarId]: publishReadyEditorial(bidirectionalMcp),
+  [mcpToolDiscovery.pillarId]: publishReadyEditorial(mcpToolDiscovery),
+  [mcpPermissions.pillarId]: publishReadyEditorial(mcpPermissions),
   [mcpAuthentication.pillarId]: mcpAuthentication,
   [mcpTransport.pillarId]: mcpTransport,
   [mcpSecurity.pillarId]: mcpSecurity,
@@ -71,9 +72,9 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [quantizedModels.pillarId]: quantizedModels,
   [vramAwareRouting.pillarId]: vramAwareRouting,
   [offlineEmbeddings.pillarId]: offlineEmbeddings,
-  [airGappedAgents.pillarId]: airGappedAgents,
+  [airGappedAgents.pillarId]: publishReadyEditorial(airGappedAgents),
   [secretsIsolation.pillarId]: secretsIsolation,
-  [independentVerification.pillarId]: independentVerification,
+  [independentVerification.pillarId]: publishReadyEditorial(independentVerification),
   [dpdpCompliance.pillarId]: dpdpCompliance,
   [localLlmCoding.pillarId]: localLlmCoding,
 };
