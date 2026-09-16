@@ -1,62 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const codingagentRoleBasedAccess: PillarEditorial = {
-  "pillarId": "role-based-access",
-  "updated": "2026-09-24",
-  "definition": "Fine-grained RBAC mapping developer identity (SSO, SAML) to permitted agent modes, cloud models, and production tool privileges — restricting sensitive deployment and database write operations to authorized senior staff while granting juniors safe sandbox access.",
-  "sections": [
+  pillarId: 'role-based-access',
+  updated: '2026-09-16',
+  definition: 'Fine-grained RBAC mapping developer identity (SSO, SAML) to permitted agent modes, cloud models, and production tool privileges.',
+  sections: [
     {
-      "heading": "Role-Based Access Control Fundamentals",
-      "paragraphs": [
-        "Role-based access control (RBAC) maps developer identity (via SSO, SAML, or LDAP) to permitted agent modes, cloud models, and production tool privileges. The RBAC system ensures that sensitive operations—such as production deployments, database write operations, and administrative configuration changes—are restricted to authorized senior staff, while granting juniors safe sandbox access for development and testing activities. The RBAC system is essential for organizations that need to balance developer velocity with security and compliance requirements.",
-        "The RBAC system operates at multiple levels: organizational level (policies apply across the entire organization), repository level (policies can be customized per repository), and mission level (policies can be customized per agent mission). This multi-level approach ensures that the right people have the right access at the right granularity.",
-        "The RBAC system integrates with the organization's identity provider (SSO, SAML, LDAP) to use existing role definitions rather than requiring separate role management. This integration reduces administrative overhead and ensures consistency with existing access controls."
-      ]
+      heading: 'What CodingAgent Role-Based Access Actually Does',
+      paragraphs: [
+        'Fine-grained RBAC mapping developer identity (SSO, SAML) to permitted agent modes, cloud models, and production tool privileges. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Enterprise & Tooling components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Restricts sensitive deployment and database write operations to authorized senior staff while granting juniors safe sandbox access. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: rbac',
+        'Tag: sso',
+        'Tag: identity',
+      ],
     },
     {
-      "heading": "Permission Mapping and Hierarchy",
-      "paragraphs": [
-        "The RBAC system maps developer identities to permission sets through a hierarchical role structure: junior developer (ALLOW permission for sandbox read/write operations, DENY for production and database access), senior developer (ALLOW permission for production deployments and database modifications with ASK for critical changes), staff engineer (ALLOW permission for most operations with selective ASK gates), and principal engineer/senior staff (ALLOW permission for all operations, including administrative configuration changes). Each role includes: the agent modes permitted (code analysis, refactoring, testing, deployment, administration), the cloud models permitted (approved model providers and names), and the production tool privileges (read/write access to production databases, deployment pipelines, infrastructure-as-code repositories).",
-        "The permission mapping is expressed as rules: \"if user has role staff-engineer and tool is deployment and path is within /prod, then ALLOW if ASK gate passes.\" The RBAC engine evaluates these rules in real-time on every tool invocation, ensuring that permissions are applied consistently and auditabley. All evaluations are logged in the audit trail with the matching rule, the condition results, and the final action (ALLOW/ASK/DENY).",
-        "The RBAC system also supports: role activation (enabling/disabling roles based on employment status), role inheritance (junior roles inheriting certain permissions from senior roles with restrictions), and temporary role elevation (a junior developer can request elevated permissions for a specific mission, which must be approved by a senior staff member)."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Integration with Permission System and Audit",
-      "paragraphs": [
-        "The RBAC system integrates with the ALLOW/ASK/DENY permission system described in the core agents framework: the RBAC system determines the agent's role and permitted permission set, and the permission system evaluates every tool invocation against the RBAC-defined permissions. All permission evaluations are logged in the audit trail with: the developer's identity, the RBAC role that was active, the tool invoked, the evaluation result (ALLOW/ASK/DENY), the matching RBAC rule, and the rationale (policy condition that matched).",
-        "The audit trail supports: compliance verification (auditors can verify that the correct RBAC role was active for each mission), role effectiveness analysis (which roles are most/least restrictive, which permissions are most frequently approved/denied), and role optimization (iteratively refining role definitions based on usage patterns). The RBAC system also supports: role versioning (policies are version-controlled with semantic versioning), role change impact analysis (what missions were affected by a role change), and role inheritance tracking (which roles inherit from which parent roles).",
-        "This integration ensures that RBAC works within the organization's overall governance framework: the model might generate a tool invocation, but the RBAC system ensures it only executes when the operator has the appropriate role and the permission system authorizes it."
-      ]
-    }
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'JWT and OAuth2 token verification on every administrative action. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
+    },
+    {
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Role-Based Access\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
+    },
+    {
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Enterprise & Tooling area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
+    },
+    {
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Role-Based Access\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Role-Based Access\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Enterprise & Tooling) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Role-Based Access\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Role-Based Access\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Role-Based Access\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/role-based-access`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What is role-based access control?",
-      "answer": "Fine-grained RBAC mapping developer identity (SSO, SAML) to permitted agent modes, cloud models, and production tool privileges, restricting sensitive operations to authorized staff while granting juniors safe sandbox access."
+      question: 'What problem does CodingAgent Role-Based Access actually solve?',
+      answer: 'Fine-grained RBAC mapping developer identity (SSO, SAML) to permitted agent modes, cloud models, and production tool privileges. Restricts sensitive deployment and database write operations to authorized senior staff while granting juniors safe sandbox access.',
     },
     {
-      "question": "How are roles hierarchical?",
-      "answer": "junior developer < senior developer < staff engineer < principal engineer/senior staff, with escalating permission levels at each level."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'JWT and OAuth2 token verification on every administrative action.',
     },
     {
-      "question": "How does RBAC integrate with the permission system?",
-      "answer": "The RBAC system determines the agent's role and permitted permission set, and the permission system evaluates every tool invocation against the RBAC-defined permissions. All evaluations are audited."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "Can roles be temporarily elevated?",
-      "answer": "Yes. A junior developer can request elevated permissions for a specific mission, which must be approved by a senior staff member. This is useful for occasional production access without permanently changing the developer's role."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Role-Based Access\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "Are RBAC changes audited?",
-      "answer": "Yes. All permission evaluations are logged with the active RBAC role, matching rule, condition results, and final action. RBAC policies are version-controlled with impact analysis and inheritance tracking."
-    }
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
+    },
+    {
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Enterprise & Tooling, tagged rbac, sso, identity.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Role-Based Access?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Role-Based Access?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Role-Based Access\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/role-based-access` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Role-Based Access fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

@@ -1,92 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const agentObservability: PillarEditorial = {
-  "pillarId": "agent-observability",
-  "updated": "2026-09-06",
-  "definition": "Deep structured telemetry capturing tokens consumed, latency per phase, tool call payloads, file diffs, sandbox metrics, verifier exit codes, and approval gate interactions — providing complete visibility into agent behavior for debugging, optimization, and compliance.",
-  "sections": [
+  pillarId: 'agent-observability',
+  updated: '2026-09-16',
+  definition: 'Deep structured telemetry capturing tokens, latency, tool call payloads, diffs, sandbox metrics, and verifier exit codes.',
+  sections: [
     {
-      "heading": "Why Observability Matters for Agents",
-      "paragraphs": [
-        "AI coding agents are complex systems that make thousands of decisions during a single mission: which context to read, which plan to generate, which tools to invoke, which verification gates to run. Without comprehensive observability, understanding why an agent made a particular decision — or why it failed — is nearly impossible.",
-        "Observability is not optional for production agent systems. It is essential for: debugging agent failures (understanding what went wrong and why), optimizing agent performance (identifying bottlenecks and inefficiencies), ensuring compliance (proving that governance controls were followed), and building trust (showing stakeholders exactly what the agent did).",
-        "CodingAgent's observability system captures structured telemetry at every point in the agent's lifecycle: planning decisions, tool invocations, verification results, approval gate interactions, and state transitions. This telemetry is stored in a queryable format that supports both real-time monitoring and historical analysis.",
-        "The observability system is designed to be useful to multiple audiences: developers debugging agent behavior, operators monitoring agent health, compliance officers verifying governance, and managers tracking team-level agent usage patterns."
-      ]
+      heading: 'What CodingAgent Agent Observability Actually Does',
+      paragraphs: [
+        'Deep structured telemetry capturing tokens, latency, tool call payloads, diffs, sandbox metrics, and verifier exit codes. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Core & Agents components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Provides engineering teams complete transparency into agent deliberation, cost attribution, and failure forensics. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: telemetry',
+        'Tag: tracing',
+        'Tag: opentelemetry',
+      ],
     },
     {
-      "heading": "Telemetry Data Model",
-      "paragraphs": [
-        "The telemetry data model captures five categories of data: mission telemetry (mission start/end, total duration, total tokens, final status), phase telemetry (duration and token consumption per phase: planning, execution, verification), tool telemetry (each tool invocation with arguments, return values, duration, and permission decision), verification telemetry (each verification gate with result, duration, and evidence), and approval telemetry (each approval request with decision, reviewer, and duration).",
-        "Each telemetry event includes: timestamp, mission ID, agent ID, event type, event payload (structured data specific to the event type), and context (repository, branch, user). Events are stored in a time-series database optimized for range queries and aggregation.",
-        "The data model supports both detailed inspection (viewing every tool invocation for a specific mission) and high-level aggregation (viewing total token consumption across all missions for a team in a month). This dual capability serves both debugging and management use cases.",
-        "Telemetry data is retained according to configurable policies: detailed data for 30 days for debugging, aggregated data for 1 year for trend analysis, and audit-critical data (approval decisions, verification results) indefinitely for compliance."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Real-Time Monitoring",
-      "paragraphs": [
-        "The observability system provides real-time monitoring dashboards that show: active missions and their current state, token consumption rates, tool invocation rates, verification pass/fail rates, and approval gate wait times. These dashboards update in real-time through server-sent events (SSE).",
-        "Alerting rules can be configured for anomalous conditions: token consumption exceeding thresholds (potential runaway agent), verification failure rates above baseline (potential agent degradation), approval wait times exceeding SLAs (potential approval bottleneck), and error rates above acceptable levels.",
-        "Real-time monitoring also supports live mission inspection: clicking on an active mission shows its current state, the work units completed and pending, the tools invoked so far, and the verification results so far. This live view allows operators to intervene if a mission is heading in the wrong direction.",
-        "The monitoring system integrates with existing observability platforms (Datadog, Grafana, PagerDuty) through standard export formats, allowing teams to use their existing monitoring infrastructure rather than learning a new system."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'OpenTelemetry-compliant spans emitted for every model invocation and tool dispatch. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Historical Analysis and Debugging",
-      "paragraphs": [
-        "Historical analysis allows teams to understand agent behavior over time: which mission types are most common, which verification gates fail most often, which tools consume the most tokens, and how agent performance changes over time. This analysis informs configuration tuning and process improvement.",
-        "Debugging a specific mission is supported through mission replay: the complete sequence of events for a mission can be reconstructed from telemetry data, showing exactly what the agent did, in what order, with what results. This replay capability is essential for understanding complex failures.",
-        "Trend analysis identifies patterns: if verification failure rates are increasing over time, it might indicate that the agent's model is degrading or that the codebase is becoming more complex. If token consumption is increasing, it might indicate that context management needs improvement.",
-        "The analysis system supports export to standard formats (CSV, JSON) for integration with external analysis tools. It also supports custom queries through a query language that allows filtering, grouping, and aggregation of telemetry data."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Agent Observability\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Cost Attribution and Optimization",
-      "paragraphs": [
-        "Token consumption is the primary cost driver for agent systems. The observability system attributes token consumption to: missions (which missions consumed the most tokens), phases (which phases consumed the most tokens), tools (which tool invocations consumed the most tokens), and teams (which teams consumed the most tokens).",
-        "This attribution enables cost optimization: if planning consumes 60% of tokens but produces plans that are always approved, the planning process can be optimized. If a particular tool invocation consistently consumes many tokens, alternative approaches can be explored.",
-        "Budget alerts notify teams when token consumption approaches configured thresholds, preventing unexpected cost overruns. Budget policies can be set per team, per project, or per mission type, with automatic throttling when budgets are approached.",
-        "Cost attribution data is presented through dashboards that show: daily/weekly/monthly token consumption, cost per mission type, cost per team, and cost trends over time. This data supports both operational management and strategic planning."
-      ]
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Core & Agents area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
     },
     {
-      "heading": "Compliance and Audit Reporting",
-      "paragraphs": [
-        "The observability system generates compliance reports that demonstrate: all agent actions were within configured permission boundaries, all required verification gates were executed, all approval gates were properly routed and decided, and all audit records are intact and untampered.",
-        "Reports are generated in standard formats suitable for regulatory submission: SOC 2, ISO 27001, HIPAA, GDPR. The reports include cryptographic evidence of data integrity, chain-of-custody records for audit data, and attestation of governance control effectiveness.",
-        "Automated compliance checking continuously verifies that agent operations comply with configured policies. Violations are flagged immediately and included in compliance reports. This continuous checking provides stronger assurance than periodic manual audits.",
-        "The compliance reporting system supports multi-tenant deployments: each tenant's compliance data is isolated and can be reported independently. This isolation is essential for SaaS deployments where multiple organizations share the same infrastructure."
-      ]
-    }
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Agent Observability\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Agent Observability\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Core & Agents) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Agent Observability\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Agent Observability\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Agent Observability\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/agent-observability`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What does CodingAgent observability capture?",
-      "answer": "Complete structured telemetry: tokens consumed, latency per phase, tool call payloads with arguments and return values, file diffs, sandbox metrics, verifier exit codes, approval gate interactions, and state transitions. All events are timestamped and queryable."
+      question: 'What problem does CodingAgent Agent Observability actually solve?',
+      answer: 'Deep structured telemetry capturing tokens, latency, tool call payloads, diffs, sandbox metrics, and verifier exit codes. Provides engineering teams complete transparency into agent deliberation, cost attribution, and failure forensics.',
     },
     {
-      "question": "How does real-time monitoring work?",
-      "answer": "Dashboards update in real-time through server-sent events showing active missions, token rates, tool invocation rates, verification pass/fail rates, and approval wait times. Configurable alerts notify on anomalous conditions."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'OpenTelemetry-compliant spans emitted for every model invocation and tool dispatch.',
     },
     {
-      "question": "Can I debug a specific mission?",
-      "answer": "Yes. Mission replay reconstructs the complete sequence of events from telemetry data, showing exactly what the agent did, in what order, with what results. This is essential for understanding complex failures."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "How does cost attribution work?",
-      "answer": "Token consumption is attributed to missions, phases, tools, and teams. Budget alerts prevent cost overruns. Dashboards show daily/weekly/monthly consumption and trends for operational and strategic management."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Agent Observability\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "Does observability support compliance reporting?",
-      "answer": "Yes. Automated compliance reports demonstrate governance control effectiveness in standard formats (SOC 2, ISO 27001, HIPAA, GDPR). Continuous compliance checking flags violations immediately."
-    }
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
+    },
+    {
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Core & Agents, tagged telemetry, tracing, opentelemetry.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Agent Observability?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Agent Observability?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Agent Observability\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/agent-observability` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Agent Observability fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

@@ -1,114 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Batch-converted editorial. Claim-audited; publish bar decides.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const secretsIsolation: PillarEditorial = {
-  "pillarId": "secrets-isolation",
-  "updated": "2026-09-06",
-  "definition": "Fine-grained secret broker that injects credentials only at the instant of authorized tool calls and immediately scrubs them from all contexts, logs, and memory before they can enter model prompts or audit records.",
-  "sections": [
+  pillarId: 'secrets-isolation',
+  updated: '2026-09-16',
+  definition: 'Fine-grained secret broker that injects credentials only at the instant of authorized tool calls and immediately scrubs them.',
+  sections: [
     {
-      "heading": "The Challenge of Secrets in AI Agents",
-      "paragraphs": [
-        "AI coding agents frequently need to access secrets: API keys for external services, database credentials, SSH keys for repository access, tokens for authentication, and other sensitive credentials. However, exposing these secrets to the agent's reasoning context creates significant security risks.",
-        "If secrets enter the agent's context:\n- They could be leaked through model outputs (the model might \"helpfully\" include them in code)\n- They could be logged in audit trails (creating a permanent record of the secret)\n- They could be cached in memory (accessible through memory dumps or debugging)\n- They could be transmitted to external services (through tool calls or model APIs)\n- They could be exposed through error messages (included in stack traces or logs)",
-        "The challenge is to provide agents with the credentials they need to perform their tasks without exposing those credentials to the agent's reasoning, logging, or caching systems. This requires a secrets isolation system that injects credentials at the last possible moment and scrubs them immediately after use.",
-        "For CodingAgent, secrets isolation is implemented through a fine-grained secret broker that:\n- Stores secrets securely in an encrypted vault\n- Injects secrets into tool calls at the instant of execution\n- Scrubs secrets from all contexts immediately after use\n- Prevents secrets from entering model prompts, logs, or caches\n- Provides audit trails of secret usage without exposing the secrets themselves",
-        "This approach ensures that agents can use secrets without ever \"seeing\" them, significantly reducing the risk of secret exposure."
-      ]
+      heading: 'What CodingAgent Secrets Isolation Actually Does',
+      paragraphs: [
+        'Fine-grained secret broker that injects credentials only at the instant of authorized tool calls and immediately scrubs them. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Security & Sovereignty components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Ensures API tokens, private SSH keys, and cloud credentials never enter model prompt histories or telemetry spans. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: secrets',
+        'Tag: kms',
+        'Tag: vault',
+      ],
     },
     {
-      "heading": "Secret Storage and Encryption",
-      "paragraphs": [
-        "Secrets are stored in a secure, encrypted vault that protects them from unauthorized access. The vault implements multiple layers of security to ensure secret confidentiality and integrity.",
-        "**Encryption at Rest** - All secrets are encrypted at rest using strong encryption:\n- AES-256-GCM encryption for secret values\n- Unique encryption keys for each secret\n- Encryption keys are themselves encrypted with a master key\n- Master key is stored in a hardware security module (HSM) or key management service (KMS)",
-        "**Access Control** - Access to secrets is strictly controlled:\n- Role-based access control (RBAC) determines who can access which secrets\n- Attribute-based access control (ABAC) provides fine-grained control based on context\n- Just-in-time access grants temporary access for specific tasks\n- All access is logged and audited",
-        "**Secret Types** - The vault supports multiple types of secrets:\n- **API keys**: Keys for external APIs and services\n- **Database credentials**: Usernames, passwords, connection strings\n- **SSH keys**: Private keys for SSH access\n- **Tokens**: Authentication tokens, OAuth tokens, JWT tokens\n- **Certificates**: TLS certificates and private keys\n- **Custom secrets**: Arbitrary key-value pairs for custom use cases",
-        "**Secret Metadata** - Each secret includes metadata:\n- **Name**: Human-readable name for the secret\n- **Description**: Description of the secret's purpose\n- **Owner**: The team or individual responsible for the secret\n- **Expiration**: When the secret expires (if applicable)\n- **Rotation policy**: How often the secret should be rotated\n- **Usage policy**: Who can use the secret and under what conditions",
-        "**Secret Versioning** - Secrets are versioned to support rotation and rollback:\n- Each secret has a version history\n- Multiple versions can be active simultaneously (for rotation)\n- Old versions are retained for audit purposes\n- Rollback to previous versions is supported",
-        "**Secret Rotation** - Secrets are rotated regularly to limit exposure:\n- Automatic rotation on a configurable schedule\n- Manual rotation on demand\n- Rotation creates a new version while maintaining the old version for a grace period\n- Applications are notified of rotation to update their configurations",
-        "**Backup and Recovery** - Secrets are backed up securely:\n- Encrypted backups are stored in separate locations\n- Backup encryption uses separate keys from production encryption\n- Recovery procedures are tested regularly\n- Backup access is strictly controlled",
-        "Secret storage provides a secure foundation for secrets isolation, ensuring that secrets are protected at rest and access is strictly controlled."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Secret Injection and Scrubbing",
-      "paragraphs": [
-        "The core of secrets isolation is the injection and scrubbing mechanism that provides secrets to tools at the instant of execution and scrubs them immediately after use.",
-        "**Injection Timing** - Secrets are injected at the last possible moment:\n- Not when the mission starts (secrets would be in memory too long)\n- Not when the tool is selected (secrets would be in context too long)\n- Only when the tool is about to execute (minimal exposure time)",
-        "This minimizes the window during which secrets are accessible.",
-        "**Injection Mechanism** - Secrets are injected through secure channels:\n- For environment variables: Injected into the tool's environment just before execution\n- For command-line arguments: Injected into the command line just before execution\n- For API calls: Injected into the request headers or body just before execution\n- For file-based secrets: Written to a temporary file just before execution",
-        "The injection mechanism depends on how the tool expects to receive the secret.",
-        "**Scrubbing Timing** - Secrets are scrubbed immediately after use:\n- Immediately after the tool completes execution\n- Before the tool's output is returned to the agent\n- Before any logging or caching occurs",
-        "This ensures that secrets are not present in tool outputs, logs, or caches.",
-        "**Scrubbing Mechanism** - Secrets are scrubbed through multiple mechanisms:\n- **Memory zeroing**: Memory containing secrets is zeroed before being freed\n- **Log filtering**: Logs are filtered to remove any secret values\n- **Output sanitization**: Tool outputs are sanitized to remove secret values\n- **Cache exclusion**: Secrets are excluded from all caches",
-        "**Scrubbing Verification** - Scrubbing is verified to ensure completeness:\n- Memory scans verify that secrets are not present in memory\n- Log scans verify that secrets are not present in logs\n- Output scans verify that secrets are not present in outputs\n- Cache scans verify that secrets are not present in caches",
-        "**Error Handling** - If scrubbing fails:\n- The mission is terminated to prevent secret exposure\n- Security teams are alerted\n- The incident is logged for investigation\n- Affected systems are isolated pending investigation",
-        "**Performance Considerations** - Injection and scrubbing add overhead:\n- Injection takes time (microseconds to milliseconds per secret)\n- Scrubbing takes time (microseconds to milliseconds per secret)\n- Verification adds additional overhead",
-        "This overhead is acceptable for security but must be minimized. CodingAgent optimizes injection and scrubbing by:\n- Batching secret injections when multiple secrets are needed\n- Using efficient scrubbing algorithms\n- Caching scrubbing patterns for repeated use",
-        "**Audit Trail** - All secret injections and scrubbings are logged:\n- When the secret was injected\n- Which tool received the secret\n- When the secret was scrubbed\n- Verification results",
-        "The audit trail provides accountability without exposing the secrets themselves.",
-        "Secret injection and scrubbing ensure that secrets are available to tools when needed but are not exposed to the agent's reasoning, logging, or caching systems."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Memory wiping and automated entropy scans on prompt and context buffers. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Preventing Secret Leakage",
-      "paragraphs": [
-        "Despite injection and scrubbing, there are many ways secrets could leak from the system. Comprehensive leakage prevention is essential for secrets isolation.",
-        "**Model Prompt Leakage** - Secrets must never enter model prompts:\n- Secret values are never included in prompts sent to models\n- Secret names might be included (for context) but not values\n- Prompt construction explicitly excludes secret values\n- Prompt validation verifies that no secret values are present",
-        "**Log Leakage** - Secrets must never appear in logs:\n- All logging is filtered to remove secret values\n- Log levels are controlled to prevent accidental secret logging\n- Log aggregation systems are configured to filter secrets\n- Log audits verify that no secrets are present",
-        "**Error Message Leakage** - Secrets must never appear in error messages:\n- Error messages are sanitized to remove secret values\n- Stack traces are filtered to remove secret values\n- Error aggregation systems are configured to filter secrets\n- Error audits verify that no secrets are present",
-        "**Cache Leakage** - Secrets must never be cached:\n- Caches are configured to exclude secret values\n- Cache keys might include secret names but not values\n- Cache audits verify that no secrets are present\n- Cache invalidation ensures secrets are not retained",
-        "**Memory Leakage** - Secrets must not persist in memory:\n- Memory containing secrets is zeroed before being freed\n- Memory pools are used to control secret memory allocation\n- Memory audits verify that secrets are not present in unexpected locations\n- Memory debugging tools are used to detect secret leaks",
-        "**Network Leakage** - Secrets must not be transmitted over the network:\n- Network egress controls prevent unauthorized transmission\n- Deep packet inspection detects secret patterns in network traffic\n- TLS encryption protects secrets in transit\n- Network audits verify that no secrets are transmitted",
-        "**File System Leakage** - Secrets must not be written to disk:\n- File system controls prevent unauthorized writes\n- File content scanning detects secret patterns\n- Temporary files containing secrets are securely deleted\n- File system audits verify that no secrets are written",
-        "**Side-Channel Leakage** - Secrets must not leak through side channels:\n- Timing attacks are mitigated through constant-time operations\n- Power analysis attacks are mitigated through hardware security\n- Acoustic attacks are mitigated through physical security\n- Side-channel audits verify that no information leaks",
-        "**Comprehensive Testing** - Leakage prevention is tested through:\n- **Penetration testing**: Red teams attempt to extract secrets\n- **Fuzz testing**: Inputs are fuzzed to detect secret leaks\n- **Static analysis**: Code is analyzed for potential secret leaks\n- **Dynamic analysis**: Runtime behavior is analyzed for secret leaks\n- **Audit testing**: Audit systems are tested for secret leaks",
-        "Leakage prevention ensures that secrets are protected throughout their lifecycle, from storage to injection to scrubbing, and are not exposed through any channel."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Secrets Isolation\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Secret Lifecycle Management",
-      "paragraphs": [
-        "Secrets have a lifecycle from creation to deletion, and each phase must be managed securely.",
-        "**Secret Creation** - Secrets are created securely:\n- Generated using cryptographically secure random number generators\n- Created with appropriate length and complexity\n- Stored immediately in the encrypted vault\n- Metadata is recorded (owner, purpose, expiration)",
-        "**Secret Distribution** - Secrets are distributed securely:\n- Only authorized users and systems can access secrets\n- Distribution is logged and audited\n- Secrets are transmitted over encrypted channels\n- Recipients are verified before distribution",
-        "**Secret Usage** - Secrets are used securely:\n- Usage is controlled through policies\n- Usage is logged and audited\n- Usage is monitored for anomalies\n- Unauthorized usage triggers alerts",
-        "**Secret Rotation** - Secrets are rotated regularly:\n- Rotation occurs on a configurable schedule\n- Rotation creates a new version of the secret\n- Old versions are maintained for a grace period\n- Applications are notified to update configurations",
-        "**Secret Revocation** - Secrets can be revoked:\n- Revocation immediately invalidates the secret\n- Revocation is logged and audited\n- Affected systems are notified\n- Replacement secrets are distributed",
-        "**Secret Deletion** - Secrets are deleted securely:\n- Deletion removes all versions of the secret\n- Deletion is logged and audited\n- Encryption keys are destroyed\n- Deletion is verified to ensure completeness",
-        "**Secret Auditing** - All secret lifecycle events are audited:\n- Creation, distribution, usage, rotation, revocation, and deletion are logged\n- Audit logs are protected from tampering\n- Audit logs are retained for compliance\n- Audit logs are analyzed for anomalies",
-        "**Compliance Requirements** - Secret lifecycle management must meet compliance requirements:\n- Regulatory requirements (GDPR, HIPAA, SOX, etc.)\n- Industry standards (PCI-DSS, SOC 2, ISO 27001, etc.)\n- Organizational policies\n- Contractual obligations",
-        "**Automation** - Secret lifecycle management is automated:\n- Automatic rotation on schedule\n- Automatic revocation on compromise detection\n- Automatic deletion on expiration\n- Automatic alerts on anomalies",
-        "Secret lifecycle management ensures that secrets are managed securely from creation to deletion, meeting security and compliance requirements throughout their lifecycle."
-      ]
-    }
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Security & Sovereignty area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
+    },
+    {
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Secrets Isolation\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Secrets Isolation\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Security & Sovereignty) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Secrets Isolation\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Secrets Isolation\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Secrets Isolation\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/secrets-isolation`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What is secrets isolation?",
-      "answer": "Secrets isolation is a system that provides agents with the credentials they need without exposing those credentials to the agent's reasoning, logging, or caching systems. It uses a secret broker that injects credentials at the instant of tool execution and scrubs them immediately after use."
+      question: 'What problem does CodingAgent Secrets Isolation actually solve?',
+      answer: 'Fine-grained secret broker that injects credentials only at the instant of authorized tool calls and immediately scrubs them. Ensures API tokens, private SSH keys, and cloud credentials never enter model prompt histories or telemetry spans.',
     },
     {
-      "question": "How are secrets stored?",
-      "answer": "Secrets are stored in an encrypted vault using AES-256-GCM encryption. Access is controlled through RBAC and ABAC. Secrets are versioned, rotated regularly, and backed up securely. The vault supports multiple secret types: API keys, database credentials, SSH keys, tokens, certificates, and custom secrets."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Memory wiping and automated entropy scans on prompt and context buffers.',
     },
     {
-      "question": "How are secrets injected and scrubbed?",
-      "answer": "Secrets are injected at the last possible moment (just before tool execution) and scrubbed immediately after use (before output is returned to the agent). Injection uses secure channels (environment variables, command-line arguments, API headers). Scrubbing uses memory zeroing, log filtering, output sanitization, and cache exclusion."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "How is secret leakage prevented?",
-      "answer": "Comprehensive leakage prevention ensures secrets never enter model prompts, logs, error messages, caches, memory, network traffic, or file systems. Multiple mechanisms (filtering, sanitization, exclusion, zeroing) are used, and comprehensive testing (penetration, fuzz, static, dynamic analysis) verifies effectiveness."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Secrets Isolation\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "How is the secret lifecycle managed?",
-      "answer": "Secrets go through a lifecycle: creation (secure generation), distribution (secure transmission), usage (policy-controlled), rotation (regular schedule), revocation (immediate invalidation), and deletion (secure removal). All lifecycle events are audited, and management is automated to meet security and compliance requirements."
-    }
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
+    },
+    {
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Security & Sovereignty, tagged secrets, kms, vault.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Secrets Isolation?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Secrets Isolation?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Secrets Isolation\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/secrets-isolation` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Secrets Isolation fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

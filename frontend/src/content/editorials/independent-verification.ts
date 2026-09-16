@@ -1,75 +1,144 @@
 import type { PillarEditorial } from '../types';
 
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const independentVerification: PillarEditorial = {
   pillarId: 'independent-verification',
-  updated: '2026-09-06',
-  definition:
-    'Independent verification is the principle that agent self-assessment is never accepted as evidence of completion: builds, type checkers, test runners, security scanners, and artifact hashes — systems with no connection to the model that produced the code — decide whether work is done. A model saying "done" is not a verification result; exit code zero is.',
+  updated: '2026-09-16',
+  definition: 'The golden principle that model self-evaluations cannot be trusted: code changes must pass independent compilers and tests.',
   sections: [
     {
-      heading: 'Why self-assessment fails',
+      heading: 'What CodingAgent Independent Verification Actually Does',
       paragraphs: [
-        'Language models are probabilistic systems. When an agent claims it has completed a task, that claim is a statistical judgment, not a measured fact. Models hallucinate APIs, misread requirements, introduce subtle regressions while fixing visible ones, and — most dangerously — generate code that looks correct and reads correctly while failing on edge cases. None of these failure modes are visible in the model\u2019s own confidence.',
-        'The failure is compounded by feedback loops: an agent asked "is it done?" will tend to say yes, because the conversation context biases toward agreement. Self-verification inside the same context window inherits the same bias. The only cure is an evaluator that shares no context, no vocabulary, and no incentive with the generator — a compiler does not know what the model intended, and that ignorance is precisely what makes its judgment trustworthy.',
-      ],
-    },
-    {
-      heading: 'The gate hierarchy',
-      paragraphs: [
-        'Verification is layered from cheapest to most expensive, and each layer answers a different question. The conjunction rule applies: a mission passes only when every applicable gate passes \u2014 no weighting lets a strong test result excuse a type failure. Gates run hermetically in clean environments on pinned toolchains, so results reflect the code, not the machine.',
+        'The golden principle that model self-evaluations cannot be trusted: code changes must pass independent compilers and tests. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Verification & Memory components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Eliminates false positives where models hallucinate that code builds without ever invoking the compiler. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
       ],
       bullets: [
-        'Build \u2014 does the code compile? Catches syntax errors, missing imports, broken references. The fastest gate; nothing else matters if this fails.',
-        'Typecheck \u2014 do the types satisfy their contracts? Catches interface violations, null-safety errors, and signature drift across file boundaries.',
-        'Unit tests \u2014 does behavior match expectations? Existing tests catch regressions; mission-generated tests must themselves pass review before counting.',
-        'Security \u2014 any new vulnerabilities? Dependency CVEs, static analysis findings, secret leakage scans.',
-        'Artifact hashes \u2014 are the inputs and outputs exactly what the record says they are? Cryptographic fingerprints make verification reproducible and tamper-evident.',
+        'Tag: verification',
+        'Tag: compilers',
+        'Tag: zero-trust',
       ],
     },
     {
-      heading: 'What independence means architecturally',
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
       paragraphs: [
-        'Independence is a property of the system wiring, not a label. The verification runner shares no process, no context, and no configuration authority with the agent runtime: it receives the workspace, the declared gate commands, and nothing else. The agent cannot choose its own acceptance criteria at runtime — the mission configuration pins the commands before execution begins, and changing them requires a new mission.',
-        'Evidence flows one way. The runner emits structured results (exit codes, output, coverage, hashes) into the mission ledger; the agent may read failures to attempt repairs, but it cannot write to the evidence stream. When a repair cycle runs, it re-enters the full loop — the new diff is verified from scratch, never grandfathered by the previous pass.',
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
       ],
     },
     {
-      heading: 'Writing gates that catch real failures',
+      heading: 'Architecture and Operating Model',
       paragraphs: [
-        'Gate quality decides everything. A build gate against a stale lockfile, a test suite with flaky cases, a security scanner in permissive mode — each converts the verification system from an authority into a rubber stamp. Practical guidance: pin toolchain versions in the gate configuration; quarantine flaky tests rather than retrying them into green; run gates with the same flags CI uses; and require new code paths to carry tests before counting as covered. Custom gates (lint thresholds, coverage floors, performance budgets) belong in the same pipeline with the same exit-code semantics as the standard gates.',
+        'Exit-code verification from non-LLM native tools (tsc, cargo check, pytest, go test). That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
+      bullets: [
+        'Related pillar: CodingAgent Build Verification',
+        'Related pillar: CodingAgent Typecheck Verification',
+        'Related pillar: CodingAgent Unit Test Verification',
+        'Related pillar: CodingAgent Terminal Benchmarks',
       ],
     },
     {
-      heading: 'Honest limits',
+      heading: 'Failure Modes and Mitigations',
       paragraphs: [
-        'Verification proves what the gates express and nothing more. A full green sweep does not mean the feature is the right feature, the requirements were correct, or the tests themselves were meaningful. Independent verification replaces the weakest link — the model\u2019s self-assessment — with strong evidence for declared criteria; the criteria themselves remain an engineering and product responsibility. That division is not a weakness of the architecture; it is the honest boundary between what machines can prove and what humans must decide.',
+        'The most direct risk in the \'CodingAgent Independent Verification\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
+    },
+    {
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Verification & Memory area of CodingAgent.in\'s knowledge graph, alongside CodingAgent Build Verification, CodingAgent Typecheck Verification, CodingAgent Unit Test Verification. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
+    },
+    {
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Independent Verification\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Independent Verification\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Verification & Memory) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Independent Verification\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Independent Verification\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Independent Verification\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/independent-verification`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
       ],
     },
   ],
   faq: [
     {
-      question: 'Why can\u2019t the agent verify its own work?',
-      answer:
-        'Because the model is probabilistic and context-biased: it tends to agree with itself, misses its own edge cases, and cannot objectively measure correctness. Independent systems — compilers, type checkers, test runners — share none of those failure modes and produce deterministic pass/fail evidence.',
+      question: 'What problem does CodingAgent Independent Verification actually solve?',
+      answer: 'The golden principle that model self-evaluations cannot be trusted: code changes must pass independent compilers and tests. Eliminates false positives where models hallucinate that code builds without ever invoking the compiler.',
     },
     {
-      question: 'Which gates run for every mission?',
-      answer:
-        'The mission configuration pins the gates before execution: typically build, typecheck, unit tests, and security scanning, plus any organization-specific custom gates. All applicable gates must pass; the conjunction is the completion criterion.',
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Exit-code verification from non-LLM native tools (tsc, cargo check, pytest, go test).',
     },
     {
-      question: 'What happens when a gate fails?',
-      answer:
-        'The failure evidence flows to the agent, which may attempt a repair. Repairs re-enter the full loop — the new workspace state is re-verified from scratch. If retries are exhausted, the mission escalates to human review with the complete evidence chain attached.',
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      question: 'Can the agent change its acceptance criteria mid-mission?',
-      answer:
-        'No. Gate commands are pinned in the mission configuration before execution. Changing criteria requires a new mission — otherwise the agent could weaken its own definition of done.',
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Independent Verification\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
-  ],
-  sources: [
-    { label: 'CodingAgent source repository', href: 'https://github.com/CodesbyFebin/Coding-Agent' },
-    { label: 'Plan-Execute-Verify pillar', href: '/plan-execute-verify' },
+    {
+      question: 'How does this pillar relate to CodingAgent Build Verification, CodingAgent Typecheck Verification?',
+      answer: 'It composes directly with CodingAgent Build Verification, CodingAgent Typecheck Verification, CodingAgent Unit Test Verification, CodingAgent Terminal Benchmarks: none of these are meant to be adopted in isolation, and the platform\'s guarantees in this area assume the related pillars are also in place around it.',
+    },
+    {
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Verification & Memory, tagged verification, compilers, zero-trust.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Independent Verification?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Independent Verification?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Independent Verification\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/independent-verification` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Independent Verification fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
 };

@@ -1,122 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Batch-converted editorial. Claim-audited; publish bar decides.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const mcpPermissions: PillarEditorial = {
-  "pillarId": "mcp-permissions",
-  "updated": "2026-09-06",
-  "definition": "Granular role-based and path-based permission policies applied to individual MCP tool invocations with support for ALLOW, ASK, and DENY postures per tool, per argument pattern, and per calling context.",
-  "sections": [
+  pillarId: 'mcp-permissions',
+  updated: '2026-09-16',
+  definition: 'Granular role-based and path-based permission policies applied to individual MCP tool invocations.',
+  sections: [
     {
-      "heading": "The Permission Model",
-      "paragraphs": [
-        "MCP permissions extend the CodingAgent permission model to cover tools accessed through the MCP protocol. Each tool invocation is evaluated against the permission policy: is this tool allowed for this agent, in this context, with these arguments? The permission system provides fine-grained control over what agents can do with MCP tools, ensuring that tool usage aligns with organizational policies and security requirements.",
-        "The permission model is based on three core concepts: posture (ALLOW, ASK, or DENY), scope (what the permission applies to), and context (when the permission applies). These concepts combine to create a flexible, expressive permission system that can handle complex authorization requirements.",
-        "**Posture** defines what happens when an agent attempts to invoke a tool:\n- **ALLOW**: The invocation proceeds automatically without human intervention\n- **ASK**: The invocation pauses and requires explicit human approval before proceeding\n- **DENY**: The invocation is rejected and cannot proceed regardless of context",
-        "**Scope** defines what the permission applies to:\n- **Tool-level**: Permissions for specific tools (e.g., \"filesystem.read is ALLOW\")\n- **Argument-level**: Permissions for specific argument patterns (e.g., \"filesystem.read with path /src/* is ALLOW, but /secrets/* is DENY\")\n- **Context-level**: Permissions that vary based on context (e.g., \"network access is ALLOW during business hours but ASK after hours\")",
-        "**Context** defines when the permission applies:\n- **Agent identity**: Different permissions for different agents or agent modes\n- **Mission type**: Different permissions for different types of missions\n- **Repository**: Different permissions for different repositories\n- **Time**: Different permissions based on time of day or day of week\n- **Environment**: Different permissions for development, staging, and production",
-        "This multi-dimensional model enables organizations to express complex authorization requirements while maintaining clarity and auditability."
-      ]
+      heading: 'What CodingAgent MCP Permissions Actually Does',
+      paragraphs: [
+        'Granular role-based and path-based permission policies applied to individual MCP tool invocations. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding MCP & Integrations components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Enforces principle of least privilege, preventing read-only file servers from performing unauthorized shell side-effects. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: permissions',
+        'Tag: rbac',
+        'Tag: least-privilege',
+      ],
     },
     {
-      "heading": "Permission Granularity and Expressiveness",
-      "paragraphs": [
-        "MCP permissions support multiple levels of granularity, enabling organizations to express permissions at the appropriate level of specificity for their needs.",
-        "**Tool-level permissions** are the coarsest granularity: they allow or deny specific tools entirely. For example, an organization might ALLOW all read-only tools but DENY all write tools for a particular agent mode. Tool-level permissions are simple to understand and manage but may be too coarse for some use cases.",
-        "**Argument-level permissions** provide finer granularity by considering the arguments passed to the tool. For example, a filesystem.read tool might be ALLOW for paths matching /src/* but DENY for paths matching /secrets/*. Argument-level permissions use pattern matching (glob patterns, regular expressions, or custom matchers) to express complex conditions.",
-        "**Context-level permissions** provide the finest granularity by considering the context of the invocation. For example, a network access tool might be ALLOW for internal domains but ASK for external domains, with the decision depending on the agent's identity, the mission type, and the time of day. Context-level permissions can combine multiple dimensions to express very specific conditions.",
-        "The permission system supports logical operators (AND, OR, NOT) to combine conditions, enabling complex expressions like: \"ALLOW filesystem.write if (path matches /src/*) AND (agent mode is Code) AND (time is business hours)\". This expressiveness enables organizations to encode their authorization policies precisely.",
-        "Permissions are evaluated in order from most specific to most general. The first matching permission determines the posture. This ordering enables organizations to define general defaults and override them with specific exceptions. For example: \"DENY all tools by default, but ALLOW filesystem.read for /src/*, and ALLOW all tools for admin agents\"."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Permission Inheritance and Cascading",
-      "paragraphs": [
-        "MCP permissions support inheritance, enabling organizations to define permissions at multiple levels and have them cascade appropriately. This inheritance model reduces configuration burden while maintaining flexibility.",
-        "**Organization-level permissions** provide defaults for the entire organization. These permissions apply to all agents, missions, and repositories unless overridden. Organization-level permissions encode the organization's baseline security posture and compliance requirements.",
-        "**Team-level permissions** can tighten (but not loosen) organization-level permissions for specific teams. For example, the security team might have additional permissions for security scanning tools that other teams don't have. Team-level permissions enable teams to customize their agent experience while maintaining organizational standards.",
-        "**Repository-level permissions** can tighten (but not loosen) team-level permissions for specific repositories. For example, a production repository might have stricter permissions than a development repository. Repository-level permissions enable fine-tuning for specific codebases.",
-        "**Mission-level permissions** can tighten (but not loosen) repository-level permissions for specific missions. For example, a security audit mission might have expanded read permissions but restricted write permissions. Mission-level permissions enable customization for specific tasks.",
-        "This cascading model ensures that organizational standards are maintained while allowing appropriate customization at each level. A permission change at the organization level automatically propagates to all teams, repositories, and missions unless explicitly overridden. This propagation reduces configuration drift and ensures consistency.",
-        "The inheritance model also supports permission auditing: when evaluating a permission, the system can show which level defined the permission and why. This transparency enables organizations to understand and debug their permission configurations."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Policy evaluation matrix validating workspace boundaries and allowed HTTP domains. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Permission Evaluation and Performance",
-      "paragraphs": [
-        "Permission evaluation must be fast and deterministic. Every tool invocation is evaluated against the permission policy before execution, and this evaluation cannot add significant latency to the invocation. The permission system is designed for high-performance evaluation while maintaining correctness and auditability.",
-        "The evaluation process follows these steps:",
-        "1. **Gather context**: Collect all relevant context for the invocation (agent identity, mission type, repository, tool name, arguments, time, environment)\n2. **Match permissions**: Evaluate permissions in order from most specific to most general, finding the first matching permission\n3. **Determine posture**: Return the posture (ALLOW, ASK, or DENY) from the matching permission\n4. **Log decision**: Log the evaluation with full context for audit purposes",
-        "The permission system uses several optimizations to ensure fast evaluation:",
-        "**Permission indexing**: Permissions are indexed by tool name and other key attributes, enabling fast lookup without scanning all permissions.",
-        "**Caching**: Frequently-evaluated permissions are cached to avoid repeated evaluation. The cache is invalidated when permissions change.",
-        "**Early termination**: Evaluation stops as soon as a matching permission is found, without evaluating remaining permissions.",
-        "**Pre-computation**: For static permissions (permissions that don't depend on runtime context), the system pre-computes the evaluation result and caches it.",
-        "These optimizations enable permission evaluation to complete in microseconds, adding negligible overhead to tool invocations. The system can evaluate thousands of permissions per second, supporting high-throughput agent operations.",
-        "Permission evaluation is deterministic: the same inputs always produce the same output. This determinism is essential for debugging and auditing—if an invocation is allowed today, it should be allowed tomorrow (assuming permissions haven't changed)."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent MCP Permissions\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Permission Testing and Validation",
-      "paragraphs": [
-        "Permission policies must be tested and validated before deployment to ensure they behave as expected. Incorrect permissions can lead to security vulnerabilities (if too permissive) or operational failures (if too restrictive). The permission system provides comprehensive testing and validation capabilities.",
-        "**Permission testing** enables organizations to test their permission policies against specific scenarios. Tests specify: the context (agent identity, mission type, repository, tool, arguments), the expected posture (ALLOW, ASK, or DENY), and the rationale. The system evaluates the permission and compares the result to the expected posture. Tests can be automated and run as part of the CI/CD pipeline, ensuring that permission changes don't introduce regressions.",
-        "**Permission validation** checks the permission policy for common errors: conflicting permissions (two permissions that match the same context with different postures), unreachable permissions (permissions that can never match because a more general permission always matches first), and overly broad permissions (permissions that grant more access than necessary). Validation helps organizations catch configuration errors before they reach production.",
-        "**Permission simulation** enables organizations to simulate the effect of permission changes before deploying them. The simulation evaluates the new permissions against historical invocation data and reports: which invocations would change posture, how many invocations would be affected, and what the impact would be. This simulation enables organizations to understand the impact of permission changes and avoid unintended consequences.",
-        "**Permission auditing** provides ongoing monitoring of permission usage. The audit system tracks: which permissions are most frequently evaluated, which permissions result in ASK or DENY postures, and which permissions are never used. This auditing enables organizations to identify unused permissions (which can be removed to simplify the policy) and frequently-denied permissions (which may indicate misalignment between agent behavior and organizational policies).",
-        "These testing and validation capabilities ensure that permission policies are correct, efficient, and aligned with organizational requirements."
-      ]
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the MCP & Integrations area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
     },
     {
-      "heading": "Integration with External Authorization Systems",
-      "paragraphs": [
-        "MCP permissions can integrate with external authorization systems, enabling organizations to leverage existing identity and access management infrastructure. This integration ensures consistency between agent permissions and other system permissions, reducing administrative overhead and improving security.",
-        "**LDAP/Active Directory integration** enables permissions to be based on directory groups. Agents can be assigned to directory groups, and permissions can reference these groups. This integration enables organizations to manage agent permissions using their existing directory infrastructure.",
-        "**OAuth integration** enables permissions to be based on OAuth scopes. Agents can be issued OAuth tokens with specific scopes, and permissions can reference these scopes. This integration enables fine-grained, token-based authorization that aligns with modern identity standards.",
-        "**RBAC integration** enables permissions to be based on roles. Agents can be assigned roles, and permissions can reference these roles. This integration enables organizations to define permissions in terms of business roles rather than technical details.",
-        "**ABAC integration** enables permissions to be based on attributes (agent attributes, resource attributes, environmental attributes). This integration enables very fine-grained, context-aware authorization that can adapt to changing conditions.",
-        "**Policy-as-code integration** enables permissions to be defined in code (using languages like Rego, Cedar, or custom DSLs) and managed through version control. This integration enables permissions to be tested, reviewed, and deployed using standard software engineering practices.",
-        "These integrations enable organizations to implement MCP permissions in a way that aligns with their existing security infrastructure and practices. The integrations are designed to be flexible, supporting various authorization models and standards."
-      ]
-    }
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent MCP Permissions\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent MCP Permissions\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within MCP & Integrations) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent MCP Permissions\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent MCP Permissions\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent MCP Permissions\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/mcp-permissions`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What are MCP permissions?",
-      "answer": "MCP permissions are granular policies controlling which tools agents can invoke through the MCP protocol, with support for ALLOW, ASK, and DENY postures at multiple levels of granularity."
+      question: 'What problem does CodingAgent MCP Permissions actually solve?',
+      answer: 'Granular role-based and path-based permission policies applied to individual MCP tool invocations. Enforces principle of least privilege, preventing read-only file servers from performing unauthorized shell side-effects.',
     },
     {
-      "question": "How granular can permissions be?",
-      "answer": "Very granular: permissions can be specified at the tool level, argument level (using pattern matching), and context level (based on agent identity, mission type, repository, time, environment). Permissions can combine multiple dimensions using logical operators."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Policy evaluation matrix validating workspace boundaries and allowed HTTP domains.',
     },
     {
-      "question": "Do permissions support inheritance?",
-      "answer": "Yes. Organization-level permissions provide defaults, with team-level, repository-level, and mission-level permissions that can tighten (but not loosen) the inherited permissions. This cascading model reduces configuration burden while maintaining flexibility."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "How fast is permission evaluation?",
-      "answer": "Permission evaluation completes in microseconds using indexing, caching, early termination, and pre-computation optimizations. The system can evaluate thousands of permissions per second with negligible overhead."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent MCP Permissions\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "Can permissions integrate with existing authorization systems?",
-      "answer": "Yes. MCP permissions integrate with LDAP/Active Directory, OAuth, RBAC, ABAC, and policy-as-code systems. This integration enables organizations to leverage existing identity and access management infrastructure."
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
     },
     {
-      "question": "How are permission conflicts resolved?",
-      "answer": "Permission conflicts are resolved through configurable precedence rules that determine which policy takes priority when multiple policies apply to the same action. The system supports deny-overrides-allow, allow-overrides-deny, and first-match-wins strategies. Administrators can define custom precedence hierarchies based on security requirements and organizational policies."
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
     },
     {
-      "question": "What is policy simulation mode?",
-      "answer": "Policy simulation mode allows agents to test tool calls against permission policies without executing actual system operations. This enables safe policy development and validation. Policy test suites can be created with expected permit/deny outcomes for various scenarios and automatically executed during CI/CD pipelines ensuring permission policies remain correct as the codebase evolves."
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under MCP & Integrations, tagged permissions, rbac, least-privilege.',
     },
     {
-      "question": "Can permissions be scoped to specific code paths?",
-      "answer": "Yes. Permissions can be scoped to specific file paths, directories, or branches using path-based and branch-based access controls. This granular scoping prevents agents from accessing sensitive files outside their designated workspace. Path normalization and canonicalization verify that targets remain within the declared task scope before any file operation is permitted."
-    }
+      question: 'Who should read this page before adopting CodingAgent MCP Permissions?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent MCP Permissions?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent MCP Permissions\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/mcp-permissions` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent MCP Permissions fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

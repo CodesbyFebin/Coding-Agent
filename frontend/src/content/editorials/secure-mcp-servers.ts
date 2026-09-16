@@ -1,77 +1,138 @@
 import type { PillarEditorial } from '../types';
 
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const secureMcpServers: PillarEditorial = {
-  "pillarId": "secure-mcp-servers",
-  "updated": "2026-09-24",
-  "definition": "Hardening standards and security audits for authoring, running, and publishing Model Context Protocol server tools — preventing tool injection vulnerabilities from turning external MCP integrations into remote code execution vectors.",
-  "sections": [
+  pillarId: 'secure-mcp-servers',
+  updated: '2026-09-16',
+  definition: 'Hardening standards and security audits for authoring, running, and publishing Model Context Protocol server tools.',
+  sections: [
     {
-      "heading": "Secure MCP Servers Fundamentals",
-      "paragraphs": [
-        "Secure MCP servers provide hardening standards and security audits for the entire MCP server lifecycle: authoring (developing new MCP tools), running (executing MCP servers in production), and publishing (making servers available to the agent ecosystem). The core objective is to prevent tool injection vulnerabilities that could allow external MCP servers to execute remote code on the agent's infrastructure, exfiltrate data, or manipulate agent behavior.",
-        "MCP server security is particularly critical because MCP servers act as a bridge between AI models and external tools, giving them significant authority over the development environment. A compromised MCP server could provide a model with unrestricted access to the filesystem, network, and execution capabilities. The hardening standards in this pillar address this risk through: input validation, output sanitization, runtime confinement, and continuous security auditing."
-      ]
+      heading: 'What CodingAgent Secure MCP Servers Actually Does',
+      paragraphs: [
+        'Hardening standards and security audits for authoring, running, and publishing Model Context Protocol server tools. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Security & Sovereignty components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Prevents tool injection vulnerabilities from turning external MCP integrations into remote code execution vectors. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: mcp-security',
+        'Tag: hardening',
+        'Tag: audit',
+      ],
     },
     {
-      "heading": "Input Validation and Schema Enforcement",
-      "paragraphs": [
-        "Every MCP server must validate all incoming tool invocation requests against a strict JSON Schema before processing. The schema defines: expected argument types and formats, required versus optional parameters, valid value ranges and enums, and format constraints (URLs, port numbers, file paths). Requests that violate the schema are rejected immediately with a descriptive error, and the violation is logged in the audit trail.",
-        "The validation system prevents: command injection via tool arguments, path traversal in file path parameters, format-based attacks (e.g., sending XML when JSON is expected), and schema-based denial-of-service (malformed requests that consume excessive resources). All validation decisions are made before any tool execution begins, ensuring that malicious inputs never reach the tool implementation.",
-        "Organizations can define custom format validations for their domain (valid repository paths, acceptable branch names, authorized API endpoints). These custom validations are evaluated alongside built-in constraints, and any failure blocks the invocation and logs the attempt."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Output Sanitization and Taint Analysis",
-      "paragraphs": [
-        "All tool output streams are subjected to taint analysis and sanitization before being returned to the agent. The system tracks variables constructed from tool responses (taint tracking) and applies AST-based sanitization to remove malicious code, injected prompts, or credential exposure from the output. Any detected secrets (API keys, passwords, SSH keys) are automatically redacted (replaced with [REDACTED]) before the result is included in the model context.",
-        "The sanitization system uses: pattern libraries for common secret formats (AWS keys, GCP keys, SSH keys, database URLs), custom regex patterns defined by the organization, and AST analysis to identify and remove code injection from tool outputs. The sanitized output is still functionally valid — the agent receives the correct result without the security risks.",
-        "Taint analysis extends through the entire output processing pipeline: from the tool's raw exit, through transformation and formatting, to the final result sent to the model. This end-to-end taint tracking ensures that no malicious content accidentally passes through to the model context."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Automated vulnerability scanning of MCP server dependencies and JSON-RPC endpoints. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
     },
     {
-      "heading": "Runtime Confinement and Monitoring",
-      "paragraphs": [
-        "MCP servers execute tool invocations in runtime confinement: sandboxed processes with restricted permissions, limited network egress (only to authorized endpoints), and resource quotas (CPU time, memory, disk I/O). The runtime monitors: invocation frequency (flagging unusual request rates that may indicate compromise), error rates (abnormally high failure rates may indicate injection attempts), and data volume (unusually large outputs may indicate data exfiltration attempts).",
-        "Anomaly detection triggers: alerts to security teams, automatic rate limiting for the affected server, and optional sandbox termination if the anomaly is severe. All anomaly events are logged in the audit trail with the server identity, the observed metric, and the action taken.",
-        "The runtime also supports: per-server capability whitelists (which tools the server is allowed to expose), per-server permission policies (ALLOW/ASK/DENY tiers specific to that server), and per-server audit logging (all invocations for that server are recorded separately for detailed analysis)."
-      ]
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Secure MCP Servers\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
     },
     {
-      "heading": "Security Auditing and Continuous Improvement",
-      "paragraphs": [
-        "Every MCP server must pass a security audit before being published to the agent ecosystem. The audit includes: static analysis of the server code for common vulnerabilities (SQL injection, path traversal, command injection), dynamic testing with malicious inputs to verify that the server properly validates and sanitizes, penetration testing of the server's endpoints and authentication mechanisms, and review of the server's permission policies and audit logging configuration.",
-        "Security audits are conducted: before a server is first published, whenever the server code is modified, and on a recurring schedule (quarterly for production servers, annually for internal servers). Audit results are recorded and must be satisfactory (no critical vulnerabilities, no high-severity issues) before the server is allowed to serve agents.",
-        "Continuous improvement: audit findings are tracked, and recurring vulnerability types trigger enhanced monitoring, mandatory code reviews, or temporary suspension of the server until remediated. The audit system supports: finding tracking (each vulnerability is assigned an ID, severity, status, and remediation deadline), trend analysis (are certain vulnerability types recurring across multiple servers?), and compliance reporting (audit results can be exported for regulator review)."
-      ]
-    }
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Security & Sovereignty area of CodingAgent.in\'s knowledge graph. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
+    },
+    {
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Secure MCP Servers\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Secure MCP Servers\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Security & Sovereignty) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Secure MCP Servers\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Secure MCP Servers\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Secure MCP Servers\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/secure-mcp-servers`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What are secure MCP servers?",
-      "answer": "Hardening standards and security audits for authoring, running, and publishing Model Context Protocol server tools, preventing tool injection vulnerabilities from turning external MCP integrations into remote code execution vectors."
+      question: 'What problem does CodingAgent Secure MCP Servers actually solve?',
+      answer: 'Hardening standards and security audits for authoring, running, and publishing Model Context Protocol server tools. Prevents tool injection vulnerabilities from turning external MCP integrations into remote code execution vectors.',
     },
     {
-      "question": "How does input validation work?",
-      "answer": "All incoming tool invocation requests are validated against a strict JSON Schema before processing. Requests violating the schema are rejected and logged. The schema defines expected types, formats, required/optional parameters, and value ranges."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Automated vulnerability scanning of MCP server dependencies and JSON-RPC endpoints.',
     },
     {
-      "question": "How is output sanitization performed?",
-      "answer": "All tool output streams undergo taint analysis and sanitization. Secrets are redacted, malicious code and injected prompts are removed via AST analysis, and the sanitized output remains functionally valid for the agent."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "What runtime confinement measures exist?",
-      "answer": "MCP servers execute in sandboxed processes with restricted permissions, limited network egress to authorized endpoints only, and resource quotas (CPU, memory, disk). Anomaly detection flags unusual invocation rates, error rates, and data volumes."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Secure MCP Servers\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "How often are security audits conducted?",
-      "answer": "Before first publication, whenever code is modified, and on a recurring schedule (quarterly for production servers, annually for internal servers). Results must be satisfactory before the server is allowed to serve agents."
-    }
+      question: 'How does this pillar relate to the rest of the platform?',
+      answer: 'It is designed to compose with the rest of the platform\'s pillars rather than operate as an isolated feature -- see the knowledge graph\'s category grouping for the pillars it most directly interacts with.',
+    },
+    {
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Security & Sovereignty, tagged mcp-security, hardening, audit.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Secure MCP Servers?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Secure MCP Servers?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Secure MCP Servers\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/secure-mcp-servers` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Secure MCP Servers fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };

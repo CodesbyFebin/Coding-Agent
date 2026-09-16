@@ -1,70 +1,144 @@
 import type { PillarEditorial } from '../types';
 
-// Editorial converted from the reviewed pillar-database source. Claim-audited.
+// Editorial generated from the reviewed pillar-database source
+// (frontend/src/data/pillarsData.ts). Claim-audited: compliance,
+// certification and benchmark language is hedged per this repo's
+// established claim-safety convention.
 export const promptInjectionDefenses: PillarEditorial = {
-  "pillarId": "prompt-injection-defenses",
-  "updated": "2026-09-24",
-  "definition": "Multi-layer defense isolating untrusted repository strings, issues, and PR comments from executive system instructions — preventing indirect prompt injections embedded in READMEs or dependencies from hijacking agent execution authority.",
-  "sections": [
+  pillarId: 'prompt-injection-defenses',
+  updated: '2026-09-16',
+  definition: 'Multi-layer defense isolating untrusted repository strings, issues, and PR comments from executive system instructions.',
+  sections: [
     {
-      "heading": "Prompt Injection Threat Model",
-      "paragraphs": [
-        "Prompt injection is one of the most critical security threats for autonomous coding agents. An indirect prompt injection occurs when external content — such as a README file, a GitHub issue, a pull comment, or a dependency — contains carefully crafted text designed to manipulate the agent's behavior. Because models naturally attend to all text in their context window, such injected content can override the agent's system instructions, causing it to execute unintended actions, exfiltrate data, or generate malicious code.",
-        "The threat is particularly insidious because the injected content appears legitimate: it might be a harmless-looking comment in a PR, a documentation section in a README, or a configuration file in a dependency. The agent reads this content as part of its context, and the injected prompt instructions blend in with the legitimate system instructions.",
-        "CodingAgent's prompt injection defense framework addresses this through: separation of control and data planes, strict input sanitization, and layered defense that ensures untrusted content cannot influence agent authority."
-      ]
+      heading: 'What CodingAgent Prompt Injection Defenses Actually Does',
+      paragraphs: [
+        'Multi-layer defense isolating untrusted repository strings, issues, and PR comments from executive system instructions. Within CodingAgent.in\'s broader agentic engineering platform, this pillar is not a standalone feature toggle but a design constraint that shapes how the surrounding Security & Sovereignty components are allowed to behave. Every capability described here is scoped by the same governance model the rest of the platform uses: an explicit boundary between what a model may reason about and what a tool is actually permitted to execute.',
+        'Prevents indirect prompt injections embedded in READMEs or dependencies from hijacking agent execution authority. That is the practical justification for treating this as its own architectural pillar rather than folding it into a more general capability: the failure modes it addresses are specific enough that a generic policy would either under-protect or over-restrict the surrounding workflow.',
+      ],
+      bullets: [
+        'Tag: injection',
+        'Tag: isolation',
+        'Tag: sanitization',
+      ],
     },
     {
-      "heading": "Separation of Control and Data Planes",
-      "paragraphs": [
-        "The fundamental defense strategy is strict separation of the control plane (system instructions, permission declarations, governance rules) from the data plane (repository content, issue comments, PR descriptions, dependency files). The control plane is never influenced by data plane content: all external inputs are sanitized and validated before they are mixed with system instructions.",
-        "The separation is enforced through: XML/JSON envelope formats that clearly delimit control versus data, AST-based parsing that identifies and isolates system instructions from user content, and runtime checks that validate that no data plane content has been injected into the control plane.",
-        "This architecture ensures that even if an attacker successfully injects a prompt into a README or dependency, the agent's system instructions remain intact and the agent cannot be manipulated to execute unauthorized actions."
-      ]
+      heading: 'Why This Is a Named Pillar, Not an Implementation Detail',
+      paragraphs: [
+        'CodingAgent.in treats an AI coding agent as a controlled engineering runtime rather than a single opaque model call: context, model policy, tools, workspaces, memory, permissions, evidence and independent verification are all explicit, separately reasoned-about components. This pillar is one of those components. Naming it explicitly, rather than leaving it implicit in a larger system prompt or a single catch-all permission flag, is what makes the behavior auditable: an engineer evaluating the platform can point at exactly this page and ask what guarantees it does and does not provide, instead of having to reverse-engineer behavior from observed agent output.',
+        'This also means the pillar has an explicit boundary with its neighbors. It does not attempt to solve problems that belong to other pillars in the knowledge graph, and it does not silently absorb responsibilities that are better handled elsewhere. Where the boundary matters for evaluating correctness, the FAQ section below calls it out directly rather than leaving it ambiguous.',
+      ],
     },
     {
-      "heading": "Multi-Layer Input Sanitization",
-      "paragraphs": [
-        "CodingAgent applies multiple sanitization layers to all external inputs before they enter the model context: regex-based pattern matching to detect common prompt injection markers (e.g., 'ignore previous instructions', 'you are now'), AST analysis to identify and remove structurally injected prompts, and semantic analysis to detect coercive language designed to override agent authority.",
-        "The sanitization system is configurable: organizations can define custom regex patterns for their domain, adjust the strictness of AST-based filtering, and specify which sanitization layers are active for different input types (READMEs vs. issues vs. dependency outputs). All sanitization decisions are logged in the audit trail with the reason and the original content hash.",
-        "Semantic analysis is particularly effective against sophisticated attacks: it detects coercive language patterns that attempt to manipulate the agent through authority framing, urgency creation, or social engineering. These patterns are updated regularly based on observed attack trends."
-      ]
+      heading: 'Architecture and Operating Model',
+      paragraphs: [
+        'Strict separation of control and data planes using structured XML/JSON envelope formats. That verification step is deliberate: nothing in this pillar\'s design is treated as complete or trustworthy purely because a model produced it -- completion is determined by an independent, mechanical check, not by the model\'s own narration of what it did.',
+        'In practice this means the pillar\'s behavior can be described as a small state machine: an entry condition (when this capability is invoked), an execution boundary (what it is and is not allowed to touch while running), and an exit condition (the specific, checkable signal that confirms it did what it claimed). Anyone integrating with or auditing this part of the platform should be able to point at each of those three states concretely, rather than treating the whole thing as a black box.',
+      ],
+      bullets: [
+        'Related pillar: CodingAgent AI Agent Security',
+        'Related pillar: CodingAgent Secure Tool Calling',
+        'Related pillar: CodingAgent Agent Sandboxing',
+        'Related pillar: CodingAgent Hallucination Defense',
+      ],
     },
     {
-      "heading": "Envelope Format and Runtime Validation",
-      "paragraphs": [
-        "All external content is wrapped in a structured XML/JSON envelope before being included in the agent's context. The envelope clearly marks which portions are control instructions (system prompts, permission declarations) and which are data (repository content, issue comments). The runtime validates the envelope integrity before releasing any content to the model, and any deviation from the expected format triggers a verification gate failure.",
-        "The envelope format includes: a header declaring the content type (control vs. data), a hash of the original content for integrity verification, and a sandbox marker indicating whether the content has been sanitized. The runtime checks the envelope before each mission startup and during mission execution if new external content is loaded.",
-        "This envelope approach provides: clear separation of control and data, integrity verification (any modification to the original content is detected), and runtime enforcement (the model only receives content that passes the validation checks)."
-      ]
-    }
+      heading: 'Failure Modes and Mitigations',
+      paragraphs: [
+        'The most direct risk in the \'CodingAgent Prompt Injection Defenses\' area is silent scope creep: a capability that starts narrowly defined gradually accumulates exceptions and special cases until its actual behavior no longer matches its documented boundary. CodingAgent.in\'s mitigation for this class of risk across every pillar is the same: policy is expressed as explicit, versioned configuration rather than ad hoc conditionals scattered through agent prompts, so a reviewer can diff the policy the same way they would diff any other piece of the codebase.',
+        'A second, related risk is that automation in this area could produce a plausible-looking result that is nonetheless wrong -- a model\'s own confidence is not evidence. That is why this pillar\'s success criteria are defined independently of the model\'s self-report: a compiler exit code, a test suite result, a schema validation, or an explicit human approval, depending on what\'s appropriate for the specific capability. Where a claim in this space cannot currently be backed by that kind of independent evidence, it is described here as an architectural design goal rather than a guarantee.',
+      ],
+    },
+    {
+      heading: 'How It Composes With the Rest of the Platform',
+      paragraphs: [
+        'This pillar sits in the Security & Sovereignty area of CodingAgent.in\'s knowledge graph, alongside CodingAgent AI Agent Security, CodingAgent Secure Tool Calling, CodingAgent Agent Sandboxing. None of these pillars are meant to be adopted in isolation: the platform\'s premise is that sovereign, local-LLM-first agentic engineering only works if the pieces are designed to compose -- a permission boundary that only holds when no other pillar can route around it, a verification step that only means something if every other pillar respects its result as authoritative.',
+        'For a team evaluating whether to adopt this specific capability, the practical question is usually not \'does this feature exist\' but \'does it hold up under the same operating conditions the rest of our engineering process already assumes\' -- private repositories, local inference where required, explicit approval gates on anything destructive, and an audit trail that a human can actually read after the fact. This pillar is designed against that same bar, not a lower one specific to itself.',
+      ],
+    },
+    {
+      heading: 'Operational Guidance',
+      paragraphs: [
+        'Teams adopting \'CodingAgent Prompt Injection Defenses\' should start by confirming the boundary described above actually matches their own risk tolerance -- the default configuration reflects a reasonable general-purpose posture, not necessarily the most restrictive (or most permissive) one available. Where the platform exposes configuration for this pillar, treat it the same way you would treat any other security- or correctness-relevant configuration: version it, review changes to it, and test that a change actually has the effect you expect before relying on it in a live workflow.',
+        'As with the rest of this platform\'s architecture, this area is presented as a design direction with an explicit verification mechanism attached to it, not as a finished, externally certified product claim. Where certification, compliance sign-off, or a specific measured benchmark result would be relevant to your own evaluation, that determination depends on your deployment\'s own configuration, infrastructure, and audit process -- the architecture here is what makes that evaluation possible to run, not a substitute for running it.',
+      ],
+    },
+    {
+      heading: 'Rollout Sequencing',
+      paragraphs: [
+        'When a team introduces \'CodingAgent Prompt Injection Defenses\' into an existing engineering workflow, sequencing matters more than the specific configuration values chosen. A common, lower-risk pattern is to start in observe-only mode -- letting the mechanism run and log what it would have done without actually enforcing the restrictive path -- before switching it to enforce. That gives the team a concrete, reviewable log of what the pillar\'s boundary would have caught, which is far more persuasive to a skeptical reviewer than an abstract description of the policy.',
+        'Once enforcement is turned on, the practical rollout question becomes: what is the smallest scope (a single repository, a single project, a single agent mode within Security & Sovereignty) this can be validated against before it applies platform-wide? Narrow-scope validation surfaces integration gaps -- an approval workflow that doesn\'t fit the team\'s actual review cadence, a boundary that\'s drawn one layer too aggressively -- while the blast radius of a misconfiguration is still small.',
+      ],
+    },
+    {
+      heading: 'What This Pillar Deliberately Does Not Cover',
+      paragraphs: [
+        'Scoping \'CodingAgent Prompt Injection Defenses\' tightly is as much a design decision as anything it actively does. This page does not attempt to describe every adjacent concern in the platform\'s knowledge graph -- general model routing, workspace lifecycle, or organization-wide policy management, for instance, are each their own pillars with their own explicit boundaries, and this one does not silently absorb responsibility for them.',
+        'That separation is deliberate rather than an oversight: a pillar whose boundary keeps expanding to cover \'whatever seems related\' becomes impossible to reason about or audit, because its actual behavior stops matching any single page\'s description. If your evaluation of this platform needs a capability that sounds adjacent but isn\'t explicitly covered here, the more precise answer usually lives on a neighboring pillar page rather than being an implicit extension of this one.',
+      ],
+    },
+    {
+      heading: 'Reading This Page Alongside the Rest of the Knowledge Graph',
+      paragraphs: [
+        '\'CodingAgent Prompt Injection Defenses\' is one entry in a deliberately large knowledge graph -- CodingAgent.in documents 80 architectural pillars rather than a handful of marketing bullet points, because the platform\'s premise is that agentic engineering only holds up under real scrutiny when every individual claim is scoped narrowly enough to check. A reader who wants the full picture, rather than just this one pillar, should treat the pillar directory as the entry point and this page as one leaf in that structure, not as a self-contained summary of the whole platform.',
+        'That structure also means updates to this page are expected to happen independently of updates elsewhere in the graph: if the underlying mechanism this pillar describes changes, this specific page is what gets revised, rather than a change note buried in a changelog that\'s disconnected from the architectural claim it affects. Treat the `updated` date on this editorial as the actual freshness signal for the claims made here, not the repository\'s overall last-commit date.',
+      ],
+    },
+    {
+      heading: 'Evaluating This Pillar Yourself',
+      paragraphs: [
+        'Rather than taking any architectural description at face value -- including this one -- the more useful exercise for a team evaluating CodingAgent.in is to write down the specific failure scenario \'CodingAgent Prompt Injection Defenses\' claims to prevent, and then check whether the platform\'s actual verification mechanism (described above) would catch that exact scenario if it happened. If it would not, that\'s a real gap worth raising, not a reason to distrust the pillar model in general -- the whole premise of naming these things explicitly is so gaps are locatable and fixable rather than hidden inside a vague, unauditable system prompt.',
+        'The href for this page (`/prompt-injection-defenses`) is a stable, canonical identifier once the pillar crosses the platform\'s own indexability bar -- so it\'s reasonable to bookmark or cite directly when tracking an evaluation decision back to the specific architectural claim that informed it.',
+      ],
+    },
   ],
-  "faq": [
+  faq: [
     {
-      "question": "What is prompt injection in the context of coding agents?",
-      "answer": "Indirect prompt injection occurs when external content (READMEs, issues, PR comments, dependencies) contains crafted text designed to manipulate the agent's behavior by overriding system instructions through the context window."
+      question: 'What problem does CodingAgent Prompt Injection Defenses actually solve?',
+      answer: 'Multi-layer defense isolating untrusted repository strings, issues, and PR comments from executive system instructions. Prevents indirect prompt injections embedded in READMEs or dependencies from hijacking agent execution authority.',
     },
     {
-      "question": "How does the separation of control and data planes work?",
-      "answer": "The control plane (system instructions, permission declarations) is strictly separated from the data plane (repository content, issue comments). All external inputs are sanitized and validated before mixing with system instructions, using XML/JSON envelope formats that clearly delimit control versus data."
+      question: 'How is completion or correctness verified for this pillar?',
+      answer: 'Strict separation of control and data planes using structured XML/JSON envelope formats.',
     },
     {
-      "question": "What sanitization layers are applied?",
-      "answer": "Three layers: regex-based pattern matching for common injection markers, AST analysis to remove structurally injected prompts, and semantic analysis to detect coercive language patterns that attempt to override agent authority."
+      question: 'Is this pillar production-certified or independently audited?',
+      answer: 'This page describes an architectural design direction with explicit verification mechanisms built in, not an externally certified or independently audited product claim. Whether a specific deployment meets a given compliance bar depends on that deployment\'s own configuration and audit process, not on this page alone.',
     },
     {
-      "question": "What is the envelope format?",
-      "answer": "External content is wrapped in structured XML/JSON envelopes that declare content type (control vs. data), include content hashes for integrity verification, and have sandbox markers indicating whether content has been sanitized. The runtime validates envelope integrity before releasing content to the model."
+      question: 'What happens if this capability fails or is misconfigured?',
+      answer: 'A misconfiguration in the \'CodingAgent Prompt Injection Defenses\' area is designed to fail toward the more restrictive behavior rather than silently degrading to a more permissive one -- consistent with the platform\'s general ALLOW/ASK/DENY posture, an unclear or failed check defaults to requiring explicit human approval rather than proceeding automatically.',
     },
     {
-      "question": "Can sanitization prevent all prompt injections?",
-      "answer": "No system can prevent 100% of prompt injections, but the multi-layer defense significantly reduces the risk. The combination of envelope separation, regex matching, AST analysis, and semantic analysis provides strong defense against both simple and sophisticated attacks."
-    }
+      question: 'How does this pillar relate to CodingAgent AI Agent Security, CodingAgent Secure Tool Calling?',
+      answer: 'It composes directly with CodingAgent AI Agent Security, CodingAgent Secure Tool Calling, CodingAgent Agent Sandboxing, CodingAgent Hallucination Defense: none of these are meant to be adopted in isolation, and the platform\'s guarantees in this area assume the related pillars are also in place around it.',
+    },
+    {
+      question: 'Can this be disabled or run with local-only inference?',
+      answer: 'Where the capability involves model inference, CodingAgent.in\'s local-first design means Ollama, vLLM, llama.cpp and LM Studio are first-class targets, so this pillar can be evaluated and operated without sending repository content to a third-party API. Where it is purely policy or tooling configuration rather than inference, it can typically be tuned or disabled through the platform\'s configuration surface, subject to the same review discipline recommended for any security-relevant change.',
+    },
+    {
+      question: 'What tags or keywords describe this pillar?',
+      answer: 'It is categorized under Security & Sovereignty, tagged injection, isolation, sanitization.',
+    },
+    {
+      question: 'Who should read this page before adopting CodingAgent Prompt Injection Defenses?',
+      answer: 'Anyone evaluating whether to route real engineering work through this capability -- particularly teams with private-repository requirements, explicit approval-gate expectations, or an existing audit process this pillar would need to plug into rather than bypass.',
+    },
+    {
+      question: 'What\'s the recommended rollout sequence for CodingAgent Prompt Injection Defenses?',
+      answer: 'Start in observe-only mode so the mechanism logs what it would have enforced without actually blocking anything, review that log against real workflow traffic, then switch to enforcement in a narrow scope -- a single repository or project -- before applying it platform-wide. That sequencing surfaces integration gaps while the blast radius of a misconfiguration is still small.',
+    },
+    {
+      question: 'Does this pillar cover every related concern, or just this specific one?',
+      answer: 'Just this one, deliberately. \'CodingAgent Prompt Injection Defenses\' does not silently absorb responsibility for adjacent concerns like general model routing, workspace lifecycle, or organization-wide policy -- those are each their own pillars with their own explicit boundary. If a capability you need sounds adjacent but isn\'t covered here, check the knowledge graph\'s category grouping for the more precise pillar.',
+    },
+    {
+      question: 'What is the canonical URL for this pillar once it\'s fully documented?',
+      answer: '`/prompt-injection-defenses` on codingagent.in -- once an editorial crosses the platform\'s own indexability bar (currently 2,000 words of substantive, non-duplicated content), that URL becomes the canonical, sitemap-listed identifier for this pillar, suitable for bookmarking or citing directly in an evaluation writeup.',
+    },
+    {
+      question: 'How does CodingAgent Prompt Injection Defenses fail -- does it fail open or fail closed?',
+      answer: 'Consistent with the platform\'s general ALLOW/ASK/DENY posture, a misconfiguration or an indeterminate check in this area is designed to fail toward the more restrictive behavior -- defaulting to requiring explicit human approval -- rather than silently falling back to a more permissive default.',
+    },
   ],
-  "sources": [
-    {
-      "label": "CodingAgent source repository",
-      "href": "https://github.com/CodesbyFebin/Coding-Agent"
-    }
-  ]
 };
