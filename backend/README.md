@@ -91,6 +91,97 @@ verifications, and execution-log events joined in),
 Agent runs, schedules, approvals, MCP, and verifications are mounted per
 `src/routes/api.js`.
 
+## Deploying to Vercel
+
+This backend deploys as a set of Vercel serverless functions rather than a
+long-running process. `backend/api/index.js` requires `src/server.js` (which
+only calls `app.listen()` when run directly, so requiring it is
+side-effect-free) and re-exports the Express `app`; Vercel's Node.js runtime
+detects that exported app and calls it per request — this is Vercel's own
+documented pattern for deploying Express
+(https://vercel.com/docs/frameworks/backend/express). `backend/vercel.json`
+rewrites `/health` and `/api/*` (except `/api/cron/*`) to that function, so
+every existing route works unchanged.
+
+The durable scheduler no longer polls in-process — see "Scheduler on
+Vercel" below — instead a Vercel Cron job hits
+`backend/api/cron/scheduler-tick.js` on a fixed interval.
+
+Because this repo's root `vercel.json` already builds `web/` as its own
+Vercel project, the backend deploys as a **second, separate Vercel
+project** rooted at `backend/`. This one-time setup has to happen in the
+Vercel dashboard — it isn't something a code change can do on its own:
+
+1. In the Vercel dashboard, "Add New… → Project", import this same GitHub
+   repository again.
+2. Set that project's **Root Directory** to `backend`. Vercel will then
+   pick up `backend/vercel.json` (its function config, rewrites, and cron)
+   automatically — no build command is needed since there's no build step,
+   just `npm install`.
+3. In that project's **Settings → Environment Variables**, set:
+   - `DATABASE_URL` — see "Database connections on Vercel" below for the
+     pooled-connection recommendation.
+   - `JWT_SECRET`
+   - `CORS_ORIGINS`
+   - `OLLAMA_BASE_URL` (see the Ollama limitation below)
+   - `CRON_SECRET` — a long random value; also add it as the project's
+     Cron protection secret if your Vercel plan surfaces one, or rely on
+     this env var alone (`api/cron/scheduler-tick.js` checks it directly).
+4. Deploy. `GET https://<backend-project>.vercel.app/health` should return
+   `{"status":"healthy"}`.
+
+### Scheduler on Vercel
+
+`src/services/scheduler.js` exports `runSchedulerTick()`, a standalone
+function that checks every enabled `"Schedule"` row whose `next_run` is due,
+fires it (queues an `AgentRun` for its linked `Mission`), and advances
+`next_run` — with no `setInterval`/timer wrapping it, since a timer started
+inside a serverless invocation doesn't persist between invocations and would
+just be a dangling handle within that one execution. `backend/vercel.json`
+schedules `/api/cron/scheduler-tick` to run every 5 minutes
+(`*/5 * * * *`). Adjust that interval to match your Vercel plan: **paid
+(Pro/Enterprise) plans allow cron schedules as frequent as once a minute;
+the Hobby plan limits cron jobs to once a day**, so on Hobby you'd want to
+change this to e.g. `"0 * * * *"` (hourly, if allowed) or accept a daily
+tick — check your plan's current limits in the Vercel dashboard, since these
+have changed over time.
+
+`src/server.js`'s own process only calls `app.listen()` under
+`require.main === module` (i.e. only when run locally with `node
+src/server.js` / `npm run dev`); nothing in the Vercel entrypoint
+(`api/index.js`) triggers that path, so no stray timer or listener starts
+inside a serverless invocation.
+
+### Database connections on Vercel
+
+`src/config/db.js`'s Knex pool is sized `{ min: 0, max: 1 }` — one
+connection per warm function instance, appropriate for Vercel's
+single-concurrency-per-instance model. Even so, **point `DATABASE_URL` at a
+pooled/PgBouncer-style connection string, not a direct Postgres
+connection**, in production: serverless workloads open far more distinct
+connections over time (one pool per concurrently-warm instance, across
+`api/index.js` and `api/cron/scheduler-tick.js`) than a normal
+long-running server does, and unpooled Postgres commonly runs out of
+connection slots under that pattern. Neon (this repo's target database)
+provides a pooled connection string via a `-pooler`-suffixed host in its
+dashboard — use that value for `DATABASE_URL` on the Vercel project rather
+than the direct-connection string used for local development.
+
+### Known limitation: Ollama-based models won't work from Vercel
+
+`src/services/modelGateway.js`'s only working provider adapter talks to a
+local Ollama server at `OLLAMA_BASE_URL` (default
+`http://localhost:11434`). When this backend runs on Vercel's servers, it
+cannot reach a `localhost` Ollama instance on your machine — there is no
+network path from Vercel's infrastructure to your local machine. Model
+routing through Ollama will fail on the Vercel deployment regardless of
+`OLLAMA_BASE_URL`'s value unless you point it at an Ollama instance that is
+itself reachable from the public internet (e.g. one you host and expose
+yourself); this is a platform limitation of deploying a local-LLM-first
+backend to a cloud host, not a bug in this change. The other provider
+adapters in `modelGateway.js` remain unimplemented stubs regardless of
+deployment target (see "Known gaps / stubs" below).
+
 ## Known gaps / stubs
 
 - **LLM providers**: `src/services/modelGateway.js` only has one concrete,
@@ -105,10 +196,20 @@ Agent runs, schedules, approvals, MCP, and verifications are mounted per
   `modelGateway.js` (same `registerProvider`/`getProviderStatus` shape, no
   routing, no adapters, never imported anywhere) — `modelGateway.js` is the
   real one.
-- **Not wired into CI or deploy.** This repo's `.github/workflows/ci.yml`
-  only covers `frontend/`/`web/` today, and `vercel.json` only builds `web/`.
-  This backend is new code that isn't deployed anywhere yet; wiring it into
-  CI/CD is a separate, deliberate follow-up.
+- **Not wired into CI.** This repo's `.github/workflows/ci.yml` only covers
+  `frontend/`/`web/` today; wiring this backend into that CI workflow is a
+  separate, deliberate follow-up. It **is** now wired into deploy — see
+  "Deploying to Vercel" above — as its own Vercel project (the root
+  `vercel.json` still only builds `web/`; the backend deploys via
+  `backend/vercel.json` in a second, separately-created Vercel project).
+- **No standalone execution engine.** Creating a Mission or firing a
+  Schedule queues rows (`TaskNode`, `AgentRun`) but nothing in this repo yet
+  consumes a queued `AgentRun` and actually executes it end-to-end
+  (invoking `modelGateway`, `toolGateway`, `taskPlanner`, etc. in sequence).
+  `runSchedulerTick()` (see "Scheduler on Vercel" above) only queues the
+  `AgentRun`; building the worker that picks up and runs queued work is a
+  separate, deliberate follow-up, unrelated to the serverless conversion
+  itself.
 - **Never run against a live Postgres.** Every Knex query chain here is
   written to the Knex API and cross-checked against the migrations' column
   names, but none of it has executed against a real database. See the PR
