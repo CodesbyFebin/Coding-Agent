@@ -1,0 +1,191 @@
+import type { PillarEditorial } from './types';
+import { wordCount } from './types';
+import { agentCostGovernance } from './editorials/agent-cost-governance.ts';
+import { agentMemoryArchitecture } from './editorials/agent-memory-architecture.ts';
+import { agentObservability } from './editorials/agent-observability.ts';
+import { agentSandboxing } from './editorials/agent-sandboxing.ts';
+import { agentSkillsVersioning } from './editorials/agent-skills-versioning.ts';
+import { agentStateMachines } from './editorials/agent-state-machines.ts';
+import { agenticEngineering } from './editorials/agentic-engineering.ts';
+import { aiAgentSecurity } from './editorials/ai-agent-security.ts';
+import { aiCodingAgents } from './editorials/ai-coding-agents.ts';
+import { airGappedAgents } from './editorials/air-gapped-agents.ts';
+import { approvalPolicyDesign } from './editorials/approval-policy-design.ts';
+import { artifactHashing } from './editorials/artifact-hashing.ts';
+import { auditLogsProvenance } from './editorials/audit-logs-provenance.ts';
+import { auditReadyEngineering } from './editorials/audit-ready-engineering.ts';
+import { bidirectionalMcp } from './editorials/bidirectional-mcp.ts';
+import { browserVerification } from './editorials/browser-verification.ts';
+import { buildVerification } from './editorials/build-verification.ts';
+import { buildingMcpIntegrations } from './editorials/building-mcp-integrations.ts';
+import { cicdPipelineAgents } from './editorials/cicd-pipeline-agents.ts';
+import { codingagentApp } from './editorials/codingagent-app.ts';
+import { codingagentArchitecture } from './editorials/codingagent-architecture.ts';
+import { codingBlog } from './editorials/codingagent-blog.ts';
+import { codingagentDevopsPipelines } from './editorials/codingagent-devops-pipelines.ts';
+import { codingagentDocs } from './editorials/codingagent-docs.ts';
+import { codingagentGuides } from './editorials/codingagent-guides.ts';
+import { codingagentHallucinationDefense } from './editorials/codingagent-hallucination-defense.ts';
+import { codingagentIndiaSovereign } from './editorials/codingagent-india-sovereign.ts';
+import { codingagentIndicWorkflows } from './editorials/codingagent-indic-workflows.ts';
+import { codingagentKnowledgeGraph } from './editorials/codingagent-knowledge-graph.ts';
+import { codingagentModelGovernance } from './editorials/codingagent-model-governance.ts';
+import { codingagentDpdpCompliance } from './editorials/codingagentDpdpCompliance.ts';
+import { codingagentFullstackTypescript } from './editorials/codingagentFullstackTypescript.ts';
+import { codingagentInrpricing } from './editorials/codingagentInrPricing.ts';
+import { codingagentOrganizationPolicy } from './editorials/codingagentOrganizationPolicy.ts';
+import { codingagentPrivateDeployment } from './editorials/codingagentPrivateDeployment.ts';
+import { codingagentPythonDataScience } from './editorials/codingagentPythonDataScience.ts';
+import { codingagentRoleBasedAccess } from './editorials/codingagentRoleBasedAccess.ts';
+import { codingagentTerminalBenchmarks } from './editorials/codingagentTerminalBenchmarks.ts';
+import { codingagentTokenOptimization } from './editorials/codingagentTokenOptimization.ts';
+import { codingagentUseCases } from './editorials/codingagentUseCases.ts';
+import { contextCompaction } from './editorials/context-compaction.ts';
+import { coreAgents } from './editorials/core-agents.ts';
+import { developerCli } from './editorials/developer-cli.ts';
+import { dpdpCompliance } from './editorials/dpdp-compliance.ts';
+import { durableRuntimes } from './editorials/durable-runtimes.ts';
+import { enterpriseAgents } from './editorials/enterprise-agents.ts';
+import { enterpriseTooling } from './editorials/enterprise-tooling.ts';
+import { ggufWorkflows } from './editorials/gguf-workflows.ts';
+import { hallucinationDefense } from './editorials/hallucination-defense.ts';
+import { humanApprovalGates } from './editorials/human-approval-gates.ts';
+import { ideIntegrations } from './editorials/ide-integrations.ts';
+import { independentVerification } from './editorials/independent-verification.ts';
+import { inrPricingBilling } from './editorials/inr-pricing-billing.ts';
+import { llamaCppRuntimes } from './editorials/llama-cpp-runtimes.ts';
+import { lmStudio } from './editorials/lm-studio.ts';
+import { localLlmCoding } from './editorials/local-llm-coding.ts';
+import { mcpAuthentication } from './editorials/mcp-authentication.ts';
+import { mcpClientArchitecture } from './editorials/mcp-client-architecture.ts';
+import { mcpIntegrations } from './editorials/mcp-integrations.ts';
+import { mcpPermissions } from './editorials/mcp-permissions.ts';
+import { mcpSecurity } from './editorials/mcp-security.ts';
+import { mcpServerArchitecture } from './editorials/mcp-server-architecture.ts';
+import { mcpToolDiscovery } from './editorials/mcp-tool-discovery.ts';
+import { mcpTransport } from './editorials/mcp-transport.ts';
+import { modelContextProtocol } from './editorials/model-context-protocol.ts';
+import { networkEgressControls } from './editorials/network-egress-controls.ts';
+import { offlineEmbeddings } from './editorials/offline-embeddings.ts';
+import { ollamaIntegration } from './editorials/ollama-integration.ts';
+import { parallelSubagents } from './editorials/parallel-subagents.ts';
+import { planExecuteVerify } from './editorials/plan-execute-verify.ts';
+import { productionOperations } from './editorials/production-operations.ts';
+import { promptInjectionDefenses } from './editorials/prompt-injection-defenses.ts';
+import { quantizedModels } from './editorials/quantized-models.ts';
+import { repositoryPermissions } from './editorials/repository-permissions.ts';
+import { secretsIsolation } from './editorials/secrets-isolation.ts';
+import { secureMcpServers } from './editorials/secure-mcp-servers.ts';
+import { secureToolCalling } from './editorials/secure-tool-calling.ts';
+import { securitySovereignty } from './editorials/security-sovereignty.ts';
+import { taskGraphs } from './editorials/task-graphs.ts';
+import { typecheckVerification } from './editorials/typecheck-verification.ts';
+import { unitTestVerification } from './editorials/unit-test-verification.ts';
+import { verificationMemory } from './editorials/verification-memory.ts';
+import { vllmServing } from './editorials/vllm-serving.ts';
+import { vramAwareRouting } from './editorials/vram-aware-routing.ts';
+import { workingMissionMemory } from './editorials/working-mission-memory.ts';
+
+export const REGISTRY: Record<string, PillarEditorial> = {
+  'agent-cost-governance': agentCostGovernance,
+  'agent-memory-architecture': agentMemoryArchitecture,
+  'agent-observability': agentObservability,
+  'agent-sandboxing': agentSandboxing,
+  'agent-skills-versioning': agentSkillsVersioning,
+  'agent-state-machines': agentStateMachines,
+  'agentic-engineering': agenticEngineering,
+  'ai-agent-security': aiAgentSecurity,
+  'ai-coding-agents': aiCodingAgents,
+  'air-gapped-agents': airGappedAgents,
+  'approval-policy-design': approvalPolicyDesign,
+  'artifact-hashing': artifactHashing,
+  'audit-logs-provenance': auditLogsProvenance,
+  'audit-ready-engineering': auditReadyEngineering,
+  'bidirectional-mcp': bidirectionalMcp,
+  'browser-verification': browserVerification,
+  'build-verification': buildVerification,
+  'building-mcp-integrations': buildingMcpIntegrations,
+  'cicd-pipeline-agents': cicdPipelineAgents,
+  'codingagent-app': codingagentApp,
+  'codingagent-architecture': codingagentArchitecture,
+  'codingagent-blog': codingBlog,
+  'codingagent-devops-pipelines': codingagentDevopsPipelines,
+  'codingagent-docs': codingagentDocs,
+  'codingagent-guides': codingagentGuides,
+  'codingagent-hallucination-defense': codingagentHallucinationDefense,
+  'codingagent-india-sovereign': codingagentIndiaSovereign,
+  'codingagent-indic-workflows': codingagentIndicWorkflows,
+  'codingagent-knowledge-graph': codingagentKnowledgeGraph,
+  'model-governance': codingagentModelGovernance,
+  'codingagent-dpdp-compliance': codingagentDpdpCompliance,
+  'codingagent-fullstack-typescript': codingagentFullstackTypescript,
+  'codingagent-inr-pricing': codingagentInrpricing,
+  'organization-policy': codingagentOrganizationPolicy,
+  'private-deployment': codingagentPrivateDeployment,
+  'codingagent-python-data-science': codingagentPythonDataScience,
+  'role-based-access': codingagentRoleBasedAccess,
+  'codingagent-terminal-benchmarks': codingagentTerminalBenchmarks,
+  'codingagent-token-optimization': codingagentTokenOptimization,
+  'codingagent-use-cases': codingagentUseCases,
+  'context-compaction': contextCompaction,
+  'core-agents': coreAgents,
+  'developer-cli': developerCli,
+  'dpdp-compliance': dpdpCompliance,
+  'durable-runtimes': durableRuntimes,
+  'enterprise-agents': enterpriseAgents,
+  'enterpriseTooling': enterpriseTooling,
+  'gguf-workflows': ggufWorkflows,
+  'hallucination-defense': hallucinationDefense,
+  'human-approval-gates': humanApprovalGates,
+  'ide-integrations': ideIntegrations,
+  'independent-verification': independentVerification,
+  'inr-pricing-billing': inrPricingBilling,
+  'llama-cpp-runtimes': llamaCppRuntimes,
+  'lm-studio': lmStudio,
+  'local-llm-coding': localLlmCoding,
+  'mcp-authentication': mcpAuthentication,
+  'mcp-client-architecture': mcpClientArchitecture,
+  'mcp-integrations': mcpIntegrations,
+  'mcp-permissions': mcpPermissions,
+  'mcp-security': mcpSecurity,
+  'mcp-server-architecture': mcpServerArchitecture,
+  'mcp-tool-discovery': mcpToolDiscovery,
+  'mcp-transport': mcpTransport,
+  'model-context-protocol': modelContextProtocol,
+  'network-egress-controls': networkEgressControls,
+  'offline-embeddings': offlineEmbeddings,
+  'ollama-integration': ollamaIntegration,
+  'parallel-subagents': parallelSubagents,
+  'plan-execute-verify': planExecuteVerify,
+  'production-operations': productionOperations,
+  'prompt-injection-defenses': promptInjectionDefenses,
+  'quantized-models': quantizedModels,
+  'repository-permissions': repositoryPermissions,
+  'secrets-isolation': secretsIsolation,
+  'secure-mcp-servers': secureMcpServers,
+  'secure-tool-calling': secureToolCalling,
+  'security-sovereignty': securitySovereignty,
+  'task-graphs': taskGraphs,
+  'typecheck-verification': typecheckVerification,
+  'unit-test-verification': unitTestVerification,
+  'verification-memory': verificationMemory,
+  'vllm-serving': vllmServing,
+  'vram-aware-routing': vramAwareRouting,
+  'working-mission-memory': workingMissionMemory,
+};
+
+// Helper functions for accessing registry data
+export function getEditorial(pillarId: string): PillarEditorial | undefined {
+  return REGISTRY[pillarId];
+}
+
+export function isContentIndexable(pillarId: string): boolean {
+  const editorial = getEditorial(pillarId);
+  return !!editorial && wordCount(editorial) >= 2000;
+}
+
+export function completedEditorialCount(): number {
+  return Object.values(REGISTRY).filter(editorial => 
+    wordCount(editorial) >= 2000
+  ).length;
+}

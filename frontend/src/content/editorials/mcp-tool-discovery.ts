@@ -71,7 +71,8 @@ export const mcpToolDiscovery: PillarEditorial = {
         "These security measures ensure that tool discovery is a trusted process that cannot be subverted by malicious actors. The defense-in-depth approach protects against both known and unknown attack vectors."
       ]
     }
-  ],
+  ,
+    {heading: "Additional Details", paragraphs: ["The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed"], bullets: undefined}],
   "faq": [
     {
       "question": "What is tool discovery?",

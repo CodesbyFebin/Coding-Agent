@@ -39,7 +39,8 @@ export const auditReadyEngineering: PillarEditorial = {
         "The real-time compliance monitor also supports automated remediation actions: when a critical violation is detected, the system can automatically take predefined actions (e.g., suspend the offending agent, trigger failover to backup model, block further tool invocations, notify compliance team). Automated remediation is configurable per violation type and severity level, enabling organizations to balance automation with human oversight. All remediation actions are logged in the audit trail, providing a complete record of the response and ensuring accountability. The system also supports human override: operators can suppress, modify, or cancel automated remediation actions from the observability dashboard, ensuring that automated responses remain under human control."
       ]
     }
-  ],
+  ,
+    {heading: "Additional Details", paragraphs: ["The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed"], bullets: undefined}],
   "faq": [
     {
       "question": "Can audit logs be exported for legal hold?",

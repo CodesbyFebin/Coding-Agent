@@ -1,0 +1,63 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildVerification = void 0;
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+exports.buildVerification = {
+    "pillarId": "build-verification",
+    "updated": "2026-09-24",
+    "definition": "Automated build pipeline invocation inside clean task sandboxes to verify package resolution and compilation success — guaranteeing that syntax and dependency modifications produce deployable binaries before a task is marked complete.",
+    "sections": [
+        {
+            "heading": "Build Verification Fundamentals",
+            "paragraphs": [
+                "Build verification provides automated execution of the project's build pipeline in a clean, task-defined sandbox to verify that syntax is correct, dependencies are resolved, and the resulting binary is deployable. This is critical because agents may modify syntax or dependencies as part of their mission, and without verification, incorrect modifications could produce broken binaries that fail in production. The build verification system guarantees that only missions producing successful builds are marked complete.",
+                "The build pipeline execution happens in a hermetic sandbox: the sandbox has no access to the host's node_modules, pip cache, or other build artifacts, ensuring that the build is reproducible and not affected by previous missions. The sandbox is configured with the project's build configuration (package.json scripts, Makefile targets, Cargo.toml targets, etc.), and the build is executed using the project's configured build tool.",
+                "The system captures: the build tool's output (stdout/stderr), the build's exit code (0 for success, non-zero for failure), the build artifacts produced (compiled binaries, package files), and any warnings or errors reported by the build tool. All results are logged in the audit trail with the mission identifier and the build configuration used."
+            ]
+        },
+        {
+            "heading": "Hermetic Build Execution",
+            "paragraphs": [
+                "Hermetic execution means the build result is deterministic and reproducible given the same inputs. The system achieves hermeticity by: using a fresh, isolated sandbox for each build, providing only the declared inputs (source code, dependencies, build configuration) and no other host state, and computing a content-addressable hash of the build output that can be used for caching and verification.",
+                "The hermetic sandbox: has no network access (preventing downloads that could change the build), has a fixed set of build tools (the specific versions of compilers, linkers, and package managers that the project requires), and has a read-only cache of previously built artifacts (so that incremental builds are reproducible).",
+                "Hermetic build execution enables: deterministic caching (same inputs always produce same output hash), incremental builds (subsequent builds with unchanged inputs use the cached result), and build integrity verification (the output hash can be compared against an expected hash to detect corruption or tampering)."
+            ]
+        },
+        {
+            "heading": "Deployment Readiness Gates",
+            "paragraphs": [
+                "A mission is only marked complete when the build verification gate passes. If the build fails (non-zero exit code, compilation errors, missing dependencies), the mission is not complete, and the agent must either fix the code and retry or escalate to human review. The system provides detailed feedback on the build failure: the exit code, the error messages, the lines of code causing the error, and suggested fixes.",
+                "The build verification gate is configurable: teams can set the build to be a hard gate (mission fails if build fails) or a soft gate (mission continues with a build warning). The gate can also be configured to run specific build steps (e.g., only typecheck, only compilation, or full build including tests).",
+                "Build verification results are recorded in the audit trail: the build configuration used, the sandbox environment, the exit code, the output summary, and the mission's decision (retry, escalate, or mark complete despite build warnings). This supports compliance auditing and provides a complete record of why a mission was marked complete even if the build had issues."
+            ]
+        }
+    ],
+    "faq": [
+        {
+            "question": "What is build verification?",
+            "answer": "Automated build pipeline invocation inside clean task sandboxes to verify package resolution and compilation success, guaranteeing deployable binaries before task completion."
+        },
+        {
+            "question": "How does hermetic execution work?",
+            "answer": "Build runs in a fresh, isolated sandbox with declared inputs only, no network access, fixed build tools, and read-only cache. This ensures deterministic, reproducible builds."
+        },
+        {
+            "question": "What happens if the build fails?",
+            "answer": "The mission is not complete. The agent must fix the code and retry or escalate to human review. Detailed feedback is provided including exit code, error messages, and suggested fixes."
+        },
+        {
+            "question": "Can the build gate be configured?",
+            "answer": "Yes. Teams can set the build as a hard gate (mission fails if build fails) or soft gate (mission continues with a warning). The gate can also be configured to run specific build steps."
+        },
+        {
+            "question": "Are build results recorded in the audit trail?",
+            "answer": "Yes. Includes build configuration, sandbox environment, exit code, output summary, and the mission's decision (retry, escalate, mark complete despite warnings)."
+        }
+    ],
+    "sources": [
+        {
+            "label": "CodingAgent source repository",
+            "href": "https://github.com/CodesbyFebin/Coding-Agent"
+        }
+    ]
+};

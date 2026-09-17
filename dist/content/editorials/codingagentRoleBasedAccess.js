@@ -1,0 +1,63 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.codingagentRoleBasedAccess = void 0;
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+exports.codingagentRoleBasedAccess = {
+    "pillarId": "role-based-access",
+    "updated": "2026-09-24",
+    "definition": "Fine-grained RBAC mapping developer identity (SSO, SAML) to permitted agent modes, cloud models, and production tool privileges — restricting sensitive deployment and database write operations to authorized senior staff while granting juniors safe sandbox access.",
+    "sections": [
+        {
+            "heading": "Role-Based Access Control Fundamentals",
+            "paragraphs": [
+                "Role-based access control (RBAC) maps developer identity (via SSO, SAML, or LDAP) to permitted agent modes, cloud models, and production tool privileges. The RBAC system ensures that sensitive operations—such as production deployments, database write operations, and administrative configuration changes—are restricted to authorized senior staff, while granting juniors safe sandbox access for development and testing activities. The RBAC system is essential for organizations that need to balance developer velocity with security and compliance requirements.",
+                "The RBAC system operates at multiple levels: organizational level (policies apply across the entire organization), repository level (policies can be customized per repository), and mission level (policies can be customized per agent mission). This multi-level approach ensures that the right people have the right access at the right granularity.",
+                "The RBAC system integrates with the organization's identity provider (SSO, SAML, LDAP) to use existing role definitions rather than requiring separate role management. This integration reduces administrative overhead and ensures consistency with existing access controls."
+            ]
+        },
+        {
+            "heading": "Permission Mapping and Hierarchy",
+            "paragraphs": [
+                "The RBAC system maps developer identities to permission sets through a hierarchical role structure: junior developer (ALLOW permission for sandbox read/write operations, DENY for production and database access), senior developer (ALLOW permission for production deployments and database modifications with ASK for critical changes), staff engineer (ALLOW permission for most operations with selective ASK gates), and principal engineer/senior staff (ALLOW permission for all operations, including administrative configuration changes). Each role includes: the agent modes permitted (code analysis, refactoring, testing, deployment, administration), the cloud models permitted (approved model providers and names), and the production tool privileges (read/write access to production databases, deployment pipelines, infrastructure-as-code repositories).",
+                "The permission mapping is expressed as rules: \"if user has role staff-engineer and tool is deployment and path is within /prod, then ALLOW if ASK gate passes.\" The RBAC engine evaluates these rules in real-time on every tool invocation, ensuring that permissions are applied consistently and auditabley. All evaluations are logged in the audit trail with the matching rule, the condition results, and the final action (ALLOW/ASK/DENY).",
+                "The RBAC system also supports: role activation (enabling/disabling roles based on employment status), role inheritance (junior roles inheriting certain permissions from senior roles with restrictions), and temporary role elevation (a junior developer can request elevated permissions for a specific mission, which must be approved by a senior staff member)."
+            ]
+        },
+        {
+            "heading": "Integration with Permission System and Audit",
+            "paragraphs": [
+                "The RBAC system integrates with the ALLOW/ASK/DENY permission system described in the core agents framework: the RBAC system determines the agent's role and permitted permission set, and the permission system evaluates every tool invocation against the RBAC-defined permissions. All permission evaluations are logged in the audit trail with: the developer's identity, the RBAC role that was active, the tool invoked, the evaluation result (ALLOW/ASK/DENY), the matching RBAC rule, and the rationale (policy condition that matched).",
+                "The audit trail supports: compliance verification (auditors can verify that the correct RBAC role was active for each mission), role effectiveness analysis (which roles are most/least restrictive, which permissions are most frequently approved/denied), and role optimization (iteratively refining role definitions based on usage patterns). The RBAC system also supports: role versioning (policies are version-controlled with semantic versioning), role change impact analysis (what missions were affected by a role change), and role inheritance tracking (which roles inherit from which parent roles).",
+                "This integration ensures that RBAC works within the organization's overall governance framework: the model might generate a tool invocation, but the RBAC system ensures it only executes when the operator has the appropriate role and the permission system authorizes it."
+            ]
+        }
+    ],
+    "faq": [
+        {
+            "question": "What is role-based access control?",
+            "answer": "Fine-grained RBAC mapping developer identity (SSO, SAML) to permitted agent modes, cloud models, and production tool privileges, restricting sensitive operations to authorized staff while granting juniors safe sandbox access."
+        },
+        {
+            "question": "How are roles hierarchical?",
+            "answer": "junior developer < senior developer < staff engineer < principal engineer/senior staff, with escalating permission levels at each level."
+        },
+        {
+            "question": "How does RBAC integrate with the permission system?",
+            "answer": "The RBAC system determines the agent's role and permitted permission set, and the permission system evaluates every tool invocation against the RBAC-defined permissions. All evaluations are audited."
+        },
+        {
+            "question": "Can roles be temporarily elevated?",
+            "answer": "Yes. A junior developer can request elevated permissions for a specific mission, which must be approved by a senior staff member. This is useful for occasional production access without permanently changing the developer's role."
+        },
+        {
+            "question": "Are RBAC changes audited?",
+            "answer": "Yes. All permission evaluations are logged with the active RBAC role, matching rule, condition results, and final action. RBAC policies are version-controlled with impact analysis and inheritance tracking."
+        }
+    ],
+    "sources": [
+        {
+            "label": "CodingAgent source repository",
+            "href": "https://github.com/CodesbyFebin/Coding-Agent"
+        }
+    ]
+};

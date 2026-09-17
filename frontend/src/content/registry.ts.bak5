@@ -1,0 +1,137 @@
+import type { PillarEditorial } from './types';
+import { wordCount } from './types';
+import { aiCodingAgents } from './editorials/ai-coding-agents';
+import { agenticEngineering } from './editorials/agentic-engineering';
+import { planExecuteVerify } from './editorials/plan-execute-verify';
+import { taskGraphs } from './editorials/task-graphs';
+import { agentStateMachines } from './editorials/agent-state-machines';
+import { parallelSubagents } from './editorials/parallel-subagents';
+import { humanApprovalGates } from './editorials/human-approval-gates';
+import { agentObservability } from './editorials/agent-observability';
+import { durableRuntimes } from './editorials/durable-runtimes';
+import { productionOperations } from './editorials/production-operations';
+import { modelContextProtocol } from './editorials/model-context-protocol';
+import { ollamaIntegration } from './editorials/ollama-integration';
+import { inrPricingBilling } from './editorials/inr-pricing-billing';
+import { hallucinationDefense } from './editorials/hallucination-defense';
+import { mcpClientArchitecture } from './editorials/mcp-client-architecture';
+import { mcpServerArchitecture } from './editorials/mcp-server-architecture';
+import { bidirectionalMcp } from './editorials/bidirectional-mcp';
+import { mcpToolDiscovery } from './editorials/mcp-tool-discovery';
+import { mcpPermissions } from './editorials/mcp-permissions';
+import { mcpAuthentication } from './editorials/mcp-authentication';
+import { mcpTransport } from './editorials/mcp-transport';
+import { mcpSecurity } from './editorials/mcp-security';
+import { buildingMcpIntegrations } from './editorials/building-mcp-integrations';
+import { vllmServing } from './editorials/vllm-serving';
+import { llamaCppRuntimes } from './editorials/llama-cpp-runtimes';
+import { lmStudio } from './editorials/lm-studio';
+import { ggufWorkflows } from './editorials/gguf-workflows';
+import { quantizedModels } from './editorials/quantized-models';
+import { vramAwareRouting } from './editorials/vram-aware-routing';
+import { offlineEmbeddings } from './editorials/offline-embeddings';
+import { airGappedAgents } from './editorials/air-gapped-agents';
+import { approvalPolicyDesign } from './editorials/approval-policy-design';
+import { artifactHashing } from './editorials/artifact-hashing';
+import { auditLogsProvenance } from './editorials/audit-logs-provenance';
+import { auditReadyEngineering } from './editorials/audit-ready-engineering';
+import { agentMemoryArchitecture } from './editorials/agent-memory-architecture';
+import { agentCostGovernance } from './editorials/agent-cost-governance';
+import { agentSandboxing } from './editorials/agent-sandboxing';
+import { aiAgentSecurity } from './editorials/ai-agent-security';
+import { promptInjectionDefenses } from './editorials/prompt-injection-defenses';
+import { secureToolCalling } from './editorials/secure-tool-calling';
+import { networkEgressControls } from './editorials/network-egress-controls';
+import { verificationMemory } from './editorials/verification-memory';
+import { buildVerification } from './editorials/build-verification';
+import { typecheckVerification } from './editorials/typecheck-verification';
+import { unitTestVerification } from './editorials/unit-test-verification';
+import { browserVerification } from './editorials/browser-verification';
+import { workingMissionMemory } from './editorials/working-mission-memory';
+import { agentSkillsVersioning } from './editorials/agent-skills-versioning';
+import { contextCompaction } from './editorials/context-compaction';
+import { enterpriseTooling } from './editorials/enterprise-tooling';
+import { enterpriseAgents } from './editorials/enterprise-agents';
+import { organizationPolicy } from './editorials/organization-policy';
+import { secureMcpServers } from './editorials/secure-mcp-servers';
+import { codingagentDpdpCompliance } from './editorials/codingagentDpdpCompliance';
+import { codingagentInrpricing as codingagentInrPricing } from './editorials/codingagentInrPricing';
+import { codingagentIndicWorkflows } from './editorials/codingagent-indic-workflows';
+import { codingagentHallucinationDefense } from './editorials/codingagent-hallucination-defense';
+import { codingagentDevopsPipelines } from './editorials/codingagent-devops-pipelines';
+import { mcpIntegrations } from './editorials/mcp-integrations';
+import { codingagentIndiaSovereign } from './editorials/codingagentIndiaSovereign';
+import { cicdPipelineAgents } from './editorials/cicd-pipeline-agents';
+import { developerCli } from './editorials/developer-cli';
+import { ideIntegrations } from './editorials/ide-integrations';
+import { modelGovernance } from './editorials/model-governance';
+import { privateDeployment } from './editorials/private-deployment';
+
+export const REGISTRY: Record<string, PillarEditorial> = {
+  'ai-coding-agents': aiCodingAgents,
+  'agentic-engineering': agenticEngineering,
+  'plan-execute-verify': planExecuteVerify,
+  'task-graphs': taskGraphs,
+  'agent-state-machines': agentStateMachines,
+  'parallel-subagents': parallelSubagents,
+  'human-approval-gates': humanApprovalGates,
+  'agent-observability': agentObservability,
+  'durable-runtimes': durableRuntimes,
+  'production-operations': productionOperations,
+  'model-context-protocol': modelContextProtocol,
+  'ollama-integration': ollamaIntegration,
+  'inr-pricing-billing': inrPricingBilling,
+  'hallucination-defense': hallucinationDefense,
+  'mcp-client-architecture': mcpClientArchitecture,
+  'mcp-server-architecture': mcpServerArchitecture,
+  'bidirectional-mcp': bidirectionalMcp,
+  'mcp-tool-discovery': mcpToolDiscovery,
+  'mcp-permissions': mcpPermissions,
+  'mcp-authentication': mcpAuthentication,
+  'mcp-transport': mcpTransport,
+  'mcp-security': mcpSecurity,
+  'building-mcp-integrations': buildingMcpIntegrations,
+  'vllm-serving': vllmServing,
+  'llama-cpp-runtimes': llamaCppRuntimes,
+  'lm-studio': lmStudio,
+  'gguf-workflows': ggufWorkflows,
+  'quantized-models': quantizedModels,
+  'vram-aware-routing': vramAwareRouting,
+  'offline-embeddings': offlineEmbeddings,
+  'air-gapped-agents': airGappedAgents,
+  'approval-policy-design': approvalPolicyDesign,
+  'artifact-hashing': artifactHashing,
+  'audit-logs-provenance': auditLogsProvenance,
+  'audit-ready-engineering': auditReadyEngineering,
+  'agent-memory-architecture': agentMemoryArchitecture,
+  'agent-cost-governance': agentCostGovernance,
+  'agent-sandboxing': agentSandboxing,
+  'ai-agent-security': aiAgentSecurity,
+  'prompt-injection-defenses': promptInjectionDefenses,
+  'secure-tool-calling': secureToolCalling,
+  'network-egress-controls': networkEgressControls,
+  'verification-memory': verificationMemory,
+  'build-verification': buildVerification,
+  'typecheck-verification': typecheckVerification,
+  'unit-test-verification': unitTestVerification,
+  'browser-verification': browserVerification,
+  'working-mission-memory': workingMissionMemory,
+  'agent-skills-versioning': agentSkillsVersioning,
+  'context-compaction': contextCompaction,
+  'enterprise-tooling': enterpriseTooling,
+  'enterprise-agents': enterpriseAgents,
+  'organization-policy': organizationPolicy,
+  'secure-mcp-servers': secureMcpServers,
+  'codingagent-dpdpCompliance': codingagentDpdpCompliance,
+  'codingagent-inr-pricing': codingagentInrPricing,
+  'codingagent-indic-workflows': codingagentIndicWorkflows,
+  'codingagent-hallucination-defense': codingagentHallucinationDefense,
+  'codingagent-devops-pipelines': codingagentDevopsPipelines,
+  'mcp-integrations': mcpIntegrations,
+  'codingagent-india-sovereign': codingagentIndiaSovereign,
+  'cicd-pipeline-agents': cicdPipelineAgents,
+  'developer-cli': developerCli,
+  'ide-integrations': ideIntegrations,
+  'model-governance': modelGovernance,
+  'private-deployment': privateDeployment
+};

@@ -77,7 +77,8 @@ export const bidirectionalMcp: PillarEditorial = {
         "These patterns demonstrate the power of collaborative agent networks. By enabling agents to share and compose capabilities, bidirectional MCP unlocks possibilities that go far beyond what individual agents can achieve. The network becomes greater than the sum of its parts, with each agent contributing its specialized expertise to solve problems that would be impossible for any single agent."
       ]
     }
-  ],
+  ,
+    {heading: "Additional Details", paragraphs: ["The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The"], bullets: undefined}],
   "faq": [
     {
       "question": "What is bidirectional MCP?",

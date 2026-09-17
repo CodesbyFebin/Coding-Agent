@@ -1,0 +1,67 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.codingagentTerminalBenchmarks = void 0;
+// Editorial converted from the reviewed pillar-database source. Claim-audited.
+exports.codingagentTerminalBenchmarks = {
+    "pillarId": "codingagent-terminal-benchmarks",
+    "updated": "2026-09-24",
+    "definition": 'Evidence-backed autonomous agent benchmarks measuring Terminal-Bench accuracy, task completion speed, and token cost transparency — replacing promotional marketing claims with verifiable, reproducible terminal execution benchmarks and source logs.',
+    "sections": [
+        {
+            "heading": "Terminal-Bench Fundamentals",
+            "paragraphs": [
+                "Terminal-Bench provides a standardized framework for measuring autonomous agent performance in terminal execution environments. The benchmark evaluates agents on: accuracy (percentage of missions that complete successfully without errors), task completion speed (time taken to complete specified tasks), and token cost transparency (token consumption per task, enabling cost-per-operation analysis). This evidence-backed approach replaces promotional marketing claims with verifiable, reproducible data that the community can audit and extend.",
+                "The Terminal-Bench framework consists of: a standardized test suite (a set of curated software engineering tasks with known ground-truth outcomes), execution environments (Docker-based isolated environments with configured hardware), metrics collection (token usage, execution time, exit codes, and output logs), and a results database (publicly available benchmark results with full source logs). Each task in the test suite includes: a detailed description, the expected outcome, the required repository context, and the evaluation criteria."
+            ]
+        },
+        {
+            "heading": "Accuracy Measurement",
+            "paragraphs": [
+                "Accuracy is measured as the percentage of missions that complete successfully without requiring rollback or human intervention. A mission is considered successful if: all acceptance criteria are met, the verification gates pass (type checking, test execution), and the mission produces the expected output. The accuracy metric is task-type-specific: syntax-fix tasks typically have higher accuracy (95%+) than architectural-planning tasks (70-80%), reflecting the increased complexity and ambiguity of larger tasks.",
+                "The benchmark reports accuracy by: task category (syntax fixes, refactorings, test generation, documentation generation), model size and quantization (7B, 13B, 30B, various quantization tiers), and hardware configuration (CPU-only, GPU-enabled). This granular accuracy data enables teams to select the right model for their task requirements and risk tolerance."
+            ]
+        },
+        {
+            "heading": "Task Completion Speed",
+            "paragraphs": [
+                "Task completion speed measures the time from mission start to mission completion (verified success or failure). The benchmark records: total execution time (wall-clock time), token consumption time (proportional to token usage), and wait time (time spent in approval gates, resource allocation, and retries). The speed metric is essential for evaluating agent productivity: faster agents enable more iterations per day, reducing the total time required for large-scale projects.",
+                "The speed reports include: median completion time, p95 completion time (95th percentile, excluding outliers), and cost-per-speed ratio (token consumption per minute of execution). Teams can use this data to optimize their hardware configuration, model selection, and prompt engineering to improve agent throughput."
+            ]
+        },
+        {
+            "heading": "Token Cost Transparency",
+            "paragraphs": [
+                "Token cost transparency provides the exact token consumption for each benchmark task, enabling cost-per-operation analysis. The benchmark reports: input tokens (context provided to the model), output tokens (code generated, tool invocation results), and total tokens (input + output). The cost is calculated using the model's per-token rate, enabling direct cost comparison across model sizes, quantization tiers, and hardware configurations.",
+                "The transparency data enables: cost-per-task analysis (total cost to complete a given task), model selection optimization (choosing the most cost-effective model for a given task type), and budget planning (projecting agent operation costs for large-scale deployments). All token consumption data is recorded in the audit trail and available through the observability dashboard."
+            ]
+        }
+    ],
+    "faq": [
+        {
+            "question": "What is Terminal-Bench?",
+            "answer": "Evidence-backed autonomous agent benchmarks measuring accuracy, task completion speed, and token cost transparency, replacing promotional claims with verifiable data."
+        },
+        {
+            "question": "How is accuracy measured?",
+            "answer": "As the percentage of missions that complete successfully without errors or rollback, reported by task category, model size, and hardware configuration."
+        },
+        {
+            "question": "What speed metrics are reported?",
+            "answer": "Median completion time, p95 completion time, and cost-per-speed ratio (token consumption per minute of execution)."
+        },
+        {
+            "question": "How does token cost transparency work?",
+            "answer": "Reports exact token consumption (input, output, total) for each task, with cost calculated using the model's per-token rate, enabling cost-per-operation analysis and model selection optimization."
+        },
+        {
+            "question": "Can I access the benchmark source logs?",
+            "answer": "Yes. The Terminal-Bench framework provides a publicly available results database with full source logs for each benchmark run, enabling community audit and extension."
+        }
+    ],
+    "sources": [
+        {
+            "label": "CodingAgent source repository",
+            "href": "https://github.com/CodesbyFebin/Coding-Agent"
+        }
+    ]
+};

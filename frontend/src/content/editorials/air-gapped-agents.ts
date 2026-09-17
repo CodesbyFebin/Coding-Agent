@@ -87,7 +87,8 @@ export const airGappedAgents: PillarEditorial = {
         "Well-trained personnel are essential for maintaining security and compliance in air-gapped environments."
       ]
     }
-  ],
+  ,
+    {heading: "Additional Details", paragraphs: ["The quick brown fox"], bullets: undefined}],
   "faq": [
     {
       "question": "What are air-gapped agents?",

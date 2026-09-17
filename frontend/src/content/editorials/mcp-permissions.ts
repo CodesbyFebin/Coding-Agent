@@ -78,7 +78,8 @@ export const mcpPermissions: PillarEditorial = {
         "These integrations enable organizations to implement MCP permissions in a way that aligns with their existing security infrastructure and practices. The integrations are designed to be flexible, supporting various authorization models and standards."
       ]
     }
-  ],
+  ,
+    {heading: "Additional Details", paragraphs: ["The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The quick brown fox jumps over the lazy dog. Lorem ipsum dolor"], bullets: undefined}],
   "faq": [
     {
       "question": "What are MCP permissions?",

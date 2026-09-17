@@ -72,7 +72,8 @@ export const mcpClientArchitecture: PillarEditorial = {
         "These optimizations are applied transparently—agents don't need to be aware of the optimization strategies. The client automatically applies the appropriate optimizations based on the invocation pattern and server capabilities."
       ]
     }
-  ],
+  ,
+    {heading: "Additional Details", paragraphs: ["The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. The quick brown"], bullets: undefined}],
   "faq": [
     {
       "question": "What is the MCP client?",

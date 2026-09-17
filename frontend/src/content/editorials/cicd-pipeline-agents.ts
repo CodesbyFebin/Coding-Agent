@@ -47,7 +47,8 @@ export const cicdPipelineAgents: PillarEditorial = {
         "The verification aspect further includes: cryptographic signature of operator authorization recorded in the mission ledger, audit logging of all approval gate interactions, and escalation paths when human operators are unavailable or when the agent encounters uncertain situations. By combining autonomous efficiency with ironclad safety controls, CICD pipeline agents enable organizations to accelerate delivery while maintaining the compliance and governance standards required in regulated industries. The combination of autonomous execution with human oversight creates a balanced approach that maximizes productivity while minimizing risk. The ironclad safety controls ensure that the organization cannot accidentally deploy broken or insecure code, even with significant autonomous operation."
       ]
     }
-  ],
+  ,
+    {heading: "Additional Details", paragraphs: ["The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod"], bullets: undefined}],
   "faq": [
     {
       "question": "What are CICD pipeline agents?",
