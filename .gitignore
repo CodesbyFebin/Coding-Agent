@@ -6,6 +6,8 @@ node_modules/
 # Build output
 frontend/dist/
 frontend/dist-ssr/
+web/.next/
+web/out/
 *.local
 
 # Testing artifacts
@@ -45,10 +47,6 @@ pnpm-debug.log*
 
 # Vercel
 .vercel/
-
-# Supabase backend artifacts
-supabase/.branches/
-supabase/.temp/
 
 # Cache
 .cache/

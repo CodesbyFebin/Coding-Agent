@@ -50,6 +50,40 @@ jobs:
           grep -q "PILLAR DIRECTORY" dist/pillars/index.html
           grep -q "Task decomposition" dist/ai-coding-agents/index.html
           grep -q "Questions and answers" dist/ai-coding-agents/index.html
-          grep -q "noindex, follow" dist/ollama-integration/index.html
           grep -q "rel=\"canonical\" href=\"https://codingagent.in/dpdp-compliance\"" dist/dpdp-compliance/index.html
-          grep -c "<loc>" dist/sitemap.xml | grep -qx "28"
+          grep -c "<loc>" dist/sitemap.xml | grep -qx "84"
+          # noindex/isContentIndexable regression coverage lives in
+          # src/content/registry.test.ts (unit test, above) rather than a
+          # grep pinned to a specific pillar page here: that pillar's
+          # content crossing the publish bar is expected to happen over
+          # time and isn't itself a regression.
+
+  backend-verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Syntax check every source file
+        run: find src -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Boot smoke test (require + route registration, no live DB)
+        env:
+          PORT: "3000"
+          NODE_ENV: test
+          DATABASE_URL: postgres://user:pass@localhost:5432/db
+          JWT_SECRET: ci-smoke-test-secret
+          CORS_ORIGINS: http://localhost:5173
+          OLLAMA_BASE_URL: http://localhost:11434
+        run: node -e "require('./src/server.js')"
