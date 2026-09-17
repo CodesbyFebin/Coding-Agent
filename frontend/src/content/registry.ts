@@ -80,7 +80,7 @@ import { codingagentUseCases } from './editorials/codingagent-use-cases';
 import { codingagentDocs } from './editorials/codingagent-docs';
 import { codingagentGuides } from './editorials/codingagent-guides';
 import { codingagentKnowledgeGraph } from './editorials/codingagent-knowledge-graph';
-import { codingagentBlog } from './editorials/codingagent-blog';
+import { codingBlog } from './editorials/codingagent-blog';
 import { codingagentPillarDirectory } from './editorials/codingagent-pillar-directory';
 import { codingagentTerminalBenchmarks } from './editorials/codingagent-terminal-benchmarks';
 
@@ -169,7 +169,7 @@ export const REGISTRY: Record<string, PillarEditorial> = {
   [codingagentDocs.pillarId]: codingagentDocs,
   [codingagentGuides.pillarId]: codingagentGuides,
   [codingagentKnowledgeGraph.pillarId]: codingagentKnowledgeGraph,
-  [codingagentBlog.pillarId]: codingagentBlog,
+  [codingBlog.pillarId]: codingBlog,
   [codingagentPillarDirectory.pillarId]: codingagentPillarDirectory,
   [codingagentTerminalBenchmarks.pillarId]: codingagentTerminalBenchmarks,
 };
