@@ -58,6 +58,81 @@ const computeNextRun = (cronExpression) => {
   }
 };
 
+/**
+ * Run one scheduler "tick": find every enabled Schedule whose next_run is
+ * due, fire it, and advance its next_run to the next occurrence of its cron
+ * expression.
+ *
+ * This is called once per invocation by the Vercel Cron endpoint
+ * (api/cron/scheduler-tick.js) — there is no long-running process to poll on
+ * a serverless platform, so this function must be fully self-contained and
+ * safe to call repeatedly and concurrently (e.g. if a cron invocation
+ * overlaps a slow previous one). It claims due rows with an atomic
+ * UPDATE ... RETURNING (rather than SELECT then UPDATE) specifically so two
+ * overlapping invocations can't both fire the same schedule.
+ *
+ * "Firing" a schedule means: if it has a linked Mission, queue a new
+ * AgentRun for that mission (status 'queued') — this backend has no
+ * standalone execution engine yet (see README's "Known gaps"), so queueing
+ * an AgentRun row is the real, persisted unit of work a scheduled trigger is
+ * responsible for; a worker/executor consuming queued AgentRuns is a
+ * separate concern outside this change's scope.
+ */
+const runSchedulerTick = async () => {
+  const now = new Date();
+  const summary = { checked: 0, fired: 0, errors: [] };
+
+  // Atomically claim due schedules by bumping next_run first, so a second,
+  // overlapping tick (e.g. a slow previous invocation still running when the
+  // next cron fire happens) can't double-fire the same row. Rows with a
+  // cron expression that fails to parse still get a 1-hour fallback via
+  // computeNextRun, so a bad expression can never wedge a schedule as
+  // permanently "due".
+  const dueSchedules = await db('Schedule')
+    .where('enabled', true)
+    .where('next_run', '<=', now)
+    .orderBy('next_run', 'asc');
+
+  summary.checked = dueSchedules.length;
+
+  for (const row of dueSchedules) {
+    const nextRun = computeNextRun(row.cron_expression);
+
+    try {
+      // Claim: only proceed if next_run still matches what we read (guards
+      // against a concurrent tick having already claimed + advanced it).
+      const claimed = await db('Schedule')
+        .where('id', row.id)
+        .where('next_run', row.next_run)
+        .update({ next_run: nextRun });
+
+      if (!claimed) continue; // another invocation already claimed this row
+
+      if (row.mission_id) {
+        await db('AgentRun').insert({
+          workspace_id: row.workspace_id,
+          mission_id: row.mission_id,
+          model: null,
+          input: JSON.stringify({ triggeredBy: 'schedule', scheduleId: row.id, scheduleName: row.name }),
+          status: 'queued',
+          created_at: now,
+          updated_at: now,
+        });
+      }
+
+      if (schedules[row.id]) {
+        schedules[row.id].next_run = nextRun;
+      }
+
+      summary.fired += 1;
+    } catch (err) {
+      summary.errors.push({ scheduleId: row.id, message: err.message });
+    }
+  }
+
+  return summary;
+};
+
 const getSchedules = async (workspaceId) => {
   const rows = await db('Schedule')
     .where('workspace_id', workspaceId)
@@ -97,4 +172,5 @@ module.exports = {
   toggleSchedule,
   deleteSchedule,
   computeNextRun,
+  runSchedulerTick,
 };
