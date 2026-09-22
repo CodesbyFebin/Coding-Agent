@@ -58,6 +58,41 @@ jobs:
           # content crossing the publish bar is expected to happen over
           # time and isn't itself a regression.
 
+  console-verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: console
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # `npm ci` currently rejects this lockfile (a pre-existing ajv version
+      # mismatch shipped by the Grok app-builder tooling, unrelated to this
+      # integration) — `npm install` is what step 3 of the integration was
+      # validated with locally, so CI matches that.
+      - name: Install
+        run: npm install
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
+
+      # No DATABASE_URL is set here (auth/DB are disabled by design — see
+      # console/.grok/app-env.json and console/README.md), so `npm run
+      # build`'s db:migrate step detects that and skips itself (exit 0) the
+      # same way it would on a Vercel deploy with no DATABASE_URL configured.
+      - name: Build
+        run: npm run build
+
   backend-verify:
     runs-on: ubuntu-latest
     defaults:

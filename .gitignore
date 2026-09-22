@@ -63,3 +63,16 @@ pnpm-debug.log*
 
 # Claude Code local session/worktree state
 .claude/
+
+# console/ (app.codingagent.in) — Grok app-builder dev/build artifacts.
+# node_modules/ and .vercel/ above already cover console/node_modules/ and
+# console/.vercel/ (Nitro's vercel preset builds to console/.vercel/output/,
+# the standard Vercel Build Output API location).
+console/.tanstack/
+
+# console/ ships real screenshots, favicon and PWA-install PNGs (product
+# content, not build artifacts) — carve all of console/ out of the blanket
+# *.png rule above. Safe as a blanket allow: console/'s only generated
+# output lives under console/.vercel/ and console/node_modules/, both
+# already ignored above, so no build-artifact PNG can leak back in here.
+!console/**/*.png

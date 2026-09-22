@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "CodingAgent",
+      "hasCanvas": false,
+      "bodyTextLen": 837,
+      "bodyTextHash": "3ddcc46b2fa8c35d12fe926ac78ab82f6e1ec49f846b442b8c3ec96348d5fa2e",
+      "bodyTextPrefix": "Work Chat New task Dashboard Plugins Skills Scheduled Tasks WebB",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "CodingAgent",
+      "hasCanvas": false,
+      "bodyTextLen": 748,
+      "bodyTextHash": "80732e0e3ad0bec5b085e588c279bcad849812077b5348b0c6e99cfef6f5f043",
+      "bodyTextPrefix": "Let's take something off your list Beta preview Describe a job P",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}
