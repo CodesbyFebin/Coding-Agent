@@ -70,7 +70,9 @@ pnpm-debug.log*
 # the standard Vercel Build Output API location).
 console/.tanstack/
 
-# console/ ships real screenshots and favicon PNGs (product content, not
-# build artifacts) — carve them out of the blanket *.png rule above.
-!console/screenshots/*.png
-!console/.grok/*.png
+# console/ ships real screenshots, favicon and PWA-install PNGs (product
+# content, not build artifacts) — carve all of console/ out of the blanket
+# *.png rule above. Safe as a blanket allow: console/'s only generated
+# output lives under console/.vercel/ and console/node_modules/, both
+# already ignored above, so no build-artifact PNG can leak back in here.
+!console/**/*.png
