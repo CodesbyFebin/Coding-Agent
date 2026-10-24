@@ -16,7 +16,7 @@ if (!process.env.DATABASE_URL || process.env.LIVE_QUALIFICATION !== 'disposable'
   test('apply all six migrations to disposable PostgreSQL',async()=>{
     // Supabase-style migrations reference roles absent from vanilla Postgres.
     for (const role of ['anon','authenticated','service_role']) {
-      await db.raw(`DO $ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${role}') THEN CREATE ROLE ${role} NOLOGIN; END IF; END $;`);
+      await db.raw(`CREATE ROLE ${role} NOLOGIN`);
     }
     for(const file of files) await db.raw(fs.readFileSync(path.join(migrationDir,file),'utf8'));
     assert.equal(files.length,6);
