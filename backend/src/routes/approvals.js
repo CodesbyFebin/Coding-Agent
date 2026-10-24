@@ -72,7 +72,7 @@ router.post('/:approvalId/decide', async (req, res) => {
   if (!approvalRow) return res.status(404).json({ error: 'Approval not found' });
 
   const membership = await requireMembership(approvalRow.workspace_id, req.userId);
-  if (!membership) return res.status(403).json({ error: 'Access denied' });
+  if (!membership || !['owner', 'admin'].includes(membership.role)) return res.status(403).json({ error: 'Approver role required' });
 
   const result = await approvalsService.decideApproval(approvalId, decision, req.userId);
   if (!result.success) return res.status(409).json({ error: result.error });
