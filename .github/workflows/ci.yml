@@ -181,3 +181,9 @@ jobs:
       - run: npm install --ignore-scripts
       - run: node --check runner.js
       - run: npm test
+      - name: Pull pinned-family test runtime
+        run: docker pull node:22-alpine
+      - name: Real isolated Docker execution
+        env:
+          WORKER_DOCKER_TEST: "1"
+        run: node --test test/docker.integration.js
