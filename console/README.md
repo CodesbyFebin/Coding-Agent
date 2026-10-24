@@ -23,24 +23,13 @@ own migration set under `migrations/auth/`).
 build-flag file `.grok/app-env.json`. `AGENTS.md` is Grok Build's own sandbox
 contract, not user-facing documentation.
 
-## Auth and database are currently disabled — by design
+## Authentication and persistence
 
-`.grok/app-env.json` ships:
+The console now enables Better Auth email/password sessions in `.grok/app-env.json` (`VITE_AUTH_ENABLED=true`). The `/login` route supports sign-in and registration. Better Auth identity/session tables and per-user workspace snapshots are migrated from `migrations/0001_auth.sql` and `migrations/0001_workspace.sql`.
 
-```json
-{ "VITE_AUTH_ENABLED": "false", "deploy": { "database": false } }
-```
+A real deployment **must** configure `DATABASE_URL`, `BETTER_AUTH_URL`, and `BETTER_AUTH_SECRET`. Production Vercel builds fail closed if any are missing. Without `DATABASE_URL`, local previews use ephemeral PGLite and cannot claim durable persistence. The app still uses a separate identity domain from the Express workspace backend; account federation is not complete.
 
-Sign-in and the Postgres-backed data layer are switched off for this initial
-integration. Wiring up real auth and a real database is an explicit, separate
-follow-up — not part of getting this app into the repo. This app's Kysely/`pg`
-layer and `migrations/` are unrelated to, and not connected to, this repo's
-Neon schema under `neon/migrations/`.
-
-`npm run build` runs `npm run db:migrate` (`scripts/migrate.mjs`) as its last
-step. With no `DATABASE_URL` set, that step logs and exits 0 (a no-op) — the
-PGLite fallback applies the same migration files at server start instead, so
-the build itself never requires a live database.
+Workbench sessions and cron entries are now stored per authenticated user through server functions with optimistic revision checks. Model provider keys are not included in the server snapshot. The app does not claim safe hosted code execution or production qualification until staging gates pass.
 
 ## Scripts
 
