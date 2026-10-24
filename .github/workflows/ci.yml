@@ -125,3 +125,36 @@ jobs:
           CORS_ORIGINS: http://localhost:5173
           OLLAMA_BASE_URL: http://localhost:11434
         run: node -e "require('./src/server.js')"
+
+  postgres-integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: qualification
+          POSTGRES_PASSWORD: qualification-only
+          POSTGRES_DB: codingagent_qualification
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U qualification -d codingagent_qualification"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: postgres://qualification:qualification-only@127.0.0.1:5432/codingagent_qualification
+      JWT_SECRET: ci-only-disposable-test-secret-please-do-not-reuse
+      LIVE_QUALIFICATION: disposable
+      DIRECTORY_ADMIN_USER_IDS: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - name: Apply real migrations and test tenant isolation
+        run: node --test test/postgres.integration.js
