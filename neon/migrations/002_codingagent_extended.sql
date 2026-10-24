@@ -308,6 +308,19 @@ create trigger touch_mcp_servers_updated_at before update on public.mcp_servers 
 create trigger touch_policy_rules_updated_at before update on public.policy_rules for each row execute function public.touch_updated_at();
 create trigger touch_webhooks_updated_at before update on public.webhooks for each row execute function public.touch_updated_at();
 
+-- Explicitly enable RLS; defining policies alone never activates it.
+alter table public.models enable row level security;
+alter table public.agents enable row level security;
+alter table public.model_invocations enable row level security;
+alter table public.mcp_servers enable row level security;
+alter table public.policy_rules enable row level security;
+alter table public.verification_runs enable row level security;
+alter table public.evidence enable row level security;
+alter table public.tool_invocations enable row level security;
+alter table public.usage_records enable row level security;
+alter table public.audit_logs enable row level security;
+alter table public.webhooks enable row level security;
+
 -- RLS policies for new tables
 
 -- Models: project members can access
