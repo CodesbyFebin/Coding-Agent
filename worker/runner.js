@@ -1,6 +1,6 @@
 'use strict';
 const { Pool } = require('pg');
-const { mkdtemp, writeFile, mkdir, rm } = require('node:fs/promises');
+const { mkdtemp, writeFile, mkdir, rm, chmod } = require('node:fs/promises');
 const { tmpdir } = require('node:os');
 const path = require('node:path');
 const { execFile } = require('node:child_process');
@@ -23,14 +23,15 @@ async function execute(input) {
   if (bytes>500000) throw new Error('Input exceeds 500 KB');
   const dir=await mkdtemp(path.join(tmpdir(),'codingagent-job-'));
   try {
+    await chmod(dir,0o755);
     for (const [name,content] of Object.entries(input.files)) {
       if (typeof content!=='string') throw new Error('File content must be text');
       const full=path.join(dir,safeFilename(name));
       await mkdir(path.dirname(full),{recursive:true});
-      await writeFile(full,content,{flag:'wx',mode:0o600});
+      await writeFile(full,content,{flag:'wx',mode:0o644});
     }
     const image=input.command==='node-check'?'node:22-alpine':'python:3.13-alpine';
-    const args=['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--pids-limit','64','--memory','256m','--cpus','0.5','--user','65534:65534','--tmpfs','/tmp:rw,noexec,nosuid,size=16m','--mount',`type=bind,source=${dir},target=/work,readonly`,image,...command];
+    const args=['run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--pids-limit','64','--memory','256m','--cpus','0.5','--user','65534:65534','--tmpfs','/tmp:rw,noexec,nosuid,size=16m','--env','PYTHONPYCACHEPREFIX=/tmp/pycache','--mount',`type=bind,source=${dir},target=/work,readonly`,image,...command];
     const started=Date.now();
     try {
       const result=await runFile('docker',args,{timeout:30000,maxBuffer:256000});
@@ -45,6 +46,7 @@ async function once(pool) {
   let run;
   try {
     await client.query('BEGIN');
+    await client.query(`UPDATE "AgentRun" SET status='queued',updated_at=NOW() WHERE status='running' AND started_at < NOW() - INTERVAL '5 minutes' AND input ? 'command'`);
     const claimed=await client.query(`SELECT * FROM "AgentRun" WHERE status='queued' AND input ? 'command' ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1`);
     run=claimed.rows[0];
     if(run) await client.query(`UPDATE "AgentRun" SET status='running',started_at=NOW(),updated_at=NOW() WHERE id=$1`,[run.id]);
