@@ -110,6 +110,9 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Directory governance tests
+        run: npm test
+
       - name: Syntax check every source file
         run: find src -name '*.js' -print0 | xargs -0 -n1 node --check
 
