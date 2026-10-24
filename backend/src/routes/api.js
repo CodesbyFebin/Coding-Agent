@@ -9,6 +9,7 @@ const scheduleRoutes = require('./schedules');
 const approvalRoutes = require('./approvals');
 const mcpRoutes = require('./mcp');
 const verificationsRoutes = require('./verifications');
+const directoryRoutes = require('./directory');
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.use('/schedules', scheduleRoutes);
 router.use('/approvals', approvalRoutes);
 router.use('/mcp', mcpRoutes);
 router.use('/verifications', verificationsRoutes);
+router.use('/directory', directoryRoutes);
 
 module.exports = router;
