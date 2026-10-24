@@ -158,6 +158,15 @@ jobs:
       - run: npm ci
       - name: Apply real migrations and test tenant isolation
         run: node --test test/postgres.integration.js
+      - name: Install console dependencies
+        working-directory: console
+        run: npm install --ignore-scripts
+      - name: Apply console auth and workspace migrations
+        working-directory: console
+        run: npm run db:migrate
+      - name: Test console tenant-state isolation
+        working-directory: console
+        run: node --test scripts/staging-db.test.mjs
 
   worker-unit:
     runs-on: ubuntu-latest
