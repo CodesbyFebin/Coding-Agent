@@ -223,7 +223,5 @@ create policy memory_member_all on public.memory_entries for all to authenticate
 create policy skills_member_all on public.skills for all to authenticated using(public.is_project_member(project_id)) with check(public.is_project_member(project_id) and created_by=current_setting('app.user_id')::uuid);
 create policy schedules_member_all on public.schedules for all to authenticated using(public.is_project_member(project_id)) with check(public.is_project_member(project_id) and created_by=current_setting('app.user_id')::uuid);
 
-do $$ begin
-  -- Publication handled via Neon WebSocket for real-time updates and schemaname='public' and tablename='mission_events') then
-  end if;
-end $$;
+-- Realtime publication is provisioned separately by the hosting operator.
+-- Do not execute platform-specific publication DDL in this portable schema.
