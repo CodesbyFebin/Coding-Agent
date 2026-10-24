@@ -337,7 +337,7 @@ create policy evidence_member_read on public.evidence for select to authenticate
 create policy evidence_member_insert on public.evidence for insert to authenticated with check(created_by=current_setting('app.current_user_id')::uuid);
 
 -- Artifacts: project members
-create policy artifacts_member_read on public.artifacts for select to authenticated using(public.is_project_member(project_id));
+create policy artifacts_member_read on public.artifacts for select to authenticated using(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
 
 -- Usage records: project members
 create policy usage_records_member_read on public.usage_records for select to authenticated using(public.is_project_member(project_id));
@@ -349,4 +349,4 @@ create policy audit_logs_member_read on public.audit_logs for select to authenti
 create policy webhooks_member_all on public.webhooks for all to authenticated using(public.is_project_member(project_id)) with check(public.is_project_member(project_id));
 
 -- Event streaming handled via Neon WebSocket
-create policy mission_events_realtime on public.mission_events for select to authenticated;
+create policy mission_events_realtime on public.mission_events for select to authenticated using(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
