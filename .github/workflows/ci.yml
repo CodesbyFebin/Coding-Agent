@@ -158,3 +158,17 @@ jobs:
       - run: npm ci
       - name: Apply real migrations and test tenant isolation
         run: node --test test/postgres.integration.js
+
+  worker-unit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --ignore-scripts
+      - run: node --check runner.js
+      - run: npm test
