@@ -126,7 +126,7 @@ const trustedOrigins: string[] = explicitBaseURL
     ];
 
 const databaseUrl = env("DATABASE_URL");
-if (process.env.NODE_ENV === "production" && (!databaseUrl || !env("BETTER_AUTH_SECRET") || !env("BETTER_AUTH_URL"))) {
+if (process.env.VERCEL_ENV === "production" && (!databaseUrl || !env("BETTER_AUTH_SECRET") || !env("BETTER_AUTH_URL"))) {
   throw new Error("Production console requires DATABASE_URL, BETTER_AUTH_SECRET, and BETTER_AUTH_URL");
 }
 
