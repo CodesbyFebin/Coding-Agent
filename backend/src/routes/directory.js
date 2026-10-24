@@ -52,6 +52,15 @@ router.post('/agents', requireAuth, requireAdmin, async (req, res, next) => {
     res.status(201).json(agent);
   } catch (err) { next(err); }
 });
+router.patch('/agents/:slug', requireAuth, requireAdmin, async (req, res, next) => {
+  try {
+    const parsed = profileSchema.partial().safeParse(req.body);
+    if (!parsed.success || Object.keys(parsed.data || {}).length === 0) return res.status(400).json({error:'Valid update fields required'});
+    const [agent] = await db('directory_agents').where({slug:req.params.slug}).update({...parsed.data,updated_at:new Date()}).returning('*');
+    if (!agent) return res.status(404).json({error:'Agent not found'});
+    res.json(agent);
+  } catch (err) { next(err); }
+});
 router.post('/agents/:slug/evidence', requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const parsed = evidenceSchema.safeParse(req.body);
