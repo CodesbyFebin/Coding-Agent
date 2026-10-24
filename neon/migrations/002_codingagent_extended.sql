@@ -315,7 +315,7 @@ create policy models_member_read on public.models for select to authenticated us
 
 -- Agents: project members with appropriate permissions
 create policy agents_member_read on public.agents for select to authenticated using(public.is_project_member(project_id));
-create policy agents_member_insert on public.agents for insert to authenticated using(public.is_project_member(project_id)) with check(created_by=current_setting('app.current_user_id')::uuid);
+create policy agents_member_insert on public.agents for insert to authenticated with check(public.is_project_member(project_id) and created_by=current_setting('app.current_user_id', true)::uuid);
 
 -- Model invocations: project members
 create policy model_invocations_member_read on public.model_invocations for select to authenticated using(public.is_project_member(project_id));
@@ -334,7 +334,7 @@ create policy verification_runs_member_read on public.verification_runs for sele
 
 -- Evidence: project members can read, only creators can insert
 create policy evidence_member_read on public.evidence for select to authenticated using(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
-create policy evidence_member_insert on public.evidence for insert to authenticated with check(created_by=current_setting('app.current_user_id')::uuid);
+create policy evidence_member_insert on public.evidence for insert to authenticated with check(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
 
 -- Artifacts: project members
 create policy artifacts_member_read on public.artifacts for select to authenticated using(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
