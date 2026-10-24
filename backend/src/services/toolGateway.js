@@ -46,11 +46,11 @@ const setToolPolicy = async (workspaceId, toolName, policy, riskLevel, requiredA
  * risk -- fail closed.
  */
 const evaluatePolicy = async (workspaceId, toolName, toolType, context = {}) => {
-  const policy = toolPolicies[workspaceId]?.[toolName];
+  const policy = toolPolicies[workspaceId]?.[toolName] || await db('ToolPolicy').where({workspace_id:workspaceId,tool_name:toolName}).first();
   if (!policy) return { decision: 'DENY', riskLevel: 'HIGH', requiresApproval: false, riskScore: 3 };
 
   const riskScore = policyHierarchy[policy.riskLevel] || 0;
-  const requiresApproval = policy.requiredApproval;
+  const requiresApproval = policy.requiredApproval ?? policy.requires_approval;
   const riskLevel = policy.riskLevel;
 
   let decision;

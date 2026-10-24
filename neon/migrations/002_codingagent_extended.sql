@@ -68,26 +68,6 @@ create index if not exists model_invocations_project_idx on public.model_invocat
 create index if not exists model_invocations_agent_idx on public.model_invocations(agent_id);
 create index if not exists model_invocations_mission_idx on public.model_invocations(mission_id);
 
--- Historical tool invocation tracking
-create table if not exists public.tool_invocations (
-  id uuid primary key default gen_random_uuid(),
-  project_id uuid not null references public.projects(id) on delete cascade,
-  agent_id uuid references public.agents(id) on delete set null,
-  mission_id uuid references public.missions(id) on delete set null,
-  task_id uuid references public.tasks(id) on delete set null,
-  tool_name text not null,
-  tool_type text not null default 'SYSTEM',
-  policy_rule_id uuid references public.policy_rules(id) on delete set null,
-  approval_id uuid references public.approvals(id) on delete set null,
-  execution_result jsonb,
-  execution_error text,
-  evidence_id uuid references public.evidence(id) on delete set null,
-  created_at timestamptz not null default now()
-);
-
-create index if not exists tool_invocations_project_idx on public.tool_invocations(project_id);
-create index if not exists tool_invocations_agent_idx on public.tool_invocations(agent_id);
-
 -- MCP server configuration
 create table if not exists public.mcp_servers (
   id uuid primary key default gen_random_uuid(),
@@ -162,6 +142,28 @@ create table if not exists public.evidence (
 create index if not exists evidence_mission_idx on public.evidence(mission_id);
 create index if not exists evidence_agent_idx on public.evidence(agent_id);
 
+-- Historical tool invocation tracking
+create table if not exists public.tool_invocations (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.projects(id) on delete cascade,
+  agent_id uuid references public.agents(id) on delete set null,
+  mission_id uuid references public.missions(id) on delete set null,
+  task_id uuid references public.tasks(id) on delete set null,
+  tool_name text not null,
+  tool_type text not null default 'SYSTEM',
+  policy_rule_id uuid references public.policy_rules(id) on delete set null,
+  approval_id uuid references public.approvals(id) on delete set null,
+  execution_result jsonb,
+  execution_error text,
+  evidence_id uuid references public.evidence(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists tool_invocations_project_idx on public.tool_invocations(project_id);
+create index if not exists tool_invocations_agent_idx on public.tool_invocations(agent_id);
+
+
+
 -- Artifact metadata
 create table if not exists public.artifacts (
   id uuid primary key default gen_random_uuid(),
@@ -180,7 +182,7 @@ create table if not exists public.artifacts (
   created_at timestamptz not null default now()
 );
 
-create index if not exists artifacts_project_idx on public.artifacts(project_id);
+-- Existing v1 artifacts are mission-scoped (no project_id); tenancy joins missions.
 create index if not exists artifacts_mission_idx on public.artifacts(mission_id);
 
 -- Enhanced memory entries
@@ -306,6 +308,19 @@ create trigger touch_mcp_servers_updated_at before update on public.mcp_servers 
 create trigger touch_policy_rules_updated_at before update on public.policy_rules for each row execute function public.touch_updated_at();
 create trigger touch_webhooks_updated_at before update on public.webhooks for each row execute function public.touch_updated_at();
 
+-- Explicitly enable RLS; defining policies alone never activates it.
+alter table public.models enable row level security;
+alter table public.agents enable row level security;
+alter table public.model_invocations enable row level security;
+alter table public.mcp_servers enable row level security;
+alter table public.policy_rules enable row level security;
+alter table public.verification_runs enable row level security;
+alter table public.evidence enable row level security;
+alter table public.tool_invocations enable row level security;
+alter table public.usage_records enable row level security;
+alter table public.audit_logs enable row level security;
+alter table public.webhooks enable row level security;
+
 -- RLS policies for new tables
 
 -- Models: project members can access
@@ -313,7 +328,7 @@ create policy models_member_read on public.models for select to authenticated us
 
 -- Agents: project members with appropriate permissions
 create policy agents_member_read on public.agents for select to authenticated using(public.is_project_member(project_id));
-create policy agents_member_insert on public.agents for insert to authenticated using(public.is_project_member(project_id)) with check(created_by=current_setting('app.current_user_id')::uuid);
+create policy agents_member_insert on public.agents for insert to authenticated with check(public.is_project_member(project_id));
 
 -- Model invocations: project members
 create policy model_invocations_member_read on public.model_invocations for select to authenticated using(public.is_project_member(project_id));
@@ -332,10 +347,10 @@ create policy verification_runs_member_read on public.verification_runs for sele
 
 -- Evidence: project members can read, only creators can insert
 create policy evidence_member_read on public.evidence for select to authenticated using(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
-create policy evidence_member_insert on public.evidence for insert to authenticated with check(created_by=current_setting('app.current_user_id')::uuid);
+create policy evidence_member_insert on public.evidence for insert to authenticated with check(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
 
 -- Artifacts: project members
-create policy artifacts_member_read on public.artifacts for select to authenticated using(public.is_project_member(project_id));
+create policy artifacts_member_read on public.artifacts for select to authenticated using(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));
 
 -- Usage records: project members
 create policy usage_records_member_read on public.usage_records for select to authenticated using(public.is_project_member(project_id));
@@ -347,4 +362,4 @@ create policy audit_logs_member_read on public.audit_logs for select to authenti
 create policy webhooks_member_all on public.webhooks for all to authenticated using(public.is_project_member(project_id)) with check(public.is_project_member(project_id));
 
 -- Event streaming handled via Neon WebSocket
-create policy mission_events_realtime on public.mission_events for select to authenticated;
+create policy mission_events_realtime on public.mission_events for select to authenticated using(exists(select 1 from public.missions m where m.id=mission_id and public.is_project_member(m.project_id)));

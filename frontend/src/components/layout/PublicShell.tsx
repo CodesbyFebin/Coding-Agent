@@ -66,6 +66,7 @@ export const PublicShell = () => (
         textTransform="uppercase"
       >
         {[
+          ['/agents', 'Agents'],
           ['/platform', 'Platform'],
           ['/agent-modes', 'Modes'],
           ['/local-runtimes', 'Runtimes'],
@@ -177,6 +178,7 @@ const PublicFooter = () => (
           Sovereign · Local-LLM-First · MCP-Native
         </Text>
         <Flex gap={4} flexWrap="wrap" fontFamily="mono" fontSize="11px" fontWeight={700}>
+          <RouterLink to="/agents" style={{ color: '#8b99a4' }}>Agent Directory</RouterLink>
           <RouterLink to="/platform" style={{ color: '#8b99a4' }}>
             Platform
           </RouterLink>

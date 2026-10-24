@@ -35,7 +35,8 @@ export const HomePage = () => {
 };
 
 const CTAS = [
-  { href: '/pillars', label: 'Explore the Pillars', primary: true, internal: true },
+  { href: '/agents', label: 'Explore Agent Directory', primary: true, internal: true },
+  { href: '/pillars', label: 'Explore the Pillars', primary: false, internal: true },
   { href: 'https://app.codingagent.in/', label: '▶ Launch Console', primary: false, internal: false },
   {
     href: 'https://github.com/CodesbyFebin/Coding-Agent',

@@ -1,0 +1,1 @@
+{"name":"codingagent-isolated-worker","private":true,"version":"0.1.0","type":"commonjs","scripts":{"start":"node runner.js","test":"node --test test/*.test.js"},"dependencies":{"pg":"^8.12.0"}}

@@ -26,6 +26,7 @@ import { AgentModesPage } from '../features/knowledge/AgentModesPage';
 import { LocalRuntimesPage } from '../features/knowledge/LocalRuntimesPage';
 import { SecurityMatrixPage } from '../features/knowledge/SecurityMatrixPage';
 import { FaqPage } from '../features/knowledge/FaqPage';
+import { AgentDirectoryPage } from '../features/directory/AgentDirectoryPage';
 import { NotFoundPage } from '../components/NotFoundPage';
 
 export const AppRoutes = () => (
@@ -42,6 +43,7 @@ export const AppRoutes = () => (
 
     {/* Public knowledge surfaces: indexable, crawlable, no auth gate */}
     <Route element={<PublicShell />}>
+      <Route path="/agents" element={<AgentDirectoryPage />} />
       <Route path="/pillars" element={<PillarsDirectoryPage />} />
       <Route path="/pillars/:slug" element={<PillarDetailPage />} />
       <Route path="/platform" element={<PlatformPage />} />

@@ -114,6 +114,7 @@ const updateAgentRun = async (req, res) => {
   try {
     const { workspaceId, runId } = req.params;
     const { status, output, error: outputError } = req.body;
+    if (!['queued','running','completed','failed','cancelled'].includes(status)) return res.status(400).json({ error: 'Invalid status' });
     const userId = req.userId;
 
     // Check workspace access
@@ -131,6 +132,9 @@ const updateAgentRun = async (req, res) => {
 
     if (!run) return res.status(404).json({ error: 'Agent run not found' });
 
+    // User-facing API may only cancel a queued/running execution. Completion must be worker-owned.
+    if (status !== 'cancelled') return res.status(403).json({ error: 'Execution state updates require worker identity' });
+    if (!['queued', 'running'].includes(run.status)) return res.status(409).json({ error: 'Run is not cancellable' });
     const updateData = { status, updated_at: new Date() };
     if (output) updateData.output = JSON.stringify(output);
 

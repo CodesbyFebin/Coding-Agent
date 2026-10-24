@@ -8,6 +8,7 @@ import {
 import { getGatewayStatus } from "@/lib/agent/gateway";
 import { runTurn } from "@/lib/agent/run";
 import { useWork } from "@/lib/store";
+import { authEnabled } from "@/lib/auth/client";
 import { ChatPane } from "./chat-pane";
 import { CommandPalette } from "./command-palette";
 import { CronPanel } from "./cron-panel";
@@ -32,7 +33,7 @@ export function Workbench() {
   const [cmd, setCmd] = useState(false);
 
   useEffect(() => {
-    void useWork.persist.rehydrate();
+    if (!authEnabled) void useWork.persist.rehydrate();
     void getGatewayStatus().then((s) => setXaiReady(s.xai));
   }, [setXaiReady]);
 
