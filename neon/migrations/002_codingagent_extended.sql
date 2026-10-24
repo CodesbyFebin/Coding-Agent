@@ -328,7 +328,7 @@ create policy models_member_read on public.models for select to authenticated us
 
 -- Agents: project members with appropriate permissions
 create policy agents_member_read on public.agents for select to authenticated using(public.is_project_member(project_id));
-create policy agents_member_insert on public.agents for insert to authenticated with check(public.is_project_member(project_id) and created_by=current_setting('app.current_user_id', true)::uuid);
+create policy agents_member_insert on public.agents for insert to authenticated with check(public.is_project_member(project_id));
 
 -- Model invocations: project members
 create policy model_invocations_member_read on public.model_invocations for select to authenticated using(public.is_project_member(project_id));
