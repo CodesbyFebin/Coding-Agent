@@ -30,8 +30,8 @@ export function PersistedWorkbench() {
     void loadWorkspaceState().then(result => {
       if (!alive) return;
       revision=Number(result.revision);
-      if (result.snapshot && typeof result.snapshot === "object") {
-        const data = result.snapshot as Partial<Snapshot>;
+      if (result.snapshotJson) {
+        const data = JSON.parse(result.snapshotJson) as Partial<Snapshot>;
         if (Array.isArray(data.sessions) && data.sessions.length && typeof data.currentId==="string" && Array.isArray(data.cronJobs)) {
           useWork.setState({sessions:data.sessions,currentId:data.currentId,cronJobs:data.cronJobs});
         }
