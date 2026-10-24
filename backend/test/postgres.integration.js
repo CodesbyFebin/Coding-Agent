@@ -14,6 +14,10 @@ if (!process.env.DATABASE_URL || process.env.LIVE_QUALIFICATION !== 'disposable'
   let base;
   after(async()=>{if(server) await new Promise(r=>server.close(r));await db.destroy();});
   test('apply all six migrations to disposable PostgreSQL',async()=>{
+    // Supabase-style migrations reference roles absent from vanilla Postgres.
+    for (const role of ['anon','authenticated','service_role']) {
+      await db.raw(`DO $ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${role}') THEN CREATE ROLE ${role} NOLOGIN; END IF; END $;`);
+    }
     for(const file of files) await db.raw(fs.readFileSync(path.join(migrationDir,file),'utf8'));
     assert.equal(files.length,6);
     const rows=await db('directory_agents').count('* as count');assert.equal(Number(rows[0].count),0);
