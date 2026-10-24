@@ -16,7 +16,7 @@ export const loadWorkspaceState = createServerFn({ method: "GET" })
       "SELECT snapshot, revision FROM coding_workspace_state WHERE user_id = $1",
       [context.userId],
     );
-    return rows[0] ?? {snapshot:null,revision:0};
+    return { snapshotJson: rows[0] ? JSON.stringify(rows[0].snapshot) : null, revision: Number(rows[0]?.revision ?? 0) };
   });
 export const saveWorkspaceState = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
