@@ -41,6 +41,11 @@ router.post('/', async (req, res) => {
 
 router.post('/:verificationId/complete', async (req, res) => {
   const { verificationId } = req.params;
+  const record = await db('VerificationRun').where('id', verificationId).first();
+  if (!record) return res.status(404).json({ error: 'Verification not found' });
+  const membership = await requireMembership(record.workspace_id, req.userId);
+  if (!membership || !['owner', 'admin', 'auditor'].includes(membership.role)) return res.status(403).json({ error: 'Verifier role required' });
+  if (record.status !== 'PENDING') return res.status(409).json({ error: 'Verification already completed' });
   const result = await verificationMesh.completeVerification(verificationId, req.userId, req.body || {});
   if (!result.success) return res.status(404).json({ error: result.error });
   res.json(result);
