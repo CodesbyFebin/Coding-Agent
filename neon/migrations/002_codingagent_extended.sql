@@ -182,7 +182,7 @@ create table if not exists public.artifacts (
   created_at timestamptz not null default now()
 );
 
-create index if not exists artifacts_project_idx on public.artifacts(project_id);
+-- Existing v1 artifacts are mission-scoped (no project_id); tenancy joins missions.
 create index if not exists artifacts_mission_idx on public.artifacts(mission_id);
 
 -- Enhanced memory entries
