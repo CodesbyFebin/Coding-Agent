@@ -68,26 +68,6 @@ create index if not exists model_invocations_project_idx on public.model_invocat
 create index if not exists model_invocations_agent_idx on public.model_invocations(agent_id);
 create index if not exists model_invocations_mission_idx on public.model_invocations(mission_id);
 
--- Historical tool invocation tracking
-create table if not exists public.tool_invocations (
-  id uuid primary key default gen_random_uuid(),
-  project_id uuid not null references public.projects(id) on delete cascade,
-  agent_id uuid references public.agents(id) on delete set null,
-  mission_id uuid references public.missions(id) on delete set null,
-  task_id uuid references public.tasks(id) on delete set null,
-  tool_name text not null,
-  tool_type text not null default 'SYSTEM',
-  policy_rule_id uuid references public.policy_rules(id) on delete set null,
-  approval_id uuid references public.approvals(id) on delete set null,
-  execution_result jsonb,
-  execution_error text,
-  evidence_id uuid references public.evidence(id) on delete set null,
-  created_at timestamptz not null default now()
-);
-
-create index if not exists tool_invocations_project_idx on public.tool_invocations(project_id);
-create index if not exists tool_invocations_agent_idx on public.tool_invocations(agent_id);
-
 -- MCP server configuration
 create table if not exists public.mcp_servers (
   id uuid primary key default gen_random_uuid(),
@@ -161,6 +141,28 @@ create table if not exists public.evidence (
 
 create index if not exists evidence_mission_idx on public.evidence(mission_id);
 create index if not exists evidence_agent_idx on public.evidence(agent_id);
+
+-- Historical tool invocation tracking
+create table if not exists public.tool_invocations (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.projects(id) on delete cascade,
+  agent_id uuid references public.agents(id) on delete set null,
+  mission_id uuid references public.missions(id) on delete set null,
+  task_id uuid references public.tasks(id) on delete set null,
+  tool_name text not null,
+  tool_type text not null default 'SYSTEM',
+  policy_rule_id uuid references public.policy_rules(id) on delete set null,
+  approval_id uuid references public.approvals(id) on delete set null,
+  execution_result jsonb,
+  execution_error text,
+  evidence_id uuid references public.evidence(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists tool_invocations_project_idx on public.tool_invocations(project_id);
+create index if not exists tool_invocations_agent_idx on public.tool_invocations(agent_id);
+
+
 
 -- Artifact metadata
 create table if not exists public.artifacts (
