@@ -14,6 +14,7 @@ import type {
   WorkSession,
 } from "@/lib/agent/types";
 import { safePath, uid } from "@/lib/utils";
+import { authEnabled } from "@/lib/auth/client";
 
 const MAX_MESSAGES = 80;
 const MAX_MEMORIES = 80;
@@ -252,7 +253,7 @@ export const useWork = create<WorkState>()(
     }),
     {
       name: "codingagent.work.v2",
-      partialize: (s) => ({
+      partialize: (s) => authEnabled ? {} : ({
         sessions: s.sessions,
         currentId: s.currentId,
         settings: s.settings,
