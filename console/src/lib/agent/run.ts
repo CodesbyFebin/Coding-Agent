@@ -6,7 +6,10 @@ import { buildSystemPrompt, maxTokensFor } from "@/lib/agent/prompts";
 import { idleSwarm, queuedSwarm } from "@/lib/agent/swarm";
 import { useWork } from "@/lib/store";
 import { safePath, uid } from "@/lib/utils";
-import type { ChatMessage, FileChange, SwarmAgent } from "@/lib/agent/types";
+import type { ChatMessage, FileChange, SwarmAgent, TraceStep, VerificationResult } from "@/lib/agent/types";
+import { research, researchContext, type Citation } from "@/lib/agent/tavily";
+import { runVerifyLoop } from "@/lib/agent/verify";
+import { NEMOTRON } from "@/lib/agent/nebius";
 
 export async function runTurn(text: string) {
   const trimmed = text.trim();
@@ -61,6 +64,19 @@ export async function runTurn(text: string) {
       content: m.content,
     }));
 
+    const trace: TraceStep[] = [];
+    let citations: Citation[] = [];
+    let webContext = "";
+    if (settings.mode !== "chat") {
+      // Researcher tool: Tavily web search (no-op server-side if TAVILY_API_KEY is unset).
+      const r = await research({ data: { query: trimmed.slice(0, 380) } }).catch(() => null);
+      if (r?.ok) {
+        citations = r.citations;
+        webContext = researchContext(r);
+        trace.push({ label: "Researcher · Tavily search", model: "tavily", costUsd: 0, tokens: 0, ms: r.ms });
+      }
+    }
+
     const res = await routeCompletion({
       data: {
         mode: settings.mode,
@@ -73,7 +89,7 @@ export async function runTurn(text: string) {
           files: live.files,
           memories: live.memories,
           openTabs: live.openTabs,
-        }),
+        }) + (webContext ? `\n\n${webContext}` : ""),
         messages: history,
         maxTokens: maxTokensFor(settings.mode),
       },
@@ -86,11 +102,25 @@ export async function runTurn(text: string) {
       return;
     }
 
-    const payload = parseSwarmPayload(res.text);
-    applyPayload(payload, {
-      providerId: res.providerId,
+    trace.push({
+      label: settings.mode === "chat" ? "Chat" : "Orchestrator · plan + implement",
       model: res.model,
+      costUsd: res.costUsd ?? 0,
+      tokens: res.tokens ?? 0,
+      ms: res.ms ?? 0,
     });
+
+    const payload = parseSwarmPayload(res.text);
+    const messageId = applyPayload(
+      payload,
+      { providerId: res.providerId, model: res.model },
+      { trace, citations },
+    );
+
+    if (settings.mode !== "chat" && res.providerId === "nebius" && payload.files?.length) {
+      await reviewWithNano(messageId, payload.files);
+      await verifyWorkspace(messageId, trimmed);
+    }
   } catch (err) {
     window.clearInterval(tick);
     fail(err instanceof Error ? err.message : "Request failed");
@@ -115,10 +145,109 @@ function fail(error: string) {
   toast.error(error);
 }
 
+/** Fast everyday call: Nemotron 3 Nano reviews the diff (cheap, low-latency). */
+async function reviewWithNano(messageId: string, files: FileChange[]) {
+  const route = resolveRoute("reviewer", useWork.getState().settings);
+  if (route.providerId !== "nebius") return;
+  const diff = files
+    .map((f) => `--- ${f.action} ${f.path}\n${(f.content ?? "").slice(0, 3000)}`)
+    .join("\n")
+    .slice(0, 12_000);
+  const r = await routeCompletion({
+    data: {
+      mode: "chat",
+      providerId: "nebius",
+      model: route.model,
+      baseUrl: providerById("nebius")!.baseUrl,
+      system:
+        "You are a strict code reviewer. In at most 4 short bullets, flag bugs, missing tests, or security issues in this change. If it looks fine, say so in one line.",
+      messages: [{ role: "user", content: diff }],
+      maxTokens: 500,
+    },
+  }).catch(() => null);
+  if (!r?.ok) return;
+  useWork.getState().patchCurrent((s) => ({
+    ...s,
+    swarm: {
+      ...s.swarm,
+      agents: s.swarm.agents.map((a) => (a.id === "reviewer" ? { ...a, output: r.text, model: r.model } : a)),
+    },
+    messages: s.messages.map((m) =>
+      m.id === messageId
+        ? {
+            ...m,
+            review: r.text,
+            trace: [
+              ...(m.trace ?? []),
+              { label: "Reviewer", model: r.model, costUsd: r.costUsd ?? 0, tokens: r.tokens ?? 0, ms: r.ms ?? 0 },
+            ],
+          }
+        : m,
+    ),
+  }));
+}
+
+/** Write -> run -> test in a sandbox; Nemotron 3 Ultra repairs failures. Evidence lands on the message. */
+export async function verifyWorkspace(messageId: string, task: string) {
+  const store = useWork.getState();
+  const session = store.current();
+  if (session.pending?.length) return; // wait for permission before executing anything
+  const files = Object.fromEntries(Object.values(session.files).map((f) => [f.path, f.content]));
+  toast("Running tests in sandbox…");
+  try {
+    const out = await runVerifyLoop({ data: { files, task } });
+    if (!out.command) return;
+    const verification: VerificationResult = {
+      command: out.command,
+      passed: out.passed,
+      attempts: out.attempts,
+      costUsd: out.costUsd,
+      changed: out.changed,
+      steps: out.steps,
+    };
+    if (out.changed.length) {
+      store.snapshotFiles();
+      for (const p of out.changed) {
+        const c = out.files[p];
+        if (typeof c === "string") store.upsertFile(p, c);
+      }
+    }
+    store.patchCurrent((s) => ({
+      ...s,
+      messages: s.messages.map((m) =>
+        m.id === messageId
+          ? {
+              ...m,
+              verification,
+              trace: [
+                ...(m.trace ?? []),
+                ...out.steps
+                  .filter((st) => st.kind === "repair")
+                  .map((st) => ({
+                    label: `Repair #${st.attempt}`,
+                    model: st.kind === "repair" ? st.model : NEMOTRON.ultra,
+                    costUsd: st.kind === "repair" ? st.costUsd : 0,
+                    tokens: st.kind === "repair" ? st.tokens : 0,
+                    ms: 0,
+                  })),
+              ],
+            }
+          : m,
+      ),
+    }));
+    if (out.passed) toast.success(`Tests pass (attempt ${out.attempts})`);
+    else toast.error("Tests still failing — see evidence");
+  } catch (err) {
+    toast.error(err instanceof Error ? err.message : "Sandbox run failed");
+  }
+}
+
 function applyPayload(
   payload: ReturnType<typeof parseSwarmPayload>,
   routed: { providerId: string; model: string },
-) {
+  extra: { trace: TraceStep[]; citations: Citation[] } = { trace: [], citations: [] },
+): string {
+  const messageId = uid();
   const store = useWork.getState();
   const permission = store.settings.permission ?? "default";
   const holdWrites = permission !== "auto";
@@ -182,12 +311,14 @@ function applyPayload(
       messages: [
         ...s.messages,
         {
-          id: uid(),
+          id: messageId,
           role: "assistant",
           content: payload.summary,
           createdAt: Date.now(),
           artifacts: applied,
           routed,
+          trace: extra.trace,
+          citations: extra.citations,
         },
       ],
       openTabs:
@@ -205,4 +336,5 @@ function applyPayload(
   } else {
     toast("Task finished");
   }
+  return messageId;
 }

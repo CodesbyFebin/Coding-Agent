@@ -21,6 +21,7 @@ import { SkillsPanel } from "./skills-panel";
 import { NewTaskHome } from "./start-overlay";
 import { WebBridgePanel } from "./webbridge-panel";
 import { WorkNav } from "./work-nav";
+import { DEMO_PROMPT, createDemoSession } from "@/lib/agent/seed";
 
 const CADENCE_MS = { hourly: 3_600_000, daily: 86_400_000, weekly: 604_800_000 };
 
@@ -33,7 +34,19 @@ export function Workbench() {
 
   useEffect(() => {
     void useWork.persist.rehydrate();
-    void getGatewayStatus().then((s) => setXaiReady(s.xai));
+    void getGatewayStatus().then((s) => setXaiReady(s.nebius || s.xai));
+    if (new URLSearchParams(window.location.search).has("demo")) {
+      // Demo mode: seeded repo with a failing test + Nemotron tier routing.
+      const demo = createDemoSession();
+      useWork.setState((st) => ({
+        sessions: [demo, ...st.sessions].slice(0, 24),
+        currentId: demo.id,
+        activity: "files",
+        settings: { ...st.settings, defaultProviderId: "nebius", strategy: "auto", mode: "swarm", permission: "auto" },
+      }));
+      sessionStorage.setItem("codingagent:prefill", DEMO_PROMPT);
+      window.dispatchEvent(new CustomEvent("codingagent:prefill", { detail: DEMO_PROMPT }));
+    }
   }, [setXaiReady]);
 
   useEffect(() => {
