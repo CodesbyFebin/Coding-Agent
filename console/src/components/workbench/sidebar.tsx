@@ -8,6 +8,7 @@ import { SkillsPanel } from "./skills-panel";
 import { NewTaskHome } from "./start-overlay";
 import { WebBridgePanel } from "./webbridge-panel";
 import { PipelinePanel } from "./pipeline-panel";
+import { MeridianPanel } from "./meridian-panel";
 import { RedTeamPanel } from "./redteam-panel";
 
 export function Sidebar() {
@@ -24,6 +25,7 @@ export function Sidebar() {
       {activity === "webbridge" ? <WebBridgePanel /> : null}
       {activity === "pipeline" ? <PipelinePanel /> : null}
       {activity === "redteam" ? <RedTeamPanel /> : null}
+      {activity === "meridian" ? <MeridianPanel /> : null}
     </aside>
   );
 }

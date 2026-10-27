@@ -102,6 +102,27 @@ Limits: Docker Postgres is not used (PGlite only), and on serverless the preview
 - **Report.** The report is markdown and can be copied. **File GitHub issue** runs `gh issue create`, but only after you click and confirm, and only if `REDAGENT_GITHUB_REPO` is set.
 - **CI gate.** `.github/workflows/redteam.yml` runs the unit tests and then `npm run redteam:ci`, which fails on any critical or high bug. Without a `NEBIUS_API_KEY` secret the live step prints SKIPPED and produces no result.
 
+## MERIDIAN: idea → deploy-ready
+
+The "Idea to deploy-ready" activity chains eight agents. Each one hands the next a fixed JSON contract (`src/lib/meridian/contracts.ts`), and each shows its evidence in the UI:
+
+| Agent | Nemotron tier | What it does |
+|---|---|---|
+| Planner | Ultra | Splits the idea into tasks with acceptance criteria (`Plan`) |
+| Architect | Super | Writes an ADR, a file list and interfaces (`Design`) |
+| Coder | Super | Writes the files and tests |
+| Tester | sandbox + Ultra repair | Runs the detected test command in the scrubbed-env sandbox, then makes one repair attempt |
+| Security | deterministic + Super triage | OWASP-mapped static rules: secrets, eval, command/SQL injection, XSS, weak hash/random, TLS off, CORS `*`, SSRF, committed `.env` |
+| Compliance | deterministic | GDPR / HIPAA / SOC2 control checklist, with evidence for each control |
+| Pipeline | deterministic | Generates a GitHub Actions workflow (Node and/or Python jobs, plus gitleaks) |
+| GreenOps | deterministic | Estimates energy and CO2e from **measured** token counts and sandbox time |
+
+- Security, Compliance, Pipeline and GreenOps are new swarm roles; the earlier roles are not duplicated.
+- Without `NEBIUS_API_KEY`, Planner, Architect and Coder are marked *skipped*. The other agents still run on the current workspace.
+- GreenOps figures are **estimates**. The formula is FLOPs ≈ 2 × active params × tokens. The assumptions are listed with every result and can be overridden with `GREENOPS_*`.
+- "Deploy-ready" requires passing tests and no critical/high security findings.
+- Nothing is deployed from this flow.
+
 ## Run it
 
 ```bash
@@ -113,7 +134,7 @@ npm run dev                   # http://localhost:8080/?demo=1
 
 **Demo mode:** open `/?demo=1`. This loads a seeded repo with a deliberately failing test (`slugify`) and pre-fills a task. Press send to watch it research, write code, review, run tests, repair with Ultra, and go green.
 
-**Tests:** `npm run test:agent` runs 24 tests. They cover routing, cost, path safety, secret isolation, the step cap, the Tavily client and an end-to-end failing → repaired → passing sandbox run. They also cover the migration scorer, rollback, topological sort, gate, seed and smoke on PGlite, and the deployer. On the RedAgent side they cover wrapper transparency, `evaluate()`, the CI gate, the harness and persistence.
+**Tests:** `npm run test:agent` runs 32 tests. They cover routing, cost, path safety, secret isolation, the step cap, the Tavily client and an end-to-end failing → repaired → passing sandbox run. They also cover the migration scorer, rollback, topological sort, gate, seed and smoke on PGlite, and the deployer. On the RedAgent side they cover wrapper transparency, `evaluate()`, the CI gate, the harness and persistence. For MERIDIAN they cover the security rules, the compliance controls, the workflow generator, the GreenOps math and the contract parsing.
 **Build:** `npm run build` produces Vercel output under `console/.vercel/output`.
 
 **Deploy (Vercel):** set the project root to `console/`, then add `NEBIUS_API_KEY` and `TAVILY_API_KEY`. Vercel Sandbox authenticates via OIDC automatically.
@@ -135,6 +156,7 @@ The repo existed before the hackathon as a multi-provider UI that only *proposed
 - the agent test suite and the Nemotron tier benchmark plus Serverless Job packaging
 - the Ship pipeline (Architect, Migration Auditor, gate, Data Smith, PGlite shadow previews, Smoke Tester, Preview Manager, confirmation-gated Deployer)
 - RedAgent adversarial testing (interceptors, Nemotron mocker, evaluate, persistence, report, CI gate)
+- MERIDIAN idea → deploy-ready flow (Planner, Architect, Coder, Tester, plus new Security, Compliance, Pipeline and GreenOps agents)
 - the Apache-2.0 license, `.env.example`, this README, and removal of one-off scripts
 
 ## Feedback on Nebius Token Factory and NVIDIA Nemotron

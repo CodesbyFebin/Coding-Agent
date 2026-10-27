@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Sparkles,
   ShieldAlert,
+  Rocket,
   SquarePen,
   Workflow,
 } from "lucide-react";
@@ -20,6 +21,7 @@ const ITEMS: { id: ActivityId; label: string; icon: typeof Files }[] = [
   { id: "cron", label: "Scheduled", icon: CalendarClock },
   { id: "pipeline", label: "Ship pipeline", icon: Workflow },
   { id: "redteam", label: "Red-team my agent", icon: ShieldAlert },
+  { id: "meridian", label: "Idea to deploy-ready", icon: Rocket },
   { id: "plugins", label: "Plugins", icon: Blocks },
 ];
 

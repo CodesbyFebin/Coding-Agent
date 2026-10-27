@@ -5,7 +5,11 @@ export type AgentRole =
   | "implementer"
   | "reviewer"
   | "tester"
-  | "researcher";
+  | "researcher"
+  | "security"
+  | "compliance"
+  | "pipeline"
+  | "greenops";
 
 export type WorkMode = "chat" | "plan" | "swarm";
 export type AppMode = "work" | "chat";
@@ -188,6 +192,7 @@ export type ActivityId =
   | "files"
   | "memory"
   | "pipeline"
-  | "redteam";
+  | "redteam"
+  | "meridian";
 
 export type MobileTab = "home" | "task" | "files" | "more";

@@ -13,6 +13,10 @@ export const AGENTS: {
   { id: "implementer", name: "Implementer", brief: "Writes and patches files" },
   { id: "reviewer", name: "Reviewer", brief: "Checks correctness and style" },
   { id: "tester", name: "Tester", brief: "Adds coverage and edge cases" },
+  { id: "security", name: "Security", brief: "OWASP-style scan of the change" },
+  { id: "compliance", name: "Compliance", brief: "GDPR / HIPAA / SOC 2 checks" },
+  { id: "pipeline", name: "Pipeline", brief: "Generates GitHub Actions CI" },
+  { id: "greenops", name: "GreenOps", brief: "Compute and carbon estimate" },
 ];
 
 export const PROVIDERS: ProviderDef[] = [

@@ -31,6 +31,10 @@ export const ROLE_TIER: Record<AgentRole, NemotronTier> = {
   reviewer: "nano",
   tester: "nano",
   researcher: "nano",
+  security: "super",
+  compliance: "super",
+  pipeline: "nano",
+  greenops: "nano",
 };
 
 export function tierModel(tier: NemotronTier, env: Record<string, string | undefined> = {}) {

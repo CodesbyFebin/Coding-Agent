@@ -8,6 +8,10 @@ const ROLES: AgentRole[] = [
   "reviewer",
   "tester",
   "researcher",
+  "security",
+  "compliance",
+  "pipeline",
+  "greenops",
 ];
 
 const ACTIONS: FileAction[] = ["create", "update", "delete"];

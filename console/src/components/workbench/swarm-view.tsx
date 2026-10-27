@@ -11,6 +11,10 @@ const POS: Record<string, { x: number; y: number }> = {
   implementer: { x: 160, y: 148 },
   reviewer: { x: 88, y: 208 },
   tester: { x: 232, y: 208 },
+  security: { x: 40, y: 268 },
+  compliance: { x: 120, y: 268 },
+  pipeline: { x: 200, y: 268 },
+  greenops: { x: 280, y: 268 },
 };
 
 const EDGES: [string, string][] = [
@@ -22,6 +26,10 @@ const EDGES: [string, string][] = [
   ["researcher", "implementer"],
   ["implementer", "reviewer"],
   ["implementer", "tester"],
+  ["reviewer", "security"],
+  ["reviewer", "compliance"],
+  ["tester", "pipeline"],
+  ["tester", "greenops"],
 ];
 
 function tone(status: AgentStatus) {
@@ -34,7 +42,7 @@ function tone(status: AgentStatus) {
 export function SwarmConstellation({ agents }: { agents: SwarmAgent[] }) {
   const byId = Object.fromEntries(agents.map((a) => [a.id, a]));
   return (
-    <svg viewBox="0 0 320 240" className="w-full text-border" role="img" aria-label="Agent swarm">
+    <svg viewBox="0 0 320 300" className="w-full text-border" role="img" aria-label="Agent swarm">
       {EDGES.map(([a, b]) => {
         const pa = POS[a]!;
         const pb = POS[b]!;

@@ -1,4 +1,5 @@
 import { PipelinePanel } from "./pipeline-panel";
+import { MeridianPanel } from "./meridian-panel";
 import { RedTeamPanel } from "./redteam-panel";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
@@ -106,6 +107,8 @@ export function Workbench() {
       <PipelinePanel />
     ) : activity === "redteam" ? (
       <RedTeamPanel />
+    ) : activity === "meridian" ? (
+      <MeridianPanel />
     ) : activity === "memory" ? (
       <div className="flex h-full min-h-0 flex-col p-6">
         <h1 className="font-display text-3xl tracking-tight">Memory</h1>

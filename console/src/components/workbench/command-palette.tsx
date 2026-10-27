@@ -31,6 +31,7 @@ export function CommandPalette({
       { id: "plugins", label: "Plugins", run: () => setActivity("plugins") },
       { id: "pipeline", label: "Run full pipeline", run: () => setActivity("pipeline") },
       { id: "redteam", label: "Red-team my agent", run: () => setActivity("redteam") },
+      { id: "meridian", label: "Idea to deploy-ready", run: () => setActivity("meridian") },
       { id: "memory", label: "Memory", run: () => setActivity("memory") },
       { id: "mode-work", label: "Mode: Work", run: () => setAppMode("work") },
       { id: "mode-chat", label: "Mode: Chat", run: () => setAppMode("chat") },
