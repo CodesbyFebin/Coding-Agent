@@ -1,3 +1,5 @@
+import { PipelinePanel } from "./pipeline-panel";
+import { RedTeamPanel } from "./redteam-panel";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import {
@@ -100,6 +102,10 @@ export function Workbench() {
       <CronPanel />
     ) : activity === "webbridge" ? (
       <WebBridgePanel />
+    ) : activity === "pipeline" ? (
+      <PipelinePanel />
+    ) : activity === "redteam" ? (
+      <RedTeamPanel />
     ) : activity === "memory" ? (
       <div className="flex h-full min-h-0 flex-col p-6">
         <h1 className="font-display text-3xl tracking-tight">Memory</h1>

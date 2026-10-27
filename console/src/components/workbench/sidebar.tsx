@@ -7,6 +7,8 @@ import { MemoryPanel } from "./memory-panel";
 import { SkillsPanel } from "./skills-panel";
 import { NewTaskHome } from "./start-overlay";
 import { WebBridgePanel } from "./webbridge-panel";
+import { PipelinePanel } from "./pipeline-panel";
+import { RedTeamPanel } from "./redteam-panel";
 
 export function Sidebar() {
   const activity = useWork((s) => s.activity);
@@ -20,6 +22,8 @@ export function Sidebar() {
       {activity === "skills" ? <SkillsPanel /> : null}
       {activity === "cron" ? <CronPanel /> : null}
       {activity === "webbridge" ? <WebBridgePanel /> : null}
+      {activity === "pipeline" ? <PipelinePanel /> : null}
+      {activity === "redteam" ? <RedTeamPanel /> : null}
     </aside>
   );
 }

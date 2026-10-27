@@ -186,6 +186,8 @@ export type ActivityId =
   | "cron"
   | "webbridge"
   | "files"
-  | "memory";
+  | "memory"
+  | "pipeline"
+  | "redteam";
 
 export type MobileTab = "home" | "task" | "files" | "more";

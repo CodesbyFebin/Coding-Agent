@@ -29,6 +29,8 @@ export function CommandPalette({
       { id: "cron", label: "Scheduled tasks", run: () => setActivity("cron") },
       { id: "web", label: "WebBridge", run: () => setActivity("webbridge") },
       { id: "plugins", label: "Plugins", run: () => setActivity("plugins") },
+      { id: "pipeline", label: "Run full pipeline", run: () => setActivity("pipeline") },
+      { id: "redteam", label: "Red-team my agent", run: () => setActivity("redteam") },
       { id: "memory", label: "Memory", run: () => setActivity("memory") },
       { id: "mode-work", label: "Mode: Work", run: () => setAppMode("work") },
       { id: "mode-chat", label: "Mode: Chat", run: () => setAppMode("chat") },
