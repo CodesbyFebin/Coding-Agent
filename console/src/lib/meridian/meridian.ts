@@ -29,6 +29,7 @@ export type MeridianResult = {
 export const ideaToDeployReady = createServerFn({ method: "POST" })
   .validator((input: { idea: string; files: Record<string, string> }) => input)
   .handler(async ({ data }): Promise<MeridianResult> => {
+    await (await import("../pcm/dna.server")).enterGrounding(data.files);
     const C = await import("./contracts");
     const { scanSecurity } = await import("./security");
     const { checkCompliance } = await import("./compliance");

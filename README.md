@@ -123,6 +123,20 @@ The "Idea to deploy-ready" activity chains eight agents. Each one hands the next
 - "Deploy-ready" requires passing tests and no critical/high security findings.
 - Nothing is deployed from this flow.
 
+## CI Whisperer + PCM Lead Maintainer
+
+A maintainer that knows the project and reads your CI. It reuses the existing Security rules, the sandbox repair loop and the Pipeline agent; nothing is duplicated.
+
+- **Project DNA (passive).** Every server agent run extracts the project's stack, patterns, conventions, quality gates and rules (headings and "Always/Never" bullets from `AGENTS.md`/`CLAUDE.md`/`CONTRIBUTING.md`). It is persisted when its fingerprint changes and prepended to **every Nemotron call** in that request (AsyncLocalStorage). Other models fetch it from `GET /api/dna?format=json|prompt` (Bearer `PCM_DNA_TOKEN`; refused in production without one).
+- **PR review.** Parses the unified diff, applies line rules (empty catch, `==`, `.only`, ts-ignore, destructive SQL in migrations…), detects deleted or missing tests, and runs the OWASP rules on added lines only, keeping real line numbers. **Nano** triages, **Super** analyses.
+- **CI failure.** Cleans a GitHub Actions log and classifies it (TypeScript, lint, test, dependency, missing module, build, timeout, permission, OOM) with file:line. **Super** explains it.
+- **Auto-heal.** **Ultra** proposes a fix through the repair loop; the patch is returned **only if the command passes in the sandbox**, shown as a unified diff, and applied only when you click.
+- **Release notes** from merged commits (Conventional Commits, breaking changes, PR links), optional Nano highlights.
+- **Audit on merge.** Workflow risks (pull_request_target + PR checkout, script injection, missing/over-broad permissions, unpinned actions, secret echo), Docker (latest tag, root, baked secrets), `.env.example` real-looking secrets, CORS `*`, `strict: false`, plus the OWASP rules.
+- **GitHub Action** (`.github/workflows/whisperer.yml`): reviews PRs, explains failed CI runs, audits pushes to `main` and builds release notes. It posts PR comments **only** when running in `CodesbyFebin/Coding-Agent` on a same-repo PR, with minimal permissions. Add a `NEBIUS_API_KEY` repo secret for the Nemotron part; without it the rule-based report is still posted. Locally: `npm run whisperer -- review|explain|audit|release`.
+
+Credits: ideas (not code; those repos carry no open-source licence) from [adeshukla](https://github.com/adeshukla): [pare](https://github.com/adeshukla/pare) for "write nothing unless the check passes", repo "laws" files and shipping as an Action, and [devstash](https://github.com/adeshukla/devstash) for the ".env.example must not contain real secrets" CI check and gitleaks awareness.
+
 ## Run it
 
 ```bash
@@ -134,7 +148,7 @@ npm run dev                   # http://localhost:8080/?demo=1
 
 **Demo mode:** open `/?demo=1`. This loads a seeded repo with a deliberately failing test (`slugify`) and pre-fills a task. Press send to watch it research, write code, review, run tests, repair with Ultra, and go green.
 
-**Tests:** `npm run test:agent` runs 32 tests. They cover routing, cost, path safety, secret isolation, the step cap, the Tavily client and an end-to-end failing → repaired → passing sandbox run. They also cover the migration scorer, rollback, topological sort, gate, seed and smoke on PGlite, and the deployer. On the RedAgent side they cover wrapper transparency, `evaluate()`, the CI gate, the harness and persistence. For MERIDIAN they cover the security rules, the compliance controls, the workflow generator, the GreenOps math and the contract parsing.
+**Tests:** `npm run test:agent` runs 40 tests. They cover routing, cost, path safety, secret isolation, the step cap, the Tavily client and an end-to-end failing → repaired → passing sandbox run. They also cover the migration scorer, rollback, topological sort, gate, seed and smoke on PGlite, and the deployer. On the RedAgent side they cover wrapper transparency, `evaluate()`, the CI gate, the harness and persistence. For MERIDIAN they cover the security rules, the compliance controls, the workflow generator, the GreenOps math and the contract parsing. For CI Whisperer they cover DNA extraction and grounding, diff review, CI log classification, release notes, the config audit and the patch generator.
 **Build:** `npm run build` produces Vercel output under `console/.vercel/output`.
 
 **Deploy (Vercel):** set the project root to `console/`, then add `NEBIUS_API_KEY` and `TAVILY_API_KEY`. Vercel Sandbox authenticates via OIDC automatically.
@@ -157,6 +171,7 @@ The repo existed before the hackathon as a multi-provider UI that only *proposed
 - the Ship pipeline (Architect, Migration Auditor, gate, Data Smith, PGlite shadow previews, Smoke Tester, Preview Manager, confirmation-gated Deployer)
 - RedAgent adversarial testing (interceptors, Nemotron mocker, evaluate, persistence, report, CI gate)
 - MERIDIAN idea → deploy-ready flow (Planner, Architect, Coder, Tester, plus new Security, Compliance, Pipeline and GreenOps agents)
+- CI Whisperer + PCM Lead Maintainer (Project DNA grounding, `/api/dna`, PR review, CI explain and sandbox-verified auto-heal, release notes, audit on merge, GitHub Action)
 - the Apache-2.0 license, `.env.example`, this README, and removal of one-off scripts
 
 ## Feedback on Nebius Token Factory and NVIDIA Nemotron

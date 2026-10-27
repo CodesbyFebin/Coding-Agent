@@ -6,6 +6,7 @@ import {
   Sparkles,
   ShieldAlert,
   Rocket,
+  GitPullRequest,
   SquarePen,
   Workflow,
 } from "lucide-react";
@@ -22,6 +23,7 @@ const ITEMS: { id: ActivityId; label: string; icon: typeof Files }[] = [
   { id: "pipeline", label: "Ship pipeline", icon: Workflow },
   { id: "redteam", label: "Red-team my agent", icon: ShieldAlert },
   { id: "meridian", label: "Idea to deploy-ready", icon: Rocket },
+  { id: "whisperer", label: "CI Whisperer / Project DNA", icon: GitPullRequest },
   { id: "plugins", label: "Plugins", icon: Blocks },
 ];
 

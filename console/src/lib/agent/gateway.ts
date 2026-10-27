@@ -47,8 +47,16 @@ export const routeCompletion = createServerFn({ method: "POST" })
       };
     }
 
+    // PCM: ground Nemotron chat calls with the persisted project DNA (server-side only).
+    let grounding = "";
+    if (providerId === "nebius" && process.env.PCM_DNA !== "off") {
+      const { loadDNA } = await import("../pcm/dna.server");
+      const { dnaPrompt } = await import("../pcm/dna");
+      const dna = await loadDNA();
+      if (dna) grounding = dnaPrompt(dna) + "\n\n";
+    }
     const messages = [
-      { role: "system" as const, content: clip(data.system, MAX_PROMPT) },
+      { role: "system" as const, content: grounding + clip(data.system, MAX_PROMPT) },
       ...data.messages.map((m) => ({
         role: m.role,
         content: clip(m.content, MAX_MESSAGE),

@@ -21,6 +21,7 @@ export type PipelineRequest = { prompt?: string; migrationSql?: string; files?: 
 export const runPipeline = createServerFn({ method: "POST" })
   .validator((input: PipelineRequest) => input)
   .handler(async ({ data }): Promise<PipelineResult> => {
+    await (await import("../pcm/dna.server")).enterGrounding(data.files);
     const A = await import("./audit");
     const B = await import("./blueprint");
     const D = await import("./datasmith");

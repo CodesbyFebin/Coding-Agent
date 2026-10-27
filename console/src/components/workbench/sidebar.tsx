@@ -9,6 +9,7 @@ import { NewTaskHome } from "./start-overlay";
 import { WebBridgePanel } from "./webbridge-panel";
 import { PipelinePanel } from "./pipeline-panel";
 import { MeridianPanel } from "./meridian-panel";
+import { WhispererPanel } from "./whisperer-panel";
 import { RedTeamPanel } from "./redteam-panel";
 
 export function Sidebar() {
@@ -26,6 +27,7 @@ export function Sidebar() {
       {activity === "pipeline" ? <PipelinePanel /> : null}
       {activity === "redteam" ? <RedTeamPanel /> : null}
       {activity === "meridian" ? <MeridianPanel /> : null}
+      {activity === "whisperer" ? <WhispererPanel /> : null}
     </aside>
   );
 }

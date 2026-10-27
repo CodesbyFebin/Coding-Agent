@@ -10,17 +10,29 @@ export async function nebiusChat(opts: {
   messages: LlmMessage[];
   maxTokens?: number;
   temperature?: number;
+  /** Set false to skip project-DNA grounding (e.g. adversarial mocker prompts). */
+  grounding?: boolean;
 }): Promise<LlmResult> {
   const key = process.env.NEBIUS_API_KEY;
   if (!key) throw new Error("NEBIUS_API_KEY is not set on the server.");
   const base = (process.env.NEBIUS_BASE_URL || NEBIUS_BASE_URL).replace(/\/+$/, "");
   const started = Date.now();
+  let messages = opts.messages;
+  if (opts.grounding !== false) {
+    const { currentGrounding } = await import("../pcm/dna.server");
+    const g = currentGrounding();
+    if (g) {
+      messages = messages[0]?.role === "system"
+        ? [{ role: "system", content: `${g}\n\n${messages[0].content}` }, ...messages.slice(1)]
+        : [{ role: "system", content: g }, ...messages];
+    }
+  }
   const res = await fetch(`${base}/chat/completions`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify({
       model: opts.model,
-      messages: opts.messages,
+      messages,
       max_tokens: opts.maxTokens ?? 2000,
       temperature: opts.temperature ?? 0.2,
     }),

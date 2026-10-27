@@ -10,6 +10,7 @@ const MAX_BYTES = 400_000;
 export const runVerifyLoop = createServerFn({ method: "POST" })
   .validator((input: VerifyRequest) => input)
   .handler(async ({ data }): Promise<LoopOutcome & { command: string | null }> => {
+    await (await import("../pcm/dna.server")).enterGrounding(data.files);
     const core = await import("./loop-core");
     const { execInSandbox } = await import("./sandbox.server");
     const { nebiusChat } = await import("./llm.server");

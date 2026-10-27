@@ -193,6 +193,7 @@ export type ActivityId =
   | "memory"
   | "pipeline"
   | "redteam"
-  | "meridian";
+  | "meridian"
+  | "whisperer";
 
 export type MobileTab = "home" | "task" | "files" | "more";
