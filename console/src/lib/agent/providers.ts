@@ -1,3 +1,4 @@
+import { NEBIUS_BASE_URL, NEMOTRON, ROLE_TIER } from "./nebius";
 import type { AgentRole, ProviderDef, RoleRoute, RouteStrategy, SettingsState } from "./types";
 
 export const AGENTS: {
@@ -15,6 +16,37 @@ export const AGENTS: {
 ];
 
 export const PROVIDERS: ProviderDef[] = [
+  {
+    id: "nebius",
+    name: "NVIDIA Nemotron · Nebius Token Factory",
+    baseUrl: NEBIUS_BASE_URL,
+    builtIn: true,
+    docs: "https://docs.tokenfactory.nebius.com/quickstart",
+    keyHint: "Server-side NEBIUS_API_KEY",
+    models: [
+      {
+        id: NEMOTRON.nano,
+        label: "Nemotron 3 Nano",
+        free: false,
+        speed: "fast",
+        roles: ["researcher", "reviewer", "tester"],
+      },
+      {
+        id: NEMOTRON.super,
+        label: "Nemotron 3 Super",
+        free: false,
+        speed: "medium",
+        roles: ["implementer", "architect"],
+      },
+      {
+        id: NEMOTRON.ultra,
+        label: "Nemotron 3 Ultra",
+        free: false,
+        speed: "quality",
+        roles: ["orchestrator", "planner"],
+      },
+    ],
+  },
   {
     id: "xai",
     name: "xAI Grok",
@@ -219,6 +251,11 @@ export function resolveRoute(
     if (p && (p.builtIn || settings.keys[p.id])) return override;
   }
 
+  // Default: Nemotron tier routing (Nano/Super fast calls, Ultra for reasoning).
+  if (settings.defaultProviderId === "nebius" && settings.strategy === "auto") {
+    return { providerId: "nebius", model: NEMOTRON[ROLE_TIER[role]] };
+  }
+
   const live = availableRoutes(settings);
   const models = live.flatMap((p) =>
     p.models.map((m) => ({ providerId: p.id, model: m.id, meta: m })),
@@ -278,7 +315,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   mode: "swarm",
   keys: {},
   roleRouting: {},
-  defaultProviderId: "xai",
-  defaultModel: "grok-4.5",
+  defaultProviderId: "nebius",
+  defaultModel: NEMOTRON.super,
   permission: "default",
 };

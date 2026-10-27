@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { GatewayRequest, GatewayResponse } from "./types";
+import { NEBIUS_BASE_URL, costUsd, tierModel, type Usage } from "./nebius";
 
 const MAX_PROMPT = 24_000;
 const MAX_MESSAGE = 6_000;
@@ -9,24 +10,40 @@ function clip(s: string, max: number) {
 }
 
 export const getGatewayStatus = createServerFn({ method: "POST" }).handler(
-  async (): Promise<{ xai: boolean }> => {
-    return { xai: Boolean(process.env.XAI_API_KEY) };
+  async (): Promise<{ xai: boolean; nebius: boolean; tavily: boolean }> => {
+    return {
+      xai: Boolean(process.env.XAI_API_KEY),
+      nebius: Boolean(process.env.NEBIUS_API_KEY),
+      tavily: Boolean(process.env.TAVILY_API_KEY),
+    };
   },
 );
 
 export const routeCompletion = createServerFn({ method: "POST" })
   .validator((input: GatewayRequest) => input)
   .handler(async ({ data }): Promise<GatewayResponse> => {
-    const useXai = data.providerId === "xai" || !data.apiKey;
-    const apiKey = useXai ? process.env.XAI_API_KEY : data.apiKey;
-    const baseUrl = useXai ? "https://api.x.ai/v1" : data.baseUrl.replace(/\/+$/, "");
-    const model = useXai && !data.apiKey ? "grok-4.5" : data.model;
-    const providerId = useXai && !data.apiKey ? "xai" : data.providerId;
+    const started = Date.now();
+    let apiKey: string | undefined;
+    let baseUrl: string;
+    let model = data.model;
+    let providerId = data.providerId;
+    if (data.providerId === "nebius" && !data.apiKey) {
+      // Built-in: NVIDIA Nemotron on Nebius Token Factory, key stays server-side.
+      apiKey = process.env.NEBIUS_API_KEY;
+      baseUrl = (process.env.NEBIUS_BASE_URL || NEBIUS_BASE_URL).replace(/\/+$/, "");
+      model = data.model || tierModel("super", process.env);
+    } else {
+      const useXai = data.providerId === "xai" || !data.apiKey;
+      apiKey = useXai ? process.env.XAI_API_KEY : data.apiKey;
+      baseUrl = useXai ? "https://api.x.ai/v1" : data.baseUrl.replace(/\/+$/, "");
+      model = useXai && !data.apiKey ? "grok-4.5" : data.model;
+      providerId = useXai && !data.apiKey ? "xai" : data.providerId;
+    }
 
     if (!apiKey) {
       return {
         ok: false,
-        error: "No model is available. Add a free-tier key in Gateway, or wait for built-in Grok.",
+        error: "No model is available. Set NEBIUS_API_KEY on the server (Nemotron via Nebius Token Factory) or add a key in Gateway.",
       };
     }
 
@@ -47,7 +64,7 @@ export const routeCompletion = createServerFn({ method: "POST" })
       headers["X-Title"] = "CodingAgent";
     }
 
-    const maxTokens = Math.min(Math.max(data.maxTokens ?? 1200, 256), 2500);
+    const maxTokens = Math.min(Math.max(data.maxTokens ?? 1200, 256), 6000);
 
     try {
       const res = await fetch(`${baseUrl}/chat/completions`, {
@@ -67,10 +84,20 @@ export const routeCompletion = createServerFn({ method: "POST" })
       const body = (await res.json()) as {
         choices?: { message?: { content?: string } }[];
         model?: string;
+        usage?: Usage;
       };
       const text = body.choices?.[0]?.message?.content ?? "";
       if (!text.trim()) return { ok: false, error: "The model returned an empty reply." };
-      return { ok: true, text, model: body.model ?? model, providerId };
+      const usage = body.usage ?? {};
+      return {
+        ok: true,
+        text,
+        model: body.model ?? model,
+        providerId,
+        costUsd: costUsd(model, usage),
+        tokens: (usage.prompt_tokens ?? 0) + (usage.completion_tokens ?? 0),
+        ms: Date.now() - started,
+      };
     } catch (err) {
       const message = err instanceof Error ? err.message : "Network error";
       return { ok: false, error: message };
