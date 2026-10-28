@@ -3,6 +3,7 @@ import { modelLabel } from "@/lib/agent/providers";
 import { useSession, useWork } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { DiffBlock } from "./diff-block";
+import { MessageEvidence } from "./evidence";
 import { Composer } from "./composer";
 import { SwarmConstellation } from "./swarm-view";
 import { cn } from "@/lib/utils";
@@ -54,6 +55,7 @@ export function ChatPane({ inputId = "job-thread" }: { inputId?: string }) {
                 before={session.snapshots.at(-1)?.files[a.path]}
               />
             ))}
+            <MessageEvidence m={m} />
           </article>
         ))}
         {session.swarm.running ? (

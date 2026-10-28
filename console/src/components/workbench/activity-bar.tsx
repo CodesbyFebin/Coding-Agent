@@ -4,7 +4,11 @@ import {
   Files,
   LayoutDashboard,
   Sparkles,
+  ShieldAlert,
+  Rocket,
+  GitPullRequest,
   SquarePen,
+  Workflow,
 } from "lucide-react";
 import type { ActivityId } from "@/lib/agent/types";
 import { useWork } from "@/lib/store";
@@ -16,6 +20,10 @@ const ITEMS: { id: ActivityId; label: string; icon: typeof Files }[] = [
   { id: "files", label: "Files", icon: Files },
   { id: "skills", label: "Skills", icon: Sparkles },
   { id: "cron", label: "Scheduled", icon: CalendarClock },
+  { id: "pipeline", label: "Ship pipeline", icon: Workflow },
+  { id: "redteam", label: "Red-team my agent", icon: ShieldAlert },
+  { id: "meridian", label: "Idea to deploy-ready", icon: Rocket },
+  { id: "whisperer", label: "CI Whisperer / Project DNA", icon: GitPullRequest },
   { id: "plugins", label: "Plugins", icon: Blocks },
 ];
 

@@ -1,3 +1,5 @@
+import { BUILT_WITH_LLAMA, LOCAL_LLAMA_BASE_URL, META_BASE_URL, META_MODELS } from "./llama";
+import { NEBIUS_BASE_URL, NEMOTRON, ROLE_TIER } from "./nebius";
 import type { AgentRole, ProviderDef, RoleRoute, RouteStrategy, SettingsState } from "./types";
 
 export const AGENTS: {
@@ -12,9 +14,44 @@ export const AGENTS: {
   { id: "implementer", name: "Implementer", brief: "Writes and patches files" },
   { id: "reviewer", name: "Reviewer", brief: "Checks correctness and style" },
   { id: "tester", name: "Tester", brief: "Adds coverage and edge cases" },
+  { id: "security", name: "Security", brief: "OWASP-style scan of the change" },
+  { id: "compliance", name: "Compliance", brief: "GDPR / HIPAA / SOC 2 checks" },
+  { id: "pipeline", name: "Pipeline", brief: "Generates GitHub Actions CI" },
+  { id: "greenops", name: "GreenOps", brief: "Compute and carbon estimate" },
 ];
 
 export const PROVIDERS: ProviderDef[] = [
+  {
+    id: "nebius",
+    name: "NVIDIA Nemotron · Nebius Token Factory",
+    baseUrl: NEBIUS_BASE_URL,
+    builtIn: true,
+    docs: "https://docs.tokenfactory.nebius.com/quickstart",
+    keyHint: "Server-side NEBIUS_API_KEY",
+    models: [
+      {
+        id: NEMOTRON.nano,
+        label: "Nemotron 3 Nano",
+        free: false,
+        speed: "fast",
+        roles: ["researcher", "reviewer", "tester"],
+      },
+      {
+        id: NEMOTRON.super,
+        label: "Nemotron 3 Super",
+        free: false,
+        speed: "medium",
+        roles: ["implementer", "architect"],
+      },
+      {
+        id: NEMOTRON.ultra,
+        label: "Nemotron 3 Ultra",
+        free: false,
+        speed: "quality",
+        roles: ["orchestrator", "planner"],
+      },
+    ],
+  },
   {
     id: "xai",
     name: "xAI Grok",
@@ -31,6 +68,31 @@ export const PROVIDERS: ProviderDef[] = [
         roles: ["orchestrator", "planner", "architect", "reviewer", "researcher"],
       },
     ],
+  },
+  {
+    id: "meta",
+    name: "Meta Llama API (optional)",
+    baseUrl: META_BASE_URL,
+    builtIn: true,
+    optIn: true,
+    attribution: BUILT_WITH_LLAMA,
+    docs: "https://llama.developer.meta.com",
+    keyHint: "Server-side META_LLAMA_API_KEY · capped by META_SPEND_CAP_USD",
+    models: [
+      { id: META_MODELS.default, label: "Muse Spark 1.3 (contributor)", free: false, speed: "medium", roles: [] },
+      { id: META_MODELS.wonder, label: "Muse Wonder 1.0", free: false, speed: "quality", roles: [] },
+    ],
+  },
+  {
+    id: "local-llama",
+    name: "Local Llama · llama.cpp (optional)",
+    baseUrl: LOCAL_LLAMA_BASE_URL,
+    builtIn: true,
+    optIn: true,
+    attribution: BUILT_WITH_LLAMA,
+    docs: "https://github.com/ggml-org/llama.cpp",
+    keyHint: "Server-side LOCAL_LLAMA_BASE_URL (default 127.0.0.1:8089)",
+    models: [{ id: "local", label: "Whatever model the local server loaded", free: true, speed: "fast", roles: [] }],
   },
   {
     id: "groq",
@@ -209,6 +271,11 @@ export function availableRoutes(settings: SettingsState) {
   return PROVIDERS.filter((p) => p.builtIn || Boolean(settings.keys[p.id]?.trim()));
 }
 
+/** Providers automatic routing may pick (excludes opt-in Llama providers). */
+function autoRoutes(settings: SettingsState) {
+  return availableRoutes(settings).filter((p) => !p.optIn);
+}
+
 export function resolveRoute(
   role: AgentRole,
   settings: SettingsState,
@@ -219,7 +286,18 @@ export function resolveRoute(
     if (p && (p.builtIn || settings.keys[p.id])) return override;
   }
 
-  const live = availableRoutes(settings);
+  // Opt-in providers (Meta / local Llama) are used only when explicitly selected as default.
+  const chosen = providerById(settings.defaultProviderId);
+  if (chosen?.optIn) {
+    return { providerId: chosen.id, model: chosen.models.find((m) => m.id === settings.defaultModel)?.id ?? chosen.models[0].id };
+  }
+
+  // Default: Nemotron tier routing (Nano/Super fast calls, Ultra for reasoning).
+  if (settings.defaultProviderId === "nebius" && settings.strategy === "auto") {
+    return { providerId: "nebius", model: NEMOTRON[ROLE_TIER[role]] };
+  }
+
+  const live = autoRoutes(settings);
   const models = live.flatMap((p) =>
     p.models.map((m) => ({ providerId: p.id, model: m.id, meta: m })),
   );
@@ -260,7 +338,7 @@ export function resolveRoute(
 
 export function fallbackRoute(settings: SettingsState): RoleRoute {
   const live = availableRoutes(settings);
-  const first = live[0];
+  const first = autoRoutes(settings)[0];
   if (!first) {
     return { providerId: "xai", model: "grok-4.5" };
   }
@@ -278,7 +356,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   mode: "swarm",
   keys: {},
   roleRouting: {},
-  defaultProviderId: "xai",
-  defaultModel: "grok-4.5",
+  defaultProviderId: "nebius",
+  defaultModel: NEMOTRON.super,
   permission: "default",
 };

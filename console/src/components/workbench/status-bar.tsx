@@ -1,3 +1,4 @@
+import { BUILT_WITH_LLAMA, isLlamaProvider } from "@/lib/agent/llama";
 import { fallbackRoute, modelLabel } from "@/lib/agent/providers";
 import { useSession, useWork } from "@/lib/store";
 
@@ -27,7 +28,7 @@ export function StatusBar() {
         </span>
         <span className="text-border">/</span>
         <span className="truncate font-mono">
-          {modelLabel(route.providerId, route.model)} · {settings.strategy}
+          {modelLabel(route.providerId, route.model)} · {settings.strategy}{isLlamaProvider(route.providerId) ? ` · ${BUILT_WITH_LLAMA}` : ""}
         </span>
       </div>
       <div className="flex items-center gap-3 tabular-nums">

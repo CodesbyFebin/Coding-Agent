@@ -1,3 +1,4 @@
+import { NEMOTRON } from "@/lib/agent/nebius";
 import { ExternalLink } from "lucide-react";
 import { PROVIDERS, availableRoutes } from "@/lib/agent/providers";
 import type { RouteStrategy, WorkMode } from "@/lib/agent/types";
@@ -96,9 +97,31 @@ export function GatewayPanel() {
                       connected ? "text-primary" : "text-muted-foreground",
                     )}
                   >
-                    {p.builtIn ? (xai === false ? "offline" : "built-in") : connected ? "keyed" : "needs key"}
+                    {p.optIn ? "optional" : p.builtIn ? (xai === false ? "offline" : "built-in") : connected ? "keyed" : "needs key"}
                   </span>
                 </div>
+                {p.optIn ? (
+                  <div className="mt-2 space-y-1.5">
+                    <div className="text-[11px] font-medium text-primary">{p.attribution}</div>
+                    <div className="flex flex-wrap gap-1">
+                      {p.models.map((m) => {
+                        const on = settings.defaultProviderId === p.id && (settings.defaultModel === m.id || p.models.length === 1);
+                        return (
+                          <button key={m.id} type="button" onClick={() => patch({ defaultProviderId: p.id, defaultModel: m.id })}
+                            className={cn("rounded-xs px-2 py-1 text-[11px]", on ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground")}>
+                            {on ? "Using " : "Use "}{m.label}
+                          </button>
+                        );
+                      })}
+                      {settings.defaultProviderId === p.id ? (
+                        <button type="button" onClick={() => patch({ defaultProviderId: "nebius", defaultModel: NEMOTRON.super })} className="rounded-xs bg-secondary px-2 py-1 text-[11px] text-muted-foreground">
+                          Back to Nemotron (default)
+                        </button>
+                      ) : null}
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">Optional, off unless selected. {p.keyHint}.</p>
+                  </div>
+                ) : null}
                 {!p.builtIn ? (
                   <Input
                     className="mt-2 h-9"
