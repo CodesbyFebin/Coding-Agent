@@ -103,7 +103,7 @@ export async function runTurn(text: string) {
     }
 
     trace.push({
-      label: settings.mode === "chat" ? "Chat" : "Orchestrator · plan + implement",
+      label: (settings.mode === "chat" ? "Chat" : "Orchestrator · plan + implement") + (res.attribution ? ` · ${res.attribution}` : ""),
       model: res.model,
       costUsd: res.costUsd ?? 0,
       tokens: res.tokens ?? 0,

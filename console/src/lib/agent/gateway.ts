@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { GatewayRequest, GatewayResponse } from "./types";
+import { BUILT_WITH_LLAMA, META_MODELS, isLlamaProvider } from "./llama";
 import { NEBIUS_BASE_URL, costUsd, tierModel, type Usage } from "./nebius";
 
 const MAX_PROMPT = 24_000;
@@ -32,6 +33,14 @@ export const routeCompletion = createServerFn({ method: "POST" })
       apiKey = process.env.NEBIUS_API_KEY;
       baseUrl = (process.env.NEBIUS_BASE_URL || NEBIUS_BASE_URL).replace(/\/+$/, "");
       model = data.model || tierModel("super", process.env);
+    } else if (data.providerId === "meta" || data.providerId === "local-llama") {
+      // Optional Llama providers: always server-side config; a client-supplied key is ignored.
+      const { metaConfig, localLlamaConfig } = await import("./llama.server");
+      const cfg = data.providerId === "meta" ? metaConfig() : localLlamaConfig();
+      apiKey = cfg.apiKey;
+      baseUrl = cfg.baseUrl;
+      model = data.model || (data.providerId === "meta" ? META_MODELS.default : "local");
+      if (!apiKey) return { ok: false, error: "Meta provider selected but META_LLAMA_API_KEY is not set on the server." };
     } else {
       const useXai = data.providerId === "xai" || !data.apiKey;
       apiKey = useXai ? process.env.XAI_API_KEY : data.apiKey;
@@ -73,6 +82,17 @@ export const routeCompletion = createServerFn({ method: "POST" })
     }
 
     const maxTokens = Math.min(Math.max(data.maxTokens ?? 1200, 256), 6000);
+    const llama = isLlamaProvider(providerId);
+    if (llama) {
+      const { checkMetaCap, llamaGuardCheck } = await import("./llama.server");
+      if (providerId === "meta") {
+        const cap = await checkMetaCap(messages.reduce((n, m) => n + m.content.length, 0), maxTokens);
+        if (!cap.ok) return cap;
+      }
+      const lastUser = [...data.messages].reverse().find((m) => m.role === "user")?.content ?? "";
+      const guard = await llamaGuardCheck(lastUser);
+      if (guard.checked && !guard.safe) return { ok: false, error: `Llama Guard 3 flagged the prompt as unsafe (${guard.categories.join(", ") || "unspecified"}).` };
+    }
 
     try {
       const res = await fetch(`${baseUrl}/chat/completions`, {
@@ -97,12 +117,16 @@ export const routeCompletion = createServerFn({ method: "POST" })
       const text = body.choices?.[0]?.message?.content ?? "";
       if (!text.trim()) return { ok: false, error: "The model returned an empty reply." };
       const usage = body.usage ?? {};
+      let cost = costUsd(model, usage);
+      if (providerId === "meta") cost = await (await import("./llama.server")).recordMetaSpend(body.model ?? model, usage);
+      else if (providerId === "local-llama") cost = 0;
       return {
         ok: true,
         text,
         model: body.model ?? model,
         providerId,
-        costUsd: costUsd(model, usage),
+        costUsd: cost,
+        ...(llama ? { attribution: BUILT_WITH_LLAMA } : {}),
         tokens: (usage.prompt_tokens ?? 0) + (usage.completion_tokens ?? 0),
         ms: Date.now() - started,
       };

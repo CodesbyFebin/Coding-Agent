@@ -1,3 +1,4 @@
+import { BUILT_WITH_LLAMA, LOCAL_LLAMA_BASE_URL, META_BASE_URL, META_MODELS } from "./llama";
 import { NEBIUS_BASE_URL, NEMOTRON, ROLE_TIER } from "./nebius";
 import type { AgentRole, ProviderDef, RoleRoute, RouteStrategy, SettingsState } from "./types";
 
@@ -67,6 +68,31 @@ export const PROVIDERS: ProviderDef[] = [
         roles: ["orchestrator", "planner", "architect", "reviewer", "researcher"],
       },
     ],
+  },
+  {
+    id: "meta",
+    name: "Meta Llama API (optional)",
+    baseUrl: META_BASE_URL,
+    builtIn: true,
+    optIn: true,
+    attribution: BUILT_WITH_LLAMA,
+    docs: "https://llama.developer.meta.com",
+    keyHint: "Server-side META_LLAMA_API_KEY · capped by META_SPEND_CAP_USD",
+    models: [
+      { id: META_MODELS.default, label: "Muse Spark 1.3 (contributor)", free: false, speed: "medium", roles: [] },
+      { id: META_MODELS.wonder, label: "Muse Wonder 1.0", free: false, speed: "quality", roles: [] },
+    ],
+  },
+  {
+    id: "local-llama",
+    name: "Local Llama · llama.cpp (optional)",
+    baseUrl: LOCAL_LLAMA_BASE_URL,
+    builtIn: true,
+    optIn: true,
+    attribution: BUILT_WITH_LLAMA,
+    docs: "https://github.com/ggml-org/llama.cpp",
+    keyHint: "Server-side LOCAL_LLAMA_BASE_URL (default 127.0.0.1:8089)",
+    models: [{ id: "local", label: "Whatever model the local server loaded", free: true, speed: "fast", roles: [] }],
   },
   {
     id: "groq",
@@ -245,6 +271,11 @@ export function availableRoutes(settings: SettingsState) {
   return PROVIDERS.filter((p) => p.builtIn || Boolean(settings.keys[p.id]?.trim()));
 }
 
+/** Providers automatic routing may pick (excludes opt-in Llama providers). */
+function autoRoutes(settings: SettingsState) {
+  return availableRoutes(settings).filter((p) => !p.optIn);
+}
+
 export function resolveRoute(
   role: AgentRole,
   settings: SettingsState,
@@ -255,12 +286,18 @@ export function resolveRoute(
     if (p && (p.builtIn || settings.keys[p.id])) return override;
   }
 
+  // Opt-in providers (Meta / local Llama) are used only when explicitly selected as default.
+  const chosen = providerById(settings.defaultProviderId);
+  if (chosen?.optIn) {
+    return { providerId: chosen.id, model: chosen.models.find((m) => m.id === settings.defaultModel)?.id ?? chosen.models[0].id };
+  }
+
   // Default: Nemotron tier routing (Nano/Super fast calls, Ultra for reasoning).
   if (settings.defaultProviderId === "nebius" && settings.strategy === "auto") {
     return { providerId: "nebius", model: NEMOTRON[ROLE_TIER[role]] };
   }
 
-  const live = availableRoutes(settings);
+  const live = autoRoutes(settings);
   const models = live.flatMap((p) =>
     p.models.map((m) => ({ providerId: p.id, model: m.id, meta: m })),
   );
@@ -301,7 +338,7 @@ export function resolveRoute(
 
 export function fallbackRoute(settings: SettingsState): RoleRoute {
   const live = availableRoutes(settings);
-  const first = live[0];
+  const first = autoRoutes(settings)[0];
   if (!first) {
     return { providerId: "xai", model: "grok-4.5" };
   }

@@ -137,6 +137,20 @@ A maintainer that knows the project and reads your CI. It reuses the existing Se
 
 Credits: ideas (not code; those repos carry no open-source licence) from [adeshukla](https://github.com/adeshukla): [pare](https://github.com/adeshukla/pare) for "write nothing unless the check passes", repo "laws" files and shipping as an Action, and [devstash](https://github.com/adeshukla/devstash) for the ".env.example must not contain real secrets" CI check and gitleaks awareness.
 
+## Optional providers: Meta Llama API and local Llama (Built with Llama)
+
+**Nemotron on Nebius stays the default for every role.** Automatic routing never picks the two providers below; they are used only when you select one in the Gateway panel. "Back to Nemotron" restores the default.
+
+- **`meta`**: an OpenAI-compatible Meta Llama API. The base URL defaults to `https://api.meta.ai/v1` (override it with `META_BASE_URL`). Models: `muse-spark-1.3-contributor` (default) and `muse-wonder-1.0`.
+  - The key comes from `META_LLAMA_API_KEY` and is read server-side only. A key sent by the browser is ignored.
+  - Pricing is user-supplied: $0.10 per 1M input tokens and $0.20 per 1M output tokens.
+  - **Hard spend cap:** `META_SPEND_CAP_USD`, default $1 if unset. A call is refused when spend so far plus the worst-case estimate would exceed it.
+  - Every call logs its tokens and cost to the server console and to `META_SPEND_LOG` (JSONL, default `.meta-spend.jsonl`). The log is replayed on restart.
+  - Muse models spend output tokens on reasoning, so very small `max_tokens` values can return an empty reply.
+- **`local-llama`**: a llama.cpp server at `http://127.0.0.1:8089/v1` (override it with `LOCAL_LLAMA_BASE_URL`). On the dev box, see `/workspace/local-llm/README.md` and `./start.sh Llama-3.2-1B-Instruct-Q4_K_M.gguf`.
+- **Llama Guard 3 hook (off by default):** set `LLAMA_GUARD=on` and `LLAMA_GUARD_URL` (for example, `./start.sh Llama-Guard-3-1B.Q4_K_M.gguf 8090`). Prompts sent to the Llama providers are checked first, and unsafe ones are refused. If the guard is unreachable, the call goes ahead with a note.
+- **Attribution:** when either provider is used, the trace and status bar show **"Built with Llama"**. Llama is a trademark of Meta; the models are used under the Llama licence and acceptable-use policy.
+
 ## Run it
 
 ```bash
@@ -148,7 +162,7 @@ npm run dev                   # http://localhost:8080/?demo=1
 
 **Demo mode:** open `/?demo=1`. This loads a seeded repo with a deliberately failing test (`slugify`) and pre-fills a task. Press send to watch it research, write code, review, run tests, repair with Ultra, and go green.
 
-**Tests:** `npm run test:agent` runs 40 tests. They cover routing, cost, path safety, secret isolation, the step cap, the Tavily client and an end-to-end failing → repaired → passing sandbox run. They also cover the migration scorer, rollback, topological sort, gate, seed and smoke on PGlite, and the deployer. On the RedAgent side they cover wrapper transparency, `evaluate()`, the CI gate, the harness and persistence. For MERIDIAN they cover the security rules, the compliance controls, the workflow generator, the GreenOps math and the contract parsing. For CI Whisperer they cover DNA extraction and grounding, diff review, CI log classification, release notes, the config audit and the patch generator.
+**Tests:** `npm run test:agent` runs 46 tests. They cover routing, cost, path safety, secret isolation, the step cap, the Tavily client and an end-to-end failing → repaired → passing sandbox run. They also cover the migration scorer, rollback, topological sort, gate, seed and smoke on PGlite, and the deployer. On the RedAgent side they cover wrapper transparency, `evaluate()`, the CI gate, the harness and persistence. For MERIDIAN they cover the security rules, the compliance controls, the workflow generator, the GreenOps math and the contract parsing. For CI Whisperer they cover DNA extraction and grounding, diff review, CI log classification, release notes, the config audit and the patch generator. For the optional Llama providers they check that Nemotron stays the default for every role and strategy, the opt-in selection, the hard spend cap and its log, the Llama Guard hook, and that the Meta key never reaches the client.
 **Build:** `npm run build` produces Vercel output under `console/.vercel/output`.
 
 **Deploy (Vercel):** set the project root to `console/`, then add `NEBIUS_API_KEY` and `TAVILY_API_KEY`. Vercel Sandbox authenticates via OIDC automatically.

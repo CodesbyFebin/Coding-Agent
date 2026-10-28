@@ -150,6 +150,9 @@ export type ProviderDef = {
   name: string;
   baseUrl: string;
   builtIn?: boolean;
+  /** Selectable only: never chosen by automatic routing or as a fallback. */
+  optIn?: boolean;
+  attribution?: string;
   docs: string;
   keyHint: string;
   models: ProviderModel[];
@@ -167,7 +170,7 @@ export type GatewayRequest = {
 };
 
 export type GatewayResponse =
-  | { ok: true; text: string; model: string; providerId: string; costUsd?: number; tokens?: number; ms?: number }
+  | { ok: true; text: string; model: string; providerId: string; costUsd?: number; tokens?: number; ms?: number; attribution?: string }
   | { ok: false; error: string };
 
 export type SwarmPayload = {
