@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+# Least privilege: no job needs more than read access to the repo contents.
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
