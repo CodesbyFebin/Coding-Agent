@@ -5,6 +5,8 @@ import type { Run, Task, TaskStatus } from "@/lib/board/repo";
 import { runHandoffFn } from "@/lib/collab/collab";
 import type { HandoffResult } from "@/lib/collab/handoff";
 import { useSession } from "@/lib/store";
+import { WindowControls } from "@/components/ui/window-controls";
+import { Maximize2, Minimize2, X } from "lucide-react";
 
 function HandoffSection() {
   const session = useSession();
@@ -50,6 +52,7 @@ export function BoardPanel() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const [open, setOpen] = useState<{ task: Task; runs: Run[] } | null>(null);
+  const [wide, setWide] = useState(false);
 
   const refresh = useCallback(async () => {
     try { setTasks(await listTasksFn()); } catch (e) { setErr((e as Error).message); }
@@ -104,9 +107,9 @@ export function BoardPanel() {
         </div>
         {open ? (
           <div className="mt-6 rounded-lg bg-card p-4 text-sm shadow-[var(--shadow-border)]">
-            <div className="flex justify-between"><b>{open.task.title}</b><button className="text-muted-foreground" onClick={() => setOpen(null)}>close</button></div>
+            <div className="flex items-center justify-between"><b>{open.task.title}</b><WindowControls className="[&_button]:bg-muted" onClose={() => setOpen(null)} onMaximize={() => setWide((w) => !w)} closeIcon={<X className="size-3" />} maximizeIcon={wide ? <Minimize2 className="size-3" /> : <Maximize2 className="size-3" />} /></div>
             {open.runs.length === 0 ? <p className="mt-2 text-muted-foreground">No runs yet.</p> : open.runs.map((r) => (
-              <div key={r.id} className="mt-2"><span className="font-mono">{r.status}</span> {r.model ?? ""}<pre className="mt-1 max-h-60 overflow-auto whitespace-pre-wrap text-xs">{r.output}</pre></div>
+              <div key={r.id} className="mt-2"><span className="font-mono">{r.status}</span> {r.model ?? ""}<pre className={`mt-1 overflow-auto whitespace-pre-wrap text-xs ${wide ? "max-h-[70vh]" : "max-h-60"}`}>{r.output}</pre></div>
             ))}
           </div>
         ) : null}
