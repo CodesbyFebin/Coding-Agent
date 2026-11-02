@@ -151,6 +151,36 @@ Credits: ideas (not code; those repos carry no open-source licence) from [adeshu
 - **Llama Guard 3 hook (off by default):** set `LLAMA_GUARD=on` and `LLAMA_GUARD_URL` (for example, `./start.sh Llama-Guard-3-1B.Q4_K_M.gguf 8090`). Prompts sent to the Llama providers are checked first, and unsafe ones are refused. If the guard is unreachable, the call goes ahead with a note.
 - **Attribution:** when either provider is used, the trace and status bar show **"Built with Llama"**. Llama is a trademark of Meta; the models are used under the Llama licence and acceptable-use policy.
 
+## Optional open-weight models
+
+Nemotron on Nebius Token Factory stays the default for every role, strategy and fallback. Everything below is **opt-in**: pick it in Gateway → provider → "Use …", and "Back to Nemotron (default)" switches back. Keys are server-side env vars only; a provider whose key is unset returns an error instead of being called.
+
+| Provider (id) | Env | Models |
+| --- | --- | --- |
+| Nebius Token Factory open weights (`nebius-open`) | same `NEBIUS_API_KEY` | see table below |
+| Ollama, local (`ollama`) | `OLLAMA_BASE_URL` (default `http://127.0.0.1:11434/v1`), `LOCAL_MODEL` (default `llama3.2`) | whatever you `ollama pull` |
+| llama.cpp, local (`local-llama`) | `LOCAL_LLAMA_BASE_URL` | already present |
+| OpenRouter free (`openrouter-free`) | `OPENROUTER_API_KEY` | `google/gemma-4-31b-it:free`, `google/gemma-4-26b-a4b-it:free`, `nvidia/nemotron-3.5-lightning:free` |
+| Hugging Face Inference (`hf`) | `HF_TOKEN`, optional `HF_BASE_URL` | `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `google/gemma-4-31B-it`, `deepseek-ai/DeepSeek-V4-Pro-0813`, `zai-org/GLM-5.3`, `moonshotai/Kimi-K3`, `meta-llama/Llama-3.3-70B-Instruct` |
+
+Nebius open-weight catalog (ids checked against Nebius docs on 2026-11-02; "unverified" ids appear only in the fine-tuning or dedicated-endpoint docs and may not be on Serverless):
+
+| Model id | License | Status |
+| --- | --- | --- |
+| `openai/gpt-oss-120b` | Apache-2.0 | verified |
+| `Qwen/Qwen3-30B-A3B-Instruct-2507` | Apache-2.0 | verified |
+| `deepseek-ai/DeepSeek-V4-Pro-0813` | see model card | verified |
+| `zai-org/GLM-5.2` | see model card | verified |
+| `moonshotai/Kimi-K3` | see model card | verified |
+| `MiniMaxAI/MiniMax-M3` | see model card | verified |
+| `Qwen/Qwen3-Coder-480B-A35B-Instruct`, `Qwen/Qwen3-Coder-30B-A3B-Instruct` | Apache-2.0 | unverified |
+| `openai/gpt-oss-20b` | Apache-2.0 | unverified |
+| `google/gemma-4-31B-it` | Apache-2.0 | unverified |
+| `meta-llama/Meta-Llama-3.1-8B-Instruct` | Llama 3.1 Community License | unverified |
+| `mistralai/Mistral-Nemo-Instruct-2407` | Apache-2.0 | unverified |
+
+Licences: each model is used under its own licence; read the model card before you ship output. Any Llama-licensed model (on any provider) shows **"Built with Llama"** in the trace and status bar. "Free" means the provider's free tier, not unlimited use: rate limits and terms are the provider's.
+
 ## Merged platform: skills, Python agents, workflows, task board, handoff
 
 - **Skills.** `console/skills/*/SKILL.md` are bundled into every agent system prompt. Karpathy's coding guidelines are included (MIT, vendored).

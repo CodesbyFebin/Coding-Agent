@@ -143,6 +143,12 @@ export type ProviderModel = {
   free: boolean;
   speed: "fast" | "medium" | "quality";
   roles: AgentRole[];
+  /** SPDX-ish license name of the open weights (see README "Open-weight models"). */
+  license?: string;
+  /** false = id seen in provider docs but not confirmed as a live serverless chat model. */
+  verified?: boolean;
+  /** Per-model attribution, e.g. "Built with Llama" for Llama-licensed weights. */
+  attribution?: string;
 };
 
 export type ProviderDef = {

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { GatewayRequest, GatewayResponse } from "./types";
 import { BUILT_WITH_LLAMA, META_MODELS, isLlamaProvider } from "./llama";
+import { isOpenWeightProvider, modelAttribution } from "./openweights";
 import { NEBIUS_BASE_URL, costUsd, tierModel, type Usage } from "./nebius";
 
 const MAX_PROMPT = 24_000;
@@ -41,6 +42,14 @@ export const routeCompletion = createServerFn({ method: "POST" })
       baseUrl = cfg.baseUrl;
       model = data.model || (data.providerId === "meta" ? META_MODELS.default : "local");
       if (!apiKey) return { ok: false, error: "Meta provider selected but META_LLAMA_API_KEY is not set on the server." };
+    } else if (isOpenWeightProvider(data.providerId)) {
+      // Optional open-weight providers: server-side env config only; a client-supplied key is ignored.
+      const { openWeightConfig, openWeightModel } = await import("./openweights.server");
+      const cfg = openWeightConfig(data.providerId);
+      if (!cfg.apiKey) return { ok: false, error: `${data.providerId} selected but ${cfg.keyVar} is not set on the server.` };
+      apiKey = cfg.apiKey;
+      baseUrl = cfg.baseUrl;
+      model = openWeightModel(data.providerId, data.model, cfg, data.model);
     } else {
       const useXai = data.providerId === "xai" || !data.apiKey;
       apiKey = useXai ? process.env.XAI_API_KEY : data.apiKey;
@@ -76,7 +85,7 @@ export const routeCompletion = createServerFn({ method: "POST" })
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
     };
-    if (providerId === "openrouter") {
+    if (providerId === "openrouter" || providerId === "openrouter-free") {
       headers["HTTP-Referer"] = "https://codingagent.in";
       headers["X-Title"] = "CodingAgent";
     }
@@ -119,14 +128,14 @@ export const routeCompletion = createServerFn({ method: "POST" })
       const usage = body.usage ?? {};
       let cost = costUsd(model, usage);
       if (providerId === "meta") cost = await (await import("./llama.server")).recordMetaSpend(body.model ?? model, usage);
-      else if (providerId === "local-llama") cost = 0;
+      else if (providerId === "local-llama" || providerId === "ollama" || providerId === "openrouter-free") cost = 0;
       return {
         ok: true,
         text,
         model: body.model ?? model,
         providerId,
         costUsd: cost,
-        ...(llama ? { attribution: BUILT_WITH_LLAMA } : {}),
+        ...(llama || modelAttribution(providerId, model) ? { attribution: BUILT_WITH_LLAMA } : {}),
         tokens: (usage.prompt_tokens ?? 0) + (usage.completion_tokens ?? 0),
         ms: Date.now() - started,
       };

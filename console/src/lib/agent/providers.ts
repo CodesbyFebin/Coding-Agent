@@ -1,4 +1,5 @@
 import { BUILT_WITH_LLAMA, LOCAL_LLAMA_BASE_URL, META_BASE_URL, META_MODELS } from "./llama";
+import { OPEN_WEIGHT_PROVIDER_DEFS } from "./openweights";
 import { NEBIUS_BASE_URL, NEMOTRON, ROLE_TIER } from "./nebius";
 import type { AgentRole, ProviderDef, RoleRoute, RouteStrategy, SettingsState } from "./types";
 
@@ -94,6 +95,7 @@ export const PROVIDERS: ProviderDef[] = [
     keyHint: "Server-side LOCAL_LLAMA_BASE_URL (default 127.0.0.1:8089)",
     models: [{ id: "local", label: "Whatever model the local server loaded", free: true, speed: "fast", roles: [] }],
   },
+  ...OPEN_WEIGHT_PROVIDER_DEFS,
   {
     id: "groq",
     name: "Groq",
@@ -271,7 +273,7 @@ export function availableRoutes(settings: SettingsState) {
   return PROVIDERS.filter((p) => p.builtIn || Boolean(settings.keys[p.id]?.trim()));
 }
 
-/** Providers automatic routing may pick (excludes opt-in Llama providers). */
+/** Providers automatic routing may pick (excludes all opt-in providers: Llama and open-weight). */
 function autoRoutes(settings: SettingsState) {
   return availableRoutes(settings).filter((p) => !p.optIn);
 }

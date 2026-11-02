@@ -102,14 +102,14 @@ export function GatewayPanel() {
                 </div>
                 {p.optIn ? (
                   <div className="mt-2 space-y-1.5">
-                    <div className="text-[11px] font-medium text-primary">{p.attribution}</div>
+                    {p.attribution ? <div className="text-[11px] font-medium text-primary">{p.attribution}</div> : null}
                     <div className="flex flex-wrap gap-1">
                       {p.models.map((m) => {
                         const on = settings.defaultProviderId === p.id && (settings.defaultModel === m.id || p.models.length === 1);
                         return (
-                          <button key={m.id} type="button" onClick={() => patch({ defaultProviderId: p.id, defaultModel: m.id })}
+                          <button key={m.id} type="button" title={m.license ? `License: ${m.license}${m.verified === false ? " · unverified id" : ""}` : undefined} onClick={() => patch({ defaultProviderId: p.id, defaultModel: m.id })}
                             className={cn("rounded-xs px-2 py-1 text-[11px]", on ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground")}>
-                            {on ? "Using " : "Use "}{m.label}
+                            {on ? "Using " : "Use "}{m.label}{m.attribution && !p.attribution ? ` · ${m.attribution}` : ""}
                           </button>
                         );
                       })}
