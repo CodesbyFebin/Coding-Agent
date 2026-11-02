@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowUp, Plus } from "lucide-react";
 import { WORK_SKILLS } from "@/lib/agent/seed";
 import { runTurn } from "@/lib/agent/run";
@@ -30,6 +30,19 @@ export function Composer({
 }) {
   const [draft, setDraft] = useState("");
   const [showSkills, setShowSkills] = useState(false);
+
+  useEffect(() => {
+    const take = () => {
+      const v = sessionStorage.getItem("codingagent:prefill");
+      if (v) {
+        sessionStorage.removeItem("codingagent:prefill");
+        setDraft(v);
+      }
+    };
+    take();
+    window.addEventListener("codingagent:prefill", take);
+    return () => window.removeEventListener("codingagent:prefill", take);
+  }, []);
   const running = useSession().swarm.running;
   const settings = useWork((s) => s.settings);
   const patch = useWork((s) => s.patchSettings);

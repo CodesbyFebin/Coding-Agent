@@ -295,3 +295,79 @@ export const SAMPLE_CRON: CronJob[] = [
     enabled: false,
   },
 ];
+
+/**
+ * Demo repo for judges: a tiny slug/pricing utility with a real bug and a
+ * failing test, so the write -> run -> test -> repair loop is visible end to end.
+ * Plain ESM JS + node:test so it runs in any Node 18+ sandbox with zero installs.
+ */
+export const DEMO_PROMPT =
+  "Add a `formatINR(paise)` helper to src/money.js that formats paise as Indian rupees (e.g. 12345678 -> '₹1,23,456.78') with tests, and make the whole test suite pass.";
+
+export const DEMO_FILES: Record<string, VFile> = {
+  "README.md": file(
+    "README.md",
+    `# demo-utils
+
+Seeded demo workspace for CodingAgent. \`npm test\` currently FAILS on purpose:
+\`slugify\` does not collapse repeated separators. Ask the agent to add a feature
+and watch it write code, run the tests in a sandbox, and repair failures with
+Nemotron 3 Ultra.
+`,
+  ),
+  "package.json": file(
+    "package.json",
+    `{
+  "name": "demo-utils",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test tests/" }
+}
+`,
+  ),
+  "src/slug.js": file(
+    "src/slug.js",
+    `export function slugify(input) {
+  return String(input)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]/g, "-");
+}
+`,
+  ),
+  "src/money.js": file(
+    "src/money.js",
+    `export function addPaise(a, b) {
+  return a + b;
+}
+`,
+  ),
+  "tests/slug.test.js": file(
+    "tests/slug.test.js",
+    `import { test } from "node:test";
+import assert from "node:assert/strict";
+import { slugify } from "../src/slug.js";
+
+test("slugify collapses separators and trims dashes", () => {
+  assert.equal(slugify("  Hello,  World!  "), "hello-world");
+  assert.equal(slugify("Nemotron 3 -- Ultra"), "nemotron-3-ultra");
+});
+`,
+  ),
+  "tests/money.test.js": file(
+    "tests/money.test.js",
+    `import { test } from "node:test";
+import assert from "node:assert/strict";
+import { addPaise } from "../src/money.js";
+
+test("addPaise", () => {
+  assert.equal(addPaise(100, 250), 350);
+});
+`,
+  ),
+};
+
+export function createDemoSession(): WorkSession {
+  const s = createSession("Demo · write → run → test → repair");
+  return { ...s, files: structuredClone(DEMO_FILES), openTabs: ["src/slug.js"], activeTab: "src/slug.js" };
+}

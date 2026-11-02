@@ -5,7 +5,11 @@ export type AgentRole =
   | "implementer"
   | "reviewer"
   | "tester"
-  | "researcher";
+  | "researcher"
+  | "security"
+  | "compliance"
+  | "pipeline"
+  | "greenops";
 
 export type WorkMode = "chat" | "plan" | "swarm";
 export type AppMode = "work" | "chat";
@@ -49,6 +53,32 @@ export type ChatMessage = {
   agentId?: AgentRole;
   artifacts?: FileChange[];
   routed?: { providerId: string; model: string };
+  /** Per-step model + cost trace (Nemotron tier routing). */
+  trace?: TraceStep[];
+  review?: string;
+  citations?: { title: string; url: string; snippet: string }[];
+  verification?: VerificationResult;
+};
+
+export type TraceStep = {
+  label: string;
+  model: string;
+  costUsd: number;
+  tokens: number;
+  ms: number;
+};
+
+export type VerificationResult = {
+  command: string | null;
+  passed: boolean;
+  attempts: number;
+  costUsd: number;
+  changed: string[];
+  steps: (
+    | { kind: "run"; attempt: number; command: string; exitCode: number; output: string; ms: number; runner: string }
+    | { kind: "repair"; attempt: number; model: string; note: string; paths: string[]; costUsd: number; tokens: number }
+    | { kind: "error"; attempt: number; message: string }
+  )[];
 };
 
 export type SwarmAgent = {
@@ -113,6 +143,12 @@ export type ProviderModel = {
   free: boolean;
   speed: "fast" | "medium" | "quality";
   roles: AgentRole[];
+  /** SPDX-ish license name of the open weights (see README "Open-weight models"). */
+  license?: string;
+  /** false = id seen in provider docs but not confirmed as a live serverless chat model. */
+  verified?: boolean;
+  /** Per-model attribution, e.g. "Built with Llama" for Llama-licensed weights. */
+  attribution?: string;
 };
 
 export type ProviderDef = {
@@ -120,6 +156,9 @@ export type ProviderDef = {
   name: string;
   baseUrl: string;
   builtIn?: boolean;
+  /** Selectable only: never chosen by automatic routing or as a fallback. */
+  optIn?: boolean;
+  attribution?: string;
   docs: string;
   keyHint: string;
   models: ProviderModel[];
@@ -137,7 +176,7 @@ export type GatewayRequest = {
 };
 
 export type GatewayResponse =
-  | { ok: true; text: string; model: string; providerId: string }
+  | { ok: true; text: string; model: string; providerId: string; costUsd?: number; tokens?: number; ms?: number; attribution?: string }
   | { ok: false; error: string };
 
 export type SwarmPayload = {
@@ -160,6 +199,12 @@ export type ActivityId =
   | "cron"
   | "webbridge"
   | "files"
-  | "memory";
+  | "memory"
+  | "pipeline"
+  | "redteam"
+  | "meridian"
+  | "whisperer"
+  | "workflows"
+  | "board";
 
 export type MobileTab = "home" | "task" | "files" | "more";
