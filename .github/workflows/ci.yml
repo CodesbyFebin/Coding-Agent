@@ -126,3 +126,14 @@ jobs:
           CORS_ORIGINS: http://localhost:5173
           OLLAMA_BASE_URL: http://localhost:11434
         run: node -e "require('./src/server.js')"
+
+  agents-py-verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: agents-py
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Tests (offline, pydantic-ai TestModel)
+        run: uv run pytest -q
