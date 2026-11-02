@@ -10,6 +10,7 @@ import {
   SquarePen,
   Workflow,
   Network,
+  KanbanSquare,
 } from "lucide-react";
 import type { ActivityId } from "@/lib/agent/types";
 import { useWork } from "@/lib/store";
@@ -26,6 +27,7 @@ const ITEMS: { id: ActivityId; label: string; icon: typeof Files }[] = [
   { id: "meridian", label: "Idea to deploy-ready", icon: Rocket },
   { id: "whisperer", label: "CI Whisperer / Project DNA", icon: GitPullRequest },
   { id: "workflows", label: "Workflows", icon: Network },
+  { id: "board", label: "Task board", icon: KanbanSquare },
   { id: "plugins", label: "Plugins", icon: Blocks },
 ];
 

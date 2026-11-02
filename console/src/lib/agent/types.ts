@@ -198,6 +198,7 @@ export type ActivityId =
   | "redteam"
   | "meridian"
   | "whisperer"
-  | "workflows";
+  | "workflows"
+  | "board";
 
 export type MobileTab = "home" | "task" | "files" | "more";

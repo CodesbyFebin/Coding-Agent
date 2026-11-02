@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EXAMPLE_WORKFLOW, validateWorkflow, type NodeType, type WfNode, type Workflow } from "@/lib/workflow/schema";
 import { runWorkflowFn } from "@/lib/workflow/workflow";
+import { saveWorkflowFn } from "@/lib/board/board";
 import type { WfResult } from "@/lib/workflow/engine";
 import { useSession } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -87,6 +88,7 @@ export function WorkflowPanel() {
           </Button>
           <Button size="sm" variant="outline" disabled={!sel} onClick={removeSel}>Delete</Button>
           <Button size="sm" variant="outline" onClick={() => setWf(EXAMPLE_WORKFLOW)}>Reset example</Button>
+          <Button size="sm" variant="outline" onClick={() => void saveWorkflowFn({ data: { id: wf.id, name: wf.name, definition: wf } }).then(() => setErr(`Saved as "${wf.id}" — reference it from a board task.`), (e: Error) => setErr(e.message))}>Save to DB</Button>
           <Button size="sm" variant="outline" onClick={() => void navigator.clipboard.writeText(JSON.stringify(wf, null, 2))}>Copy JSON</Button>
         </div>
         <svg

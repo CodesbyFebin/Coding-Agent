@@ -10,6 +10,7 @@ import { WebBridgePanel } from "./webbridge-panel";
 import { PipelinePanel } from "./pipeline-panel";
 import { MeridianPanel } from "./meridian-panel";
 import { WorkflowPanel } from "./workflow-panel";
+import { BoardPanel } from "./board-panel";
 import { WhispererPanel } from "./whisperer-panel";
 import { RedTeamPanel } from "./redteam-panel";
 
@@ -30,6 +31,7 @@ export function Sidebar() {
       {activity === "meridian" ? <MeridianPanel /> : null}
       {activity === "whisperer" ? <WhispererPanel /> : null}
       {activity === "workflows" ? <WorkflowPanel /> : null}
+      {activity === "board" ? <BoardPanel /> : null}
     </aside>
   );
 }

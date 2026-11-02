@@ -33,6 +33,7 @@ export function CommandPalette({
       { id: "redteam", label: "Red-team my agent", run: () => setActivity("redteam") },
       { id: "meridian", label: "Idea to deploy-ready", run: () => setActivity("meridian") },
       { id: "workflows", label: "Workflows", run: () => setActivity("workflows") },
+      { id: "board", label: "Task board", run: () => setActivity("board") },
       { id: "whisperer", label: "CI Whisperer / Project DNA", run: () => setActivity("whisperer") },
       { id: "memory", label: "Memory", run: () => setActivity("memory") },
       { id: "mode-work", label: "Mode: Work", run: () => setAppMode("work") },
