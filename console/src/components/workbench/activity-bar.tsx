@@ -9,6 +9,7 @@ import {
   GitPullRequest,
   SquarePen,
   Workflow,
+  Network,
 } from "lucide-react";
 import type { ActivityId } from "@/lib/agent/types";
 import { useWork } from "@/lib/store";
@@ -24,6 +25,7 @@ const ITEMS: { id: ActivityId; label: string; icon: typeof Files }[] = [
   { id: "redteam", label: "Red-team my agent", icon: ShieldAlert },
   { id: "meridian", label: "Idea to deploy-ready", icon: Rocket },
   { id: "whisperer", label: "CI Whisperer / Project DNA", icon: GitPullRequest },
+  { id: "workflows", label: "Workflows", icon: Network },
   { id: "plugins", label: "Plugins", icon: Blocks },
 ];
 
