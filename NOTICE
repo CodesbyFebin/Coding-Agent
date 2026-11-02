@@ -10,3 +10,10 @@ This product includes third-party software:
 
 2. pydantic-ai (https://github.com/pydantic/pydantic-ai), pydantic-graph, pydantic-evals
    MIT License, Copyright (c) Pydantic Services Inc. Used as dependencies of agents-py (not vendored).
+
+3. Ensemble (https://github.com/MeloMei/ensemble), commit 803bc28
+   MIT License, Copyright (c) 2026 MeloMei.
+   Vendored (modified for zod v4): console/src/lib/collab/vendor/ensemble-collaboration.ts
+   Notice: console/third_party/ensemble/LICENSE
+   The implement-then-review role pattern is adapted from Ensemble's templates; the
+   scheduler (console/src/lib/collab/handoff.ts) is original code.

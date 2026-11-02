@@ -2,6 +2,43 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createTaskFn, listTasksFn, runNextFn, runsFn } from "@/lib/board/board";
 import type { Run, Task, TaskStatus } from "@/lib/board/repo";
+import { runHandoffFn } from "@/lib/collab/collab";
+import type { HandoffResult } from "@/lib/collab/handoff";
+import { useSession } from "@/lib/store";
+
+function HandoffSection() {
+  const session = useSession();
+  const [goal, setGoal] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const [res, setRes] = useState<HandoffResult | null>(null);
+  const go = async () => {
+    setBusy(true); setErr(""); setRes(null);
+    try {
+      const files = Object.fromEntries(Object.values(session.files ?? {}).map((f) => [f.path, f.content]));
+      setRes(await runHandoffFn({ data: { goal, files } }));
+    } catch (e) { setErr((e as Error).message); } finally { setBusy(false); }
+  };
+  return (
+    <section className="mt-8 rounded-lg bg-card p-4 shadow-[var(--shadow-border)]">
+      <h2 className="font-medium">Builder → Reviewer handoff</h2>
+      <p className="text-xs text-muted-foreground">Nemotron Super implements; Nemotron Ultra reviews read-only and can send it back (role pattern from Ensemble, MIT).</p>
+      <div className="mt-2 flex gap-2">
+        <input aria-label="Handoff goal" className="flex-1 rounded border bg-background px-3 py-2 text-sm" placeholder="Goal" value={goal} onChange={(e) => setGoal(e.target.value)} />
+        <Button disabled={busy || !goal.trim()} onClick={() => void go()}>{busy ? "Working…" : "Start"}</Button>
+      </div>
+      {err ? <p className="mt-2 text-sm text-red-600">{err}</p> : null}
+      {res ? (
+        <ol className="mt-3 grid gap-2 text-sm">
+          <li className="font-mono">{res.status} · {res.rounds} round(s)</li>
+          {res.log.map((l, i) => (
+            <li key={i}><b>{l.participant}</b> · {l.task} #{l.attempt}<pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap text-xs">{l.output}</pre></li>
+          ))}
+        </ol>
+      ) : null}
+    </section>
+  );
+}
 
 const COLS: TaskStatus[] = ["queued", "running", "done", "failed"];
 
@@ -73,6 +110,7 @@ export function BoardPanel() {
             ))}
           </div>
         ) : null}
+        <HandoffSection />
       </div>
     </div>
   );
