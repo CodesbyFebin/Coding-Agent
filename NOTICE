@@ -8,7 +8,7 @@ This product includes third-party software:
    MIT License. Vendored: console/skills/karpathy-guidelines/SKILL.md
    Notice: console/third_party/andrej-karpathy-skills/LICENSE.md
 
-2. pydantic-ai (https://github.com/pydantic/pydantic-ai), pydantic-graph, pydantic-evals
+2. pydantic-ai (https://github.com/pydantic/pydantic-ai) and pydantic-evals
    MIT License, Copyright (c) Pydantic Services Inc. Used as dependencies of agents-py (not vendored).
 
 3. Ensemble (https://github.com/MeloMei/ensemble), commit 803bc28

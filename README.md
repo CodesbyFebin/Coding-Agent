@@ -151,6 +151,14 @@ Credits: ideas (not code; those repos carry no open-source licence) from [adeshu
 - **Llama Guard 3 hook (off by default):** set `LLAMA_GUARD=on` and `LLAMA_GUARD_URL` (for example, `./start.sh Llama-Guard-3-1B.Q4_K_M.gguf 8090`). Prompts sent to the Llama providers are checked first, and unsafe ones are refused. If the guard is unreachable, the call goes ahead with a note.
 - **Attribution:** when either provider is used, the trace and status bar show **"Built with Llama"**. Llama is a trademark of Meta; the models are used under the Llama licence and acceptable-use policy.
 
+## Merged platform: skills, Python agents, workflows, task board, handoff
+
+- **Skills.** `console/skills/*/SKILL.md` are bundled into every agent system prompt. Karpathy's coding guidelines are included (MIT, vendored).
+- **Python agent service (`agents-py/`).** A FastAPI app built on pydantic-ai: `/review`, `/plan`, and `/evals/review` (pydantic-evals). It uses Nemotron on Nebius Token Factory by default, with Meta Llama and local Llama as options. The console calls it through `PY_AGENT_URL`.
+- **Workflows.** A drag-and-link DAG builder: Nemotron llm nodes, Meridian tools, sandbox checks and condition branches. Workflows can be saved to Postgres.
+- **Task board.** Our own Postgres schema (`migrations/0002_platform.sql`, which also runs on PGlite) and a FIFO runner that records every run.
+- **Builder → Reviewer handoff.** Nemotron Super implements and Nemotron Ultra reviews read-only. The reviewer can send the change back with feedback.
+
 ## Run it
 
 ```bash
@@ -169,6 +177,7 @@ npm run dev                   # http://localhost:8080/?demo=1
 
 ## Repo layout
 
+- `agents-py/`: Python pydantic-ai agent service (review / plan / evals)
 - `console/`: the agent workbench app (TanStack Start + React). **This is the hackathon project.**
 - `backend/`, `neon/`: mission API and Postgres schema (pre-existing)
 - `frontend/`, `web/`: public site and docs (pre-existing)
@@ -194,6 +203,16 @@ The repo existed before the hackathon as a multi-provider UI that only *proposed
 
 - **Token Factory:** OpenAI compatibility made integration a base-URL swap. The public `models_info` JSON with prices made in-app cost accounting easy. *Wish list:* a per-request cost field in the response, and model IDs with consistent casing (e.g. `nemotron-3-super-120b-a12b` vs `Nemotron-3-Ultra-550b-a55b`).
 - **Nemotron:** TODO, observations on Nano vs Ultra quality and latency from `bench/results.md`.
+
+## Credits and third-party code
+
+See [NOTICE](NOTICE) for the full list.
+
+- [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) (MIT): the `karpathy-guidelines` skill, vendored unmodified.
+- [Ensemble](https://github.com/MeloMei/ensemble) (MIT): the collaboration schema, vendored with a zod v4 patch, and the implement-and-review role pattern.
+- [pydantic-ai / pydantic-evals](https://github.com/pydantic/pydantic-ai) (MIT): dependencies of `agents-py`.
+- [Taku UI](https://github.com/taku-ui) (MIT): `window-controls`, added through its CLI.
+- **Ideas only, no code copied:** [Dify](https://github.com/langgenius/dify) (the visual workflow builder) and [Multica](https://github.com/multica-ai/multica) (agents as teammates on a task board).
 
 ## License
 

@@ -6,7 +6,6 @@ requires-python = ">=3.11"
 license = "Apache-2.0"
 dependencies = [
   "pydantic-ai-slim[openai]>=1.0",
-  "pydantic-graph>=1.0",
   "pydantic-evals>=1.0",
   "fastapi>=0.115",
   "uvicorn>=0.30",
