@@ -1,5 +1,6 @@
 import { WORK_SKILLS } from "@/lib/agent/seed";
 import { runTurn } from "@/lib/agent/run";
+import { BUNDLED_SKILLS } from "@/lib/skills/bundled";
 
 export function SkillsPanel() {
   return (
@@ -27,6 +28,21 @@ export function SkillsPanel() {
             </button>
           ))}
         </div>
+        <h2 className="mt-10 font-display text-xl tracking-tight">Agent skills (SKILL.md)</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Loaded into every agent prompt. Add a folder under <code>console/skills/</code> to extend.
+        </p>
+        <ul className="mt-4 grid gap-3">
+          {BUNDLED_SKILLS.map((s) => (
+            <li key={s.id} className="rounded-lg bg-card p-4 shadow-[var(--shadow-border)]">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono text-sm">{s.name}</span>
+                {s.license ? <span className="text-xs text-muted-foreground">{s.license}</span> : null}
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">{s.description}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

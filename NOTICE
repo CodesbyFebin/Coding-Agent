@@ -1,0 +1,9 @@
+Coding-Agent
+Copyright 2026 CodesbyFebin
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes third-party software:
+
+1. andrej-karpathy-skills (https://github.com/multica-ai/andrej-karpathy-skills)
+   MIT License. Vendored: console/skills/karpathy-guidelines/SKILL.md
+   Notice: console/third_party/andrej-karpathy-skills/LICENSE.md

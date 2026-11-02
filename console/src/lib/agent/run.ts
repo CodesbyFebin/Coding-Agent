@@ -10,6 +10,8 @@ import type { ChatMessage, FileChange, SwarmAgent, TraceStep, VerificationResult
 import { research, researchContext, type Citation } from "@/lib/agent/tavily";
 import { runVerifyLoop } from "@/lib/agent/verify";
 import { NEMOTRON } from "@/lib/agent/nebius";
+import { BUNDLED_SKILLS } from "@/lib/skills/bundled";
+import { skillsPromptBlock } from "@/lib/skills/registry";
 
 export async function runTurn(text: string) {
   const trimmed = text.trim();
@@ -89,7 +91,7 @@ export async function runTurn(text: string) {
           files: live.files,
           memories: live.memories,
           openTabs: live.openTabs,
-        }) + (webContext ? `\n\n${webContext}` : ""),
+        }) + `\n\n${skillsPromptBlock(BUNDLED_SKILLS)}` + (webContext ? `\n\n${webContext}` : ""),
         messages: history,
         maxTokens: maxTokensFor(settings.mode),
       },
